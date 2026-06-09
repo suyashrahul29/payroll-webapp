@@ -186,9 +186,10 @@ export class ReadinessService extends EventEmitter {
     );
 
     if (staleBlockers.length > 0) {
-      // Mark stale blockers as resolved
+      // Mark stale blockers as resolved (immutable update)
       for (const blocker of staleBlockers) {
-        blocker.resolved_at = event.timestamp;
+        const resolvedBlocker = { ...blocker, resolved_at: event.timestamp };
+        tenantState.blockers.set(blocker.id, resolvedBlocker);
       }
     }
 
@@ -268,28 +269,30 @@ export class ReadinessService extends EventEmitter {
     );
     tenantState.sourceFreshness.set(event.source_id, sourceFreshness);
 
-    // Create FRESHNESS_VITALS blocker (dead)
+    // Create FRESHNESS_VITALS blocker (dead) — clear any prior stale blocker for this source
     const existingBlocker = Array.from(
       tenantState.blockers.values()
     ).find(
       b =>
         b.blocker_type === BlockerType.FRESHNESS_VITALS &&
-        b.blocking_record_ids.includes(event.source_id) &&
-        b.description.toLowerCase().includes("dead")
+        b.blocking_record_ids.includes(event.source_id)
     );
 
-    if (!existingBlocker) {
-      const blocker = createBlocker(
-        `blocker-${event.source_id}-dead`,
-        event.tenant_id,
-        BlockerType.FRESHNESS_VITALS,
-        "Data Freshness",
-        Severity.HIGH,
-        `${event.source_id} sync dead — no successful sync in 24h. Payroll at risk.`,
-        [event.source_id]
-      );
-      tenantState.blockers.set(blocker.id, blocker);
+    if (existingBlocker) {
+      tenantState.blockers.delete(existingBlocker.id);
     }
+
+    const blocker = createBlocker(
+      `blocker-${event.source_id}-dead`,
+      event.tenant_id,
+      BlockerType.FRESHNESS_VITALS,
+      "Data Freshness",
+      Severity.HIGH,
+      `${event.source_id} sync dead — no successful sync in 24h. Payroll at risk.`,
+      [event.source_id],
+      true // is_dead_source flag
+    );
+    tenantState.blockers.set(blocker.id, blocker);
 
     this.recomputeAndEmitScore(event.tenant_id);
   }
@@ -343,7 +346,7 @@ export class ReadinessService extends EventEmitter {
   private handleFFSettled(event: FFSettled): void {
     const tenantState = this.getTenantState(event.tenant_id);
 
-    // Mark exit blocker as resolved
+    // Mark exit blocker as resolved (immutable update)
     const exitBlocker = Array.from(
       tenantState.blockers.values()
     ).find(
@@ -354,7 +357,8 @@ export class ReadinessService extends EventEmitter {
     );
 
     if (exitBlocker) {
-      exitBlocker.resolved_at = event.timestamp;
+      const resolvedBlocker = { ...exitBlocker, resolved_at: event.timestamp };
+      tenantState.blockers.set(exitBlocker.id, resolvedBlocker);
     }
 
     this.recomputeAndEmitScore(event.tenant_id);
@@ -386,7 +390,7 @@ export class ReadinessService extends EventEmitter {
         tenantState.blockers.set(blocker.id, blocker);
       }
     } else {
-      // PASS - clear preflight blockers for this check
+      // PASS - clear preflight blockers for this check (immutable update)
       const blockers = Array.from(
         tenantState.blockers.values()
       ).filter(
@@ -395,9 +399,11 @@ export class ReadinessService extends EventEmitter {
           b.blocking_record_ids.includes(event.check_id)
       );
 
+      const now = new Date();
       for (const blocker of blockers) {
         if (blocker.resolved_at === null) {
-          blocker.resolved_at = new Date();
+          const resolvedBlocker = { ...blocker, resolved_at: now };
+          tenantState.blockers.set(blocker.id, resolvedBlocker);
         }
       }
     }
