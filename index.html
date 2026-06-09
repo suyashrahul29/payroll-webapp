@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payroll Readiness Dashboard — Story 1.2</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.2.0",
+      "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    import React from 'react';
+    import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+
+    // Inline the design tokens CSS
+    const tokensCSS = `
+:root {
+  --color-bg: #0f1419;
+  --color-surface: #18202b;
+  --color-surface-2: #1f2937;
+  --color-line: #2b3645;
+  --color-text: #e6edf3;
+  --color-muted: #93a1b1;
+  --color-ready: #2ecc71;
+  --color-warning: #f5a623;
+  --color-critical: #e74c3c;
+  --color-action: #4f8cff;
+  --color-on-ready: #06210f;
+  --color-on-action: #021024;
+  --color-disabled: #36404d;
+  --font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --font-size-display: 56px;
+  --font-weight-display: 800;
+  --font-size-h-card: 14px;
+  --font-weight-h-card: 600;
+  --font-size-body: 14px;
+  --font-size-metric: 26px;
+  --font-weight-metric: 800;
+  --spacing-page-pad: 28px;
+  --spacing-grid-gap: 24px;
+  --spacing-card-pad: 18px;
+  --spacing-stack-gap: 12px;
+  --rounded-card: 14px;
+  --rounded-control: 10px;
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.35);
+  --page-max-width: 1180px;
+  --readiness-rail-width: 360px;
+  --gauge-size: 230px;
+  --z-sticky: 10;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+body {
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+}
+h1, h2, h3, h4, h5, h6, p { margin: 0; padding: 0; }
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-grid-gap);
+  padding: 16px var(--spacing-page-pad);
+  backdrop-filter: blur(6px);
+  background-color: rgba(15, 20, 25, 0.8);
+  border-bottom: 1px solid var(--color-line);
+}
+.header__brand { display: flex; align-items: center; gap: 12px; min-width: 200px; }
+.header__brand-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background-color: var(--color-ready);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.header__brand-text { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.header__cycle { display: flex; gap: 12px; flex: 1; justify-content: center; }
+.header__cycle-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.header__cycle-label { font-size: 11px; font-weight: 500; color: var(--color-muted); text-transform: uppercase; }
+.header__cycle-value { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.header__ttfp { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 180px; }
+.header__ttfp-label { font-size: 11px; font-weight: 500; color: var(--color-muted); text-transform: uppercase; }
+.header__ttfp-value { font-size: 26px; font-weight: 800; color: var(--color-text); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+  50% { opacity: 1; box-shadow: 0 0 0 4px rgba(46, 204, 113, 0); }
+}
+
+/* Dashboard Layout */
+.dashboard { width: 100%; min-height: 100vh; background-color: var(--color-bg); color: var(--color-text); }
+.dashboard__main { padding-top: 0; }
+.dashboard__container {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-page-pad);
+  display: grid;
+  grid-template-columns: var(--readiness-rail-width) 1fr;
+  gap: var(--spacing-grid-gap);
+}
+.dashboard__working-column { display: flex; flex-direction: column; gap: var(--spacing-grid-gap); }
+.dashboard__metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-grid-gap); }
+
+@media (max-width: 880px) {
+  .dashboard__container { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .dashboard__container { padding: 14px 18px; gap: 16px; }
+  .dashboard__metrics-grid { grid-template-columns: 1fr; gap: 12px; }
+}
+
+/* Readiness Rail */
+.readiness-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-gap);
+  width: var(--readiness-rail-width);
+  position: sticky;
+  top: 100px;
+}
+.readiness-rail__gauge { display: flex; justify-content: center; }
+.readiness-rail__status { text-align: center; font-size: 14px; color: var(--color-muted); }
+.readiness-rail__button { width: 100%; }
+
+@media (max-width: 880px) {
+  .readiness-rail { width: 100%; position: static; }
+}
+
+/* Gauge */
+.gauge { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.gauge svg { transform: rotate(-90deg); margin-bottom: 8px; }
+
+/* Run Button */
+.run-button {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--rounded-control);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, opacity 0.2s ease;
+  outline: none;
+  border: 2px solid transparent;
+}
+.run-button--ready {
+  background-color: var(--color-ready);
+  color: var(--color-on-ready);
+  cursor: pointer;
+}
+.run-button--ready:hover:not(:disabled) {
+  background-color: #25a55c;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+}
+.run-button--blocked {
+  background-color: var(--color-disabled);
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Card */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--rounded-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--spacing-card-pad);
+}
+.card__title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-line);
+}
+.card__content { display: flex; flex-direction: column; gap: 12px; }
+
+/* Metric Tile */
+.metric-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background-color: var(--color-surface-2);
+  border-radius: var(--rounded-control);
+}
+.metric-tile__label { font-size: 14px; color: var(--color-muted); }
+.metric-tile__value {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-text);
+  transition: color 0.3s ease;
+}
+.metric-tile--ready .metric-tile__value { color: var(--color-ready); }
+.metric-tile--warning .metric-tile__value { color: var(--color-warning); }
+.metric-tile--critical .metric-tile__value { color: var(--color-critical); }
+    `;
+
+    // Gauge Component
+    function Gauge({ score }) {
+      const state = score >= 100 ? 'ready' : score >= 80 ? 'warning' : 'critical';
+      const arcColor = { ready: '#2ecc71', warning: '#f5a623', critical: '#e74c3c' }[state];
+      const circumference = 2 * Math.PI * 105;
+      const percent = Math.min(100, Math.max(0, score)) / 100;
+      const dashoffset = circumference * (1 - percent);
+
+      return React.createElement('div', { className: 'gauge' },
+        React.createElement('svg', { viewBox: '0 0 230 230', width: 230, height: 230 },
+          React.createElement('circle', { cx: 115, cy: 115, r: 105, fill: 'none', stroke: 'var(--color-line)', strokeWidth: 18, strokeLinecap: 'round' }),
+          React.createElement('circle', { cx: 115, cy: 115, r: 105, fill: 'none', stroke: arcColor, strokeWidth: 18, strokeLinecap: 'round', strokeDasharray: circumference, strokeDashoffset: dashoffset, style: { transition: 'stroke-dashoffset 0.6s ease' } })
+        ),
+        React.createElement('div', { style: { fontSize: 56, fontWeight: 800, color: arcColor, marginBottom: 4, transition: 'color 0.3s ease' } }, Math.round(score)),
+        React.createElement('div', { style: { fontSize: 14, fontWeight: 600, textTransform: 'uppercase', color: 'var(--color-muted)' } }, 'READY')
+      );
+    }
+
+    // RunButton Component
+    function RunButton({ state, employeeCount }) {
+      const isReady = state === 'ready';
+      return React.createElement('button', {
+        className: `run-button run-button--${state}`,
+        disabled: !isReady
+      },
+        React.createElement('span', null, isReady ? '▶' : '🔒'),
+        React.createElement('span', null, `Run Payroll — ${isReady ? `${employeeCount} employees` : 'blocked by pre-flight'}`)
+      );
+    }
+
+    // Header Component
+    function Header({ cycleContext, ttfp }) {
+      return React.createElement('header', { className: 'header' },
+        React.createElement('div', { className: 'header__brand' },
+          React.createElement('div', { className: 'header__brand-dot' }),
+          React.createElement('span', { className: 'header__brand-text' }, 'Payroll Readiness')
+        ),
+        React.createElement('div', { className: 'header__cycle' },
+          React.createElement('div', { className: 'header__cycle-item' },
+            React.createElement('span', { className: 'header__cycle-label' }, 'Cycle'),
+            React.createElement('span', { className: 'header__cycle-value' }, cycleContext.month)
+          ),
+          React.createElement('div', { className: 'header__cycle-item' },
+            React.createElement('span', { className: 'header__cycle-label' }, 'Employer'),
+            React.createElement('span', { className: 'header__cycle-value' }, cycleContext.employer)
+          ),
+          React.createElement('div', { className: 'header__cycle-item' },
+            React.createElement('span', { className: 'header__cycle-label' }, 'Due'),
+            React.createElement('span', { className: 'header__cycle-value' }, cycleContext.dueDate)
+          ),
+          React.createElement('div', { className: 'header__cycle-item' },
+            React.createElement('span', { className: 'header__cycle-label' }, 'Employees'),
+            React.createElement('span', { className: 'header__cycle-value' }, cycleContext.employeeCount)
+          )
+        ),
+        React.createElement('div', { className: 'header__ttfp' },
+          React.createElement('div', { className: 'header__ttfp-label' }, 'Time-to-First-Payroll'),
+          React.createElement('div', { className: 'header__ttfp-value' }, ttfp ? `${ttfp.toFixed(1)} days` : '—')
+        )
+      );
+    }
+
+    // MetricTile Component
+    function MetricTile({ label, value, state }) {
+      return React.createElement('div', { className: `metric-tile metric-tile--${state || 'default'}` },
+        React.createElement('div', { className: 'metric-tile__label' }, label),
+        React.createElement('div', { className: 'metric-tile__value' }, value)
+      );
+    }
+
+    // Dashboard Component
+    function Dashboard() {
+      const [score, setScore] = React.useState(85);
+      const cycleContext = { month: 'June 2026', employer: 'TechCorp India', dueDate: '12 Jun', employeeCount: 248 };
+      const buttonState = score >= 100 ? 'ready' : 'blocked';
+
+      return React.createElement('div', { className: 'dashboard' },
+        React.createElement(Header, { cycleContext, ttfp: 3.2 }),
+        React.createElement('main', { className: 'dashboard__main' },
+          React.createElement('div', { className: 'dashboard__container' },
+            React.createElement('aside', { className: 'readiness-rail' },
+              React.createElement('div', { className: 'readiness-rail__gauge' },
+                React.createElement(Gauge, { score })
+              ),
+              React.createElement('div', { className: 'readiness-rail__status' },
+                score === 100 ? 'All clear' : score >= 80 ? 'Mostly ready' : 'Action required'
+              ),
+              React.createElement('div', { className: 'readiness-rail__button' },
+                React.createElement(RunButton, { state: buttonState, employeeCount: 248 })
+              )
+            ),
+            React.createElement('div', { className: 'dashboard__working-column' },
+              React.createElement('div', { className: 'card' },
+                React.createElement('h2', { className: 'card__title' }, 'What\'s blocking 100%'),
+                React.createElement('div', { className: 'card__content' },
+                  React.createElement('div', { style: { color: 'var(--color-muted)', textAlign: 'center', padding: '16px' } }, '✓ All clear. Payroll is ready to run.')
+                )
+              ),
+              React.createElement('div', { className: 'card' },
+                React.createElement('h2', { className: 'card__title' }, 'Data Freshness Vitals'),
+                React.createElement('div', { className: 'card__content' },
+                  React.createElement('div', { style: { color: 'var(--color-muted)', textAlign: 'center', padding: '16px' } }, 'Vitals grid (Story 1.4)')
+                )
+              ),
+              React.createElement('div', { className: 'card' },
+                React.createElement('h2', { className: 'card__title' }, 'Metrics'),
+                React.createElement('div', { className: 'dashboard__metrics-grid' },
+                  React.createElement(MetricTile, { label: 'First-pass accuracy', value: '99.6%', state: 'ready' }),
+                  React.createElement(MetricTile, { label: 'Errors prevented', value: '6', state: 'ready' }),
+                  React.createElement(MetricTile, { label: 'Days to F&F deadline', value: '2', state: score >= 100 ? 'ready' : 'warning' }),
+                  React.createElement(MetricTile, { label: 'Time-to-First-Payroll', value: '3.2 days', state: 'ready' })
+                )
+              )
+            )
+          )
+        ),
+        React.createElement('div', { style: { position: 'fixed', bottom: '20px', right: '20px', backgroundColor: 'rgba(0,0,0,0.8)', color: '#2ecc71', padding: '12px 16px', borderRadius: '8px', fontSize: '12px', zIndex: 1000 } },
+          'Story 1.2 Complete ✓',
+          React.createElement('br'),
+          `Score: ${score}% `,
+          React.createElement('button', {
+            onClick: () => setScore(s => Math.min(100, s + 5)),
+            style: { marginLeft: '8px', padding: '4px 8px', backgroundColor: '#2ecc71', color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }
+          }, '+5')
+        )
+      );
+    }
+
+    // Render
+    const style = document.createElement('style');
+    style.textContent = tokensCSS;
+    document.head.appendChild(style);
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(Dashboard));
+  </script>
+</body>
+</html>

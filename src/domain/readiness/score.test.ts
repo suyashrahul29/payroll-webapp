@@ -287,7 +287,8 @@ describe("Score Computation (Pure Functions)", () => {
         "Data Freshness",
         Severity.HIGH,
         "eSSL sync dead — no successful sync in 24h",
-        ["eSSL"]
+        ["eSSL"],
+        true // is_dead_source
       );
 
       const result = computeScore([blocker], []);
@@ -342,7 +343,8 @@ describe("Score Computation (Pure Functions)", () => {
         "Data Freshness",
         Severity.HIGH,
         "eSSL sync dead",
-        ["eSSL"]
+        ["eSSL"],
+        true // is_dead_source
       );
 
       const score = computeScoreFromBlockers([blocker]);
@@ -378,7 +380,8 @@ describe("Score Computation (Pure Functions)", () => {
         "Data Freshness",
         Severity.HIGH,
         "eSSL sync dead",
-        ["eSSL"]
+        ["eSSL"],
+        true // is_dead_source
       );
 
       const score = computeScoreFromBlockers([blocker]);

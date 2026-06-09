@@ -115,6 +115,20 @@ export class ReadinessService extends EventEmitter {
 
     const scoreResult = computeScore(blockers, sourceFreshness);
 
+    // Map sources to include status and formatted names
+    const sources = sourceFreshness.map(src => {
+      let status: "live" | "stale" | "dead" = "live";
+      if (src.state === "DEAD") status = "dead";
+      else if (src.state === "STALE") status = "stale";
+
+      return {
+        source_id: src.source_name,
+        name: this.formatSourceName(src.source_name),
+        status,
+        last_synced_at: src.last_success_at,
+      };
+    });
+
     return {
       tenant_id,
       score: scoreResult.score,
@@ -125,9 +139,23 @@ export class ReadinessService extends EventEmitter {
         description: b.description,
         action_button: this.getActionButton(b.blocker_type),
       })),
+      sources,
       dead_sources: scoreResult.deadSources,
       timestamp: new Date(),
     };
+  }
+
+  /**
+   * Format source_id into human-readable name
+   */
+  private formatSourceName(source_id: string): string {
+    const names: { [key: string]: string } = {
+      "essl-biometric": "eSSL Biometric",
+      "hrms-csv": "HRMS CSV",
+      "tally-finance": "Tally Finance",
+      "zkeco-biometric": "ZKTeco Biometric",
+    };
+    return names[source_id] || source_id;
   }
 
   /**

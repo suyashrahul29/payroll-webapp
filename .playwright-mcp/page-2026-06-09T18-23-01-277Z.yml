@@ -1,0 +1,56 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e7]: Payroll Readiness
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: Cycle
+        - generic [ref=e11]: June 2026
+      - generic [ref=e12]:
+        - generic [ref=e13]: Employer
+        - generic [ref=e14]: TechCorp India
+      - generic [ref=e15]:
+        - generic [ref=e16]: Due
+        - generic [ref=e17]: 12 Jun
+      - generic [ref=e18]:
+        - generic [ref=e19]: Employees
+        - generic [ref=e20]: "248"
+    - generic [ref=e21]:
+      - generic [ref=e22]: Time-to-First-Payroll
+      - generic [ref=e23]: 3.2 days
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - complementary [ref=e26]:
+        - generic [ref=e28]:
+          - img [ref=e29]
+          - generic [ref=e32]: "85"
+          - generic [ref=e33]: READY
+        - generic [ref=e34]: Mostly ready
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e36]:
+          - generic [ref=e37]: 🔒
+          - generic [ref=e38]: Run Payroll — blocked by pre-flight
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "What's blocking 100%" [level=2] [ref=e41]
+          - generic [ref=e43]: ✓ All clear. Payroll is ready to run.
+        - generic [ref=e44]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e45]
+          - generic [ref=e47]: Vitals grid (Story 1.4)
+        - generic [ref=e48]:
+          - heading "Metrics" [level=2] [ref=e49]
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - generic [ref=e52]: First-pass accuracy
+              - generic [ref=e53]: 99.6%
+            - generic [ref=e54]:
+              - generic [ref=e55]: Errors prevented
+              - generic [ref=e56]: "6"
+            - generic [ref=e57]:
+              - generic [ref=e58]: Days to F&F deadline
+              - generic [ref=e59]: "2"
+            - generic [ref=e60]:
+              - generic [ref=e61]: Time-to-First-Payroll
+              - generic [ref=e62]: 3.2 days
+  - generic [ref=e63]:
+    - text: Story 1.2 Complete ✓
+    - text: "Score: 85%"
+    - button "+5" [ref=e64] [cursor=pointer]

@@ -1,0 +1,64 @@
+/**
+ * Readiness Rail Styles
+ * Fixed 360px width, sticky positioning on desktop
+ */
+
+.readiness-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-gap);
+  width: var(--readiness-rail-width);
+  position: sticky;
+  top: 100px;
+}
+
+.readiness-rail__gauge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.readiness-rail__status {
+  text-align: center;
+  font-size: var(--font-size-body);
+  color: var(--color-muted);
+  min-height: 20px;
+  line-height: 1.4;
+  font-weight: var(--font-weight-body);
+}
+
+.readiness-rail__button {
+  width: 100%;
+}
+
+/* Responsive — collapse to single column at ≤880px */
+@media (max-width: 880px) {
+  .readiness-rail {
+    width: 100%;
+    position: static;
+  }
+
+  .readiness-rail__status {
+    text-align: left;
+    padding: 0 var(--spacing-page-pad);
+  }
+
+  .readiness-rail__button {
+    padding: 0 var(--spacing-page-pad);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .readiness-rail {
+    gap: 12px;
+  }
+
+  .readiness-rail__status {
+    padding: 0;
+  }
+
+  .readiness-rail__button {
+    padding: 0;
+  }
+}

@@ -38,6 +38,10 @@ Or serve it (any static server works), e.g.:
 python -m http.server 8000   # then visit http://localhost:8000/app/
 ```
 
+## Styling
+All UI must follow the color system defined in @colours.md. Use the CSS variables / Tailwind tokens defined there — never hardcode hex values in components
+
+
 ## The hero screen — Payroll Readiness Score
 
 A single live % on the home screen that decomposes into exactly what's blocking 100%. Its four
@@ -66,3 +70,6 @@ When extending the prototype, **every feature must visibly serve accuracy or tim
 
 Full HRMS suite · deep bidirectional HRMS sync (CSV import only) · gig/contractor payout rails ·
 multi-country payroll · enterprise (500+) configs.
+
+## NOTE
+Build in such a way that you use less tokens and also build fast.

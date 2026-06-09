@@ -257,11 +257,7 @@
       <section class="card">
         <h2>Data Freshness Vitals</h2>
         <div class="body">
-          <div class="vitals">
-            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('essl')"><div class="src">Biometric (eSSL)</div><div class="when"><span class="pulse red"></span>Stale · 5 days</div></div>
-            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('hrms')"><div class="src">Leave (HRMS CSV)</div><div class="when"><span class="pulse amber"></span>12 hrs ago</div></div>
-            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('tally')"><div class="src">Finance (Tally)</div><div class="when"><span class="pulse green"></span>Live · 4 min</div></div>
-          </div>
+          <div class="vitals" id="sourcesContainer"></div>
         </div>
       </section>
 
@@ -334,6 +330,13 @@
   let resolved = new Set();
   let prevented = 0;
 
+  // Mock sources data
+  const sources = [
+    { source_id: 'essl-biometric', name: 'eSSL Biometric', status: 'dead', last_synced_at: new Date(Date.now() - 5*86400*1000) },
+    { source_id: 'hrms-csv', name: 'HRMS CSV', status: 'stale', last_synced_at: new Date(Date.now() - 12*3600*1000) },
+    { source_id: 'tally-finance', name: 'Tally Finance', status: 'live', last_synced_at: new Date(Date.now() - 4*60*1000) }
+  ];
+
   const arc = document.getElementById('arc');
   const scoreNum = document.getElementById('scoreNum');
   const statusLine = document.getElementById('statusLine');
@@ -373,6 +376,7 @@
       runBtn.textContent = '🔒 Run Payroll — blocked by pre-flight';
     }
     preventedNum.textContent = prevented;
+    renderSources(sources);
   }
 
   function renderList(){
@@ -474,6 +478,80 @@
 
   function closeVitalsModal(){
     document.getElementById('vitalsModal').classList.remove('show');
+  }
+
+  // Render Data Freshness Vitals from sources array
+  function renderSources(sources) {
+    const container = document.getElementById('sourcesContainer');
+    container.innerHTML = '';
+
+    if (!sources || sources.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">No sources configured</div>';
+      return;
+    }
+
+    sources.forEach(source => {
+      const pulseClass = source.status === 'live' ? 'green' : source.status === 'stale' ? 'amber' : 'red';
+      const timeStr = getRelativeTimeString(source.last_synced_at, source.status);
+
+      const vital = document.createElement('div');
+      vital.className = 'vital';
+      vital.style.cursor = 'pointer';
+      vital.onclick = () => openSourceModal(source);
+      vital.innerHTML =
+        '<div class="src">' + source.name + '</div>' +
+        '<div class="when"><span class="pulse ' + pulseClass + '"></span>' + timeStr + '</div>';
+
+      container.appendChild(vital);
+    });
+  }
+
+  // Calculate relative time string for source sync
+  function getRelativeTimeString(lastSyncedAt, status) {
+    if (!lastSyncedAt) {
+      return status === 'dead' ? 'Dead · never synced' : 'Unknown';
+    }
+
+    const now = new Date();
+    const lastSync = new Date(lastSyncedAt);
+    const secondsAgo = Math.floor((now - lastSync) / 1000);
+    const minutesAgo = Math.floor(secondsAgo / 60);
+    const hoursAgo = Math.floor(secondsAgo / 3600);
+    const daysAgo = Math.floor(secondsAgo / 86400);
+
+    if (status === 'live') {
+      if (minutesAgo < 60) return 'Live · ' + minutesAgo + ' min';
+      if (hoursAgo < 24) return 'Live · ' + hoursAgo + 'h';
+      return 'Live · ' + daysAgo + ' days';
+    } else if (status === 'stale') {
+      return 'Stale · ' + hoursAgo + 'h';
+    } else {
+      return 'Dead · ' + daysAgo + ' days';
+    }
+  }
+
+  // Open modal for source details
+  function openSourceModal(source) {
+    document.getElementById('vitalsTitle').textContent = source.name + ' — Status';
+    const timeline = document.getElementById('vitalsTimeline');
+    timeline.innerHTML = '';
+
+    const item = document.createElement('div');
+    item.className = 'timeline-item ' + source.status;
+    const lastSyncStr = source.last_synced_at
+      ? new Date(source.last_synced_at).toLocaleString()
+      : 'Never synced';
+
+    item.innerHTML =
+      '<div class="timeline-dot"></div>' +
+      '<div class="timeline-content">' +
+      '<div class="timeline-source">' + source.name + '</div>' +
+      '<div class="timeline-time">Status: ' + source.status.charAt(0).toUpperCase() + source.status.slice(1) + '</div>' +
+      '<div class="timeline-time" style="margin-top:8px;">Last synced: ' + lastSyncStr + '</div>' +
+      '</div>';
+
+    timeline.appendChild(item);
+    document.getElementById('vitalsModal').classList.add('show');
   }
 
   function openChangeModal(){

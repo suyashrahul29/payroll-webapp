@@ -1,0 +1,183 @@
+/* Design Tokens — Payroll Readiness Dashboard */
+/* Sourced from: _bmad-output/planning-artifacts/ux-designs/ux-payroll-webapp-2026-06-09/DESIGN.md */
+
+:root {
+  /* ===== COLORS ===== */
+  /* Semantic color palette — dark cockpit theme */
+
+  --color-bg: #0f1419;                    /* App background (deep slate) */
+  --color-surface: #18202b;               /* Card surface */
+  --color-surface-2: #1f2937;             /* Nested tile surface (vitals, metrics) */
+  --color-line: #2b3645;                  /* Borders, dividers, gauge track */
+  --color-text: #e6edf3;                  /* Primary text */
+  --color-muted: #93a1b1;                 /* Secondary text, labels, section headers */
+
+  /* State colors — semantic, never a fake green */
+  --color-ready: #2ecc71;                 /* Ready/fresh/pass (score ≥100, live source) */
+  --color-warning: #f5a623;               /* Stale/caution (score 80–99, aging source) */
+  --color-critical: #e74c3c;              /* Dead/breach risk (score <80, dead source) */
+  --color-action: #4f8cff;                /* Interactive affordance (buttons, links) */
+
+  /* Text on colored fills */
+  --color-on-ready: #06210f;              /* Text on ready (green) fill */
+  --color-on-action: #021024;             /* Text on action (blue) fill */
+
+  /* Special disabled state */
+  --color-disabled: #36404d;              /* Muted fill for disabled buttons */
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+
+  /* Display — gauge numeral */
+  --font-size-display: 56px;
+  --font-weight-display: 800;
+  --line-height-display: 1;
+
+  /* Card headers */
+  --font-size-h-card: 14px;
+  --font-weight-h-card: 600;
+  --letter-spacing-h-card: 0.6px;
+  --text-transform-h-card: uppercase;
+
+  /* Body text */
+  --font-size-body: 14px;
+  --font-weight-body: 400;
+  --line-height-body: 1.5;
+
+  /* Small text */
+  --font-size-small: 13px;
+  --font-weight-small: 400;
+  --line-height-small: 1.4;
+
+  /* Micro text (tags, labels) */
+  --font-size-micro: 12px;
+  --font-weight-micro: 500;
+  --letter-spacing-micro: 0.5px;
+  --text-transform-micro: uppercase;
+
+  /* Metric values (large numbers) */
+  --font-size-metric: 26px;
+  --font-weight-metric: 800;
+  --font-family-numeric: "Segoe UI Mono", monospace;
+  --font-variant-numeric: tabular-nums;
+
+  /* ===== SPACING ===== */
+  --spacing-page-pad: 28px;
+  --spacing-grid-gap: 24px;
+  --spacing-card-pad: 18px;
+  --spacing-stack-gap: 12px;
+  --spacing-stack-gap-lg: 14px;
+
+  /* ===== BORDERS & RADIUS ===== */
+  --rounded-card: 14px;
+  --rounded-control: 10px;
+  --rounded-chip: 20px;
+  --rounded-pulse: 50%;
+
+  /* ===== SHADOWS & ELEVATION ===== */
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.35);
+  --shadow-none: none;
+
+  /* ===== LAYOUT ===== */
+  --page-max-width: 1180px;
+  --readiness-rail-width: 360px;
+  --gauge-size: 230px;
+  --pulse-size: 9px;
+
+  /* ===== TRANSITIONS ===== */
+  --transition-sweep: 0.6s ease;
+  --transition-color: 0.3s ease;
+  --transition-opacity: 0.2s ease;
+
+  /* Pulse animation */
+  --animation-pulse-cycle: 1.6s;
+
+  /* ===== Z-INDEX SCALE ===== */
+  --z-background: 0;
+  --z-content: 1;
+  --z-sticky: 10;
+  --z-overlay: 100;
+  --z-toast: 1000;
+}
+
+/* ===== PREFERS-REDUCED-MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-sweep: 0s;
+    --transition-color: 0s;
+    --transition-opacity: 0s;
+    --animation-pulse-cycle: 0s;
+  }
+}
+
+/* ===== GLOBAL STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
+}
+
+/* Reset common elements */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-critical {
+  color: var(--color-critical);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-ready {
+  color: var(--color-ready);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.rounded {
+  border-radius: var(--rounded-card);
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}

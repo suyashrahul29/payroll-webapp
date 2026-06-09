@@ -1,0 +1,95 @@
+/**
+ * Dashboard Page Styles
+ *
+ * AC-2: Two-column responsive layout (360px rail + 1fr column, gaps 24px)
+ * AC-10: Design token compliance
+ * AC-11 & AC-12: Responsive behavior at 600px and 880px
+ */
+
+.dashboard {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.dashboard__main {
+  padding-top: 0;
+}
+
+.dashboard__container {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-page-pad);
+  display: grid;
+  grid-template-columns: var(--readiness-rail-width) 1fr;
+  gap: var(--spacing-grid-gap);
+}
+
+.dashboard__working-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-grid-gap);
+}
+
+/* Metrics grid: 2-up on wide, 1-up on narrow */
+.dashboard__metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-grid-gap);
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablet and below (≤880px) — single column layout */
+@media (max-width: 880px) {
+  .dashboard__container {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__working-column {
+    order: 2;
+  }
+}
+
+/* Mobile (≤600px) — stack everything, adjust spacing */
+@media (max-width: 600px) {
+  .dashboard__container {
+    padding: var(--spacing-card-pad);
+    gap: 16px;
+  }
+
+  .dashboard__working-column {
+    gap: 16px;
+  }
+
+  /* Metrics: 1-up on mobile */
+  .dashboard__metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* Very small screens (≤360px) */
+@media (max-width: 360px) {
+  .dashboard__container {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .dashboard__working-column {
+    gap: 12px;
+  }
+}
+
+/* Scroll padding for sticky header */
+html {
+  scroll-padding-top: 80px;
+}
+
+/* Print styles (optional — hide interactive elements) */
+@media print {
+  .dashboard__metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

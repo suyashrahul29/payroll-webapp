@@ -24,6 +24,7 @@ export interface Blocker {
   created_at: Date;
   resolved_at: Date | null; // When this blocker was marked resolved
   reopened_at: Date | null; // When this blocker was reopened (post-sign-off change detected)
+  is_dead_source?: boolean; // Flag: true if this is a dead source blocker (forces score to 0)
 }
 
 /**
@@ -36,7 +37,8 @@ export function createBlocker(
   blocker_category: string,
   severity: Severity,
   description: string,
-  blocking_record_ids: string[]
+  blocking_record_ids: string[],
+  is_dead_source: boolean = false
 ): Blocker {
   return {
     id,
@@ -49,6 +51,7 @@ export function createBlocker(
     created_at: new Date(),
     resolved_at: null,
     reopened_at: null,
+    is_dead_source,
   };
 }
 
@@ -99,11 +102,11 @@ export function calculateBlockerImpact(blocker: Blocker): number {
  * Check if this blocker is a "dead source" blocker
  *
  * Dead source blockers force the score to 0 regardless of other state.
+ * Uses the is_dead_source flag for reliable detection.
  */
 export function isDeadSourceBlocker(blocker: Blocker): boolean {
   return (
     blocker.blocker_type === BlockerType.FRESHNESS_VITALS &&
-    (blocker.description.toLowerCase().includes("dead") ||
-      blocker.description.toLowerCase().includes("sync dead"))
+    blocker.is_dead_source === true
   );
 }

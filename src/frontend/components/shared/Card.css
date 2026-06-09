@@ -1,0 +1,64 @@
+/**
+ * Card Styles
+ * Generic container for sections
+ */
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--rounded-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.card--default {
+  padding: var(--spacing-card-pad);
+}
+
+.card--minimal {
+  padding: 0;
+}
+
+.card__title {
+  font-size: var(--font-size-h-card);
+  font-weight: var(--font-weight-h-card);
+  letter-spacing: var(--letter-spacing-h-card);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-stack-gap-lg);
+  padding-bottom: var(--spacing-stack-gap-lg);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.card--minimal .card__title {
+  padding: var(--spacing-card-pad);
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack-gap-lg);
+}
+
+.card--minimal .card__content {
+  padding: var(--spacing-card-pad);
+  gap: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .card--default {
+    padding: 14px 16px;
+  }
+
+  .card__title {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    font-size: 12px;
+  }
+
+  .card__content {
+    gap: 12px;
+  }
+}

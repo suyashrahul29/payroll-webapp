@@ -1,0 +1,52 @@
+/**
+ * Metric Tile Styles
+ * Large numeric display with label
+ */
+
+.metric-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--spacing-card-pad);
+  background-color: var(--color-surface-2);
+  border-radius: var(--rounded-control);
+  align-items: flex-start;
+}
+
+.metric-tile__label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-muted);
+}
+
+.metric-tile__value {
+  font-size: var(--font-size-metric);
+  font-weight: var(--font-weight-metric);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition-color);
+}
+
+/* State coloring — ready state shows green */
+.metric-tile--ready .metric-tile__value {
+  color: var(--color-ready);
+}
+
+.metric-tile--warning .metric-tile__value {
+  color: var(--color-warning);
+}
+
+.metric-tile--critical .metric-tile__value {
+  color: var(--color-critical);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .metric-tile {
+    padding: 12px 14px;
+  }
+
+  .metric-tile__value {
+    font-size: 22px;
+  }
+}

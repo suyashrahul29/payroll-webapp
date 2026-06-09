@@ -126,6 +126,14 @@ export const ReadinessScoreChangedSchema = z.object({
       action_button: z.string().optional(),
     })
   ),
+  sources: z.array(
+    z.object({
+      source_id: z.string(),
+      name: z.string(),
+      status: z.enum(["live", "stale", "dead"]),
+      last_synced_at: z.date().nullable(),
+    })
+  ).optional(),
   dead_sources: z.boolean(),
   timestamp: z.date(),
 });

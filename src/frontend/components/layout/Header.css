@@ -1,0 +1,182 @@
+/**
+ * Header Styles — Sticky header with blur backdrop
+ */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-grid-gap);
+  padding: 16px var(--spacing-page-pad);
+  backdrop-filter: blur(6px);
+  background-color: rgba(15, 20, 25, 0.8);
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* Brand section */
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.header__brand-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-ready);
+  flex-shrink: 0;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.header__brand-text {
+  font-size: var(--font-size-h-card);
+  font-weight: var(--font-weight-h-card);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+/* Cycle context (center) */
+.header__cycle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-stack-gap);
+  flex: 1;
+  justify-content: center;
+}
+
+.header__cycle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.header__cycle-label {
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-micro);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-micro);
+}
+
+.header__cycle-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-h-card);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* TTFP metric (right) */
+.header__ttfp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 180px;
+}
+
+.header__ttfp-label {
+  font-size: var(--font-size-micro);
+  font-weight: var(--font-weight-micro);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-micro);
+}
+
+.header__ttfp-value {
+  font-size: var(--font-size-metric);
+  font-weight: var(--font-weight-metric);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pulse animation for brand dot */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .header__brand-dot {
+    animation: none;
+  }
+}
+
+/* Responsive — tablet and below */
+@media (max-width: 1024px) {
+  .header {
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header__cycle {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .header__cycle-item {
+    gap: 0;
+  }
+
+  .header__cycle-label {
+    font-size: 10px;
+  }
+
+  .header__cycle-value {
+    font-size: 12px;
+  }
+
+  .header__ttfp {
+    min-width: 140px;
+    gap: 2px;
+  }
+
+  .header__ttfp-label {
+    font-size: 9px;
+  }
+
+  .header__ttfp-value {
+    font-size: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px var(--spacing-page-pad);
+  }
+
+  .header__brand {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header__cycle {
+    order: 2;
+  }
+
+  .header__cycle-item {
+    gap: 2px;
+  }
+
+  .header__ttfp {
+    order: 3;
+    width: 100%;
+    align-items: center;
+  }
+}

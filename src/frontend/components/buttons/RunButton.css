@@ -1,0 +1,101 @@
+/**
+ * Run Button Styles
+ * Binary gate: ready (green) or blocked (muted)
+ */
+
+.run-button {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--rounded-control);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-h-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color var(--transition-color),
+              opacity var(--transition-opacity),
+              box-shadow var(--transition-color);
+  outline: none;
+  border: 2px solid transparent;
+}
+
+/* Ready state — enabled, green, clickable */
+.run-button--ready {
+  background-color: var(--color-ready);
+  color: var(--color-on-ready);
+  cursor: pointer;
+}
+
+.run-button--ready:hover:not(:disabled) {
+  background-color: #25a55c;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+}
+
+.run-button--ready:focus:not(:disabled) {
+  border-color: var(--color-ready);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+}
+
+.run-button--ready:active:not(:disabled) {
+  background-color: #229a52;
+  transform: scale(0.98);
+}
+
+/* Blocked state — disabled, muted, not clickable */
+.run-button--blocked {
+  background-color: var(--color-disabled);
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.run-button--blocked:hover {
+  background-color: var(--color-disabled);
+}
+
+.run-button__icon {
+  font-size: 1.2em;
+  display: inline-block;
+  font-weight: normal;
+}
+
+.run-button__text {
+  text-align: center;
+  flex: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Accessibility — disabled state should be clear without color alone */
+.run-button:disabled {
+  cursor: not-allowed;
+}
+
+/* Focus visible for keyboard navigation */
+.run-button:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .run-button {
+    transition: none;
+  }
+
+  .run-button--ready:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .run-button {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .run-button__icon {
+    font-size: 1em;
+  }
+}
