@@ -1,0 +1,57 @@
+# Color System — Payroll Web Application
+
+Use these exact values across the application. Do not introduce additional colors without updating this file.
+
+## Design Tokens
+
+```css
+:root {
+  /* Brand */
+  --color-primary: #1E3A5F;        /* Deep navy — headers, nav, primary surfaces */
+  --color-accent: #0D9488;         /* Teal — buttons, links, active states */
+
+  /* Surfaces */
+  --color-bg: #FFFFFF;             /* Page background */
+  --color-surface: #F5F7FA;        /* Panels, cards, alternating table rows */
+
+  /* Text */
+  --color-text: #1F2937;           /* Body / primary text */
+  --color-text-muted: #6B7280;     /* Secondary labels, captions */
+
+  /* Status */
+  --color-success: #16A34A;        /* Paid, approved */
+  --color-warning: #D97706;        /* Pending, awaiting action */
+  --color-error: #DC2626;          /* Errors, overdue */
+}
+```
+
+## Usage Rules
+
+- **Primary (`--color-primary`)**: Top nav bar, sidebar, section headers, table header rows. Signals trust/security.
+- **Accent (`--color-accent`)**: Primary buttons, hyperlinks, active tab/menu indicators, focus rings. Use sparingly — it should draw the eye to the main action.
+- **Backgrounds**: `--color-bg` for the main canvas. `--color-surface` for grouped content and zebra-striping dense tables.
+- **Text**: `--color-text` for all body content and numeric data. `--color-text-muted` for labels, helper text, and timestamps.
+- **Status colors**: Only for state communication (badges, row highlights, alerts). Never use them as decorative or brand colors.
+
+## Constraints
+
+- Maintain WCAG AA contrast (≥4.5:1 for body text, ≥3:1 for large text/UI). Navy and charcoal on white/gray surfaces already satisfy this.
+- Do not place teal text on navy or vice versa — insufficient contrast.
+- White text only on `--color-primary`, `--color-accent`, and status fills.
+- Reserve red strictly for errors and overdue states; do not use it for delete buttons that aren't destructive-confirmed.
+
+## Tailwind Equivalents (if applicable)
+
+```js
+// tailwind.config — theme.extend.colors
+colors: {
+  primary: '#1E3A5F',
+  accent:  '#0D9488',
+  surface: '#F5F7FA',
+  ink:     '#1F2937',
+  muted:   '#6B7280',
+  success: '#16A34A',
+  warning: '#D97706',
+  error:   '#DC2626',
+}
+```

@@ -1,0 +1,117 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e11]
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - img [ref=e14]
+            - generic [ref=e17]:
+              - generic [ref=e18]: "48"
+              - generic [ref=e19]: ready
+          - generic [ref=e20]: 4 blockers · 3 exits pending f&f · 18 unconfirmed ctc changes · attendance stale — 5 days · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e24]
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - generic [ref=e27]: ⏳
+              - generic [ref=e28]:
+                - generic [ref=e29]: 3 exits pending F&F
+                - generic [ref=e30]: "F&F blocked on HR notice-waiver decision · legal deadline: 2 working days"
+                - generic [ref=e31]: Lifecycle Clock
+              - button "Settle" [ref=e32] [cursor=pointer]
+            - generic [ref=e33]:
+              - generic [ref=e34]: ✎
+              - generic [ref=e35]:
+                - generic [ref=e36]: 18 unconfirmed CTC changes
+                - generic [ref=e37]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e38]: Change Handshake
+              - button "Review & sign" [active] [ref=e39] [cursor=pointer]
+            - generic [ref=e40]:
+              - generic [ref=e41]: 📡
+              - generic [ref=e42]:
+                - generic [ref=e43]: Attendance stale — 5 days
+                - generic [ref=e44]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e45]: Freshness Vitals
+              - button "Re-sync" [ref=e46] [cursor=pointer]
+            - generic [ref=e47]:
+              - generic [ref=e48]: ₹
+              - generic [ref=e49]:
+                - generic [ref=e50]: PF challan not generated
+                - generic [ref=e51]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e52]: Compliance floor
+              - button "Generate" [ref=e53] [cursor=pointer]
+        - generic [ref=e54]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e55]
+          - generic [ref=e57]:
+            - generic [ref=e58] [cursor=pointer]:
+              - generic [ref=e59]: Biometric (eSSL)
+              - generic [ref=e60]: Stale · 5 days
+            - generic [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: Leave (HRMS CSV)
+              - generic [ref=e64]: 12 hrs ago
+            - generic [ref=e66] [cursor=pointer]:
+              - generic [ref=e67]: Finance (Tally)
+              - generic [ref=e68]: Live · 4 min
+        - generic [ref=e70]:
+          - heading "The two numbers we live by" [level=2] [ref=e71]
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: First-pass accuracy
+              - generic [ref=e76]: 99.6% / target ≥99.5%
+            - generic [ref=e77]:
+              - generic [ref=e78]: Errors prevented this run
+              - generic [ref=e79]: "0"
+            - generic [ref=e80]:
+              - generic [ref=e81]: Lifecycle clock — next F&F
+              - generic [ref=e82]: 41:11:10
+            - generic [ref=e83]:
+              - generic [ref=e84]: Time-to-First-Payroll
+              - generic [ref=e85]: 2.1 biz days
+    - paragraph [ref=e86]: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+  - generic: ✅ Payroll run completed — zero post-run corrections
+  - generic [ref=e88]:
+    - generic [ref=e89]:
+      - heading "Change Handshake — CTC Structure Diff" [level=3] [ref=e90]
+      - button "×" [ref=e91] [cursor=pointer]
+    - generic [ref=e92]:
+      - paragraph [ref=e93]:
+        - text: 18 employee records changed since last payroll run. Finance pushed these edits.
+        - strong [ref=e94]: Payroll sign-off required to proceed.
+      - table [ref=e95]:
+        - rowgroup [ref=e96]:
+          - row "CTC ₹ 580,000 → 615,000 5 employees" [ref=e97]:
+            - cell "CTC ₹" [ref=e98]
+            - cell "580,000 → 615,000" [ref=e99]:
+              - text: 580,000 →
+              - strong [ref=e100]: 615,000
+            - cell "5 employees" [ref=e101]
+          - row "Basic % 45% → 50% Wage Code fix" [ref=e102]:
+            - cell "Basic %" [ref=e103]
+            - cell "45% → 50%" [ref=e104]:
+              - text: 45% →
+              - strong [ref=e105]: 50%
+            - cell "Wage Code fix" [ref=e106]
+          - row "HRA Amt 120,000 → 125,000 DA-linked rebase" [ref=e107]:
+            - cell "HRA Amt" [ref=e108]
+            - cell "120,000 → 125,000" [ref=e109]:
+              - text: 120,000 →
+              - strong [ref=e110]: 125,000
+            - cell "DA-linked rebase" [ref=e111]
+          - row "PF Amt Auto (recalc) From new basic" [ref=e112]:
+            - cell "PF Amt" [ref=e113]
+            - cell "Auto (recalc)" [ref=e114]:
+              - strong [ref=e115]: Auto
+              - text: (recalc)
+            - cell "From new basic" [ref=e116]
+      - generic [ref=e117]: ⚠ AWAITING SIGN-OFF
+      - button "✓ Review & Sign Off" [ref=e118] [cursor=pointer]

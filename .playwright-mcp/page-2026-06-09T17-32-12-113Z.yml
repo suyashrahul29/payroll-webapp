@@ -1,0 +1,26 @@
+- generic [ref=e1]:
+  - generic [ref=e20]:
+    - heading "payroll-webapp" [level=1] [ref=e21]
+    - generic [ref=e22]: Sign in to your account
+    - generic [ref=e23]:
+      - button "HR Manager" [ref=e24] [cursor=pointer]
+      - button "Employee" [ref=e25] [cursor=pointer]
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]: Username
+        - textbox "e.g., priya@acme.com" [ref=e29]: priya
+        - generic [ref=e30]: "Demo: any username works"
+      - generic [ref=e31]:
+        - generic [ref=e32]: Password
+        - textbox "••••••••" [ref=e33]: demo
+        - generic [ref=e34]: "Demo: any password works"
+      - button "Sign In" [ref=e35] [cursor=pointer]
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - button "Logout" [active] [ref=e8] [cursor=pointer]
+  - generic: ✅ Payroll run completed — zero post-run corrections

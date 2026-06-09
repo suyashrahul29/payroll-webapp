@@ -1,0 +1,20 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e19]:
+    - generic [ref=e22]:
+      - text: payroll-webapp
+      - generic [ref=e23]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e24]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - button "Logout" [ref=e25] [cursor=pointer]
+  - main [ref=e36]:
+    - generic [ref=e116]:
+      - heading "Employee Portal" [level=2] [ref=e117]
+      - generic [ref=e118]:
+        - generic [ref=e119]: 📋
+        - heading "My Payslips" [level=3] [ref=e120]
+        - paragraph [ref=e121]: Your payslip history and F&F settlement status will appear here.
+        - generic [ref=e122]:
+          - strong [ref=e123]: "Session:"
+          - text: EMP001
+  - generic: ✅ Payroll run completed — zero post-run corrections

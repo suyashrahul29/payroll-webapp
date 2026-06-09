@@ -1,0 +1,82 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - button "Logout" [ref=e8] [cursor=pointer]
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e12]
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]:
+              - generic [ref=e19]: "0"
+              - generic [ref=e20]: ready
+          - generic [ref=e21]: Reconciling upstream inputs…
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e22]
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: ⏳
+              - generic [ref=e29]:
+                - generic [ref=e30]: 3 exits pending F&F
+                - generic [ref=e31]: "F&F blocked on HR notice-waiver decision · legal deadline: 2 working days"
+                - generic [ref=e32]: Lifecycle Clock
+              - button "Settle" [ref=e33] [cursor=pointer]
+            - generic [ref=e34]:
+              - generic [ref=e35]: ✎
+              - generic [ref=e36]:
+                - generic [ref=e37]: 18 unconfirmed CTC changes
+                - generic [ref=e38]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e39]: Change Handshake
+              - button "Review & sign" [ref=e40] [cursor=pointer]
+            - generic [ref=e41]:
+              - generic [ref=e42]: 📡
+              - generic [ref=e43]:
+                - generic [ref=e44]: Attendance stale — 5 days
+                - generic [ref=e45]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e46]: Freshness Vitals
+              - button "Re-sync" [ref=e47] [cursor=pointer]
+            - generic [ref=e48]:
+              - generic [ref=e49]: ₹
+              - generic [ref=e50]:
+                - generic [ref=e51]: PF challan not generated
+                - generic [ref=e52]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e53]: Compliance floor
+              - button "Generate" [ref=e54] [cursor=pointer]
+        - generic [ref=e55]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e56]
+          - generic [ref=e58]:
+            - generic [ref=e59] [cursor=pointer]:
+              - generic [ref=e60]: Biometric (eSSL)
+              - generic [ref=e61]: Stale · 5 days
+            - generic [ref=e63] [cursor=pointer]:
+              - generic [ref=e64]: Leave (HRMS CSV)
+              - generic [ref=e65]: 12 hrs ago
+            - generic [ref=e67] [cursor=pointer]:
+              - generic [ref=e68]: Finance (Tally)
+              - generic [ref=e69]: Live · 4 min
+        - generic [ref=e71]:
+          - heading "The two numbers we live by" [level=2] [ref=e72]
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - generic [ref=e76]: First-pass accuracy
+              - generic [ref=e77]: 99.6% / target ≥99.5%
+            - generic [ref=e78]:
+              - generic [ref=e79]: Errors prevented this run
+              - generic [ref=e80]: "0"
+            - generic [ref=e81]:
+              - generic [ref=e82]: Lifecycle clock — next F&F
+              - generic [ref=e83]: "--:--:--"
+            - generic [ref=e84]:
+              - generic [ref=e85]: Time-to-First-Payroll
+              - generic [ref=e86]: 2.1 biz days
+    - paragraph [ref=e87]: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+  - generic: ✅ Payroll run completed — zero post-run corrections

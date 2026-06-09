@@ -1,0 +1,78 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e11]
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - img [ref=e14]
+            - generic [ref=e17]:
+              - generic [ref=e18]: "94"
+              - generic [ref=e19]: ready
+          - generic [ref=e20]: 1 blocker · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e24]
+          - generic [ref=e25]:
+            - generic [ref=e194]:
+              - generic [ref=e195]: ✓
+              - generic [ref=e196]:
+                - generic [ref=e197]: 3 exits pending F&F
+                - generic [ref=e198]: "F&F blocked on HR notice-waiver decision · legal deadline: 2 working days"
+                - generic [ref=e199]: Lifecycle Clock
+            - generic [ref=e200]:
+              - generic [ref=e201]: ✓
+              - generic [ref=e202]:
+                - generic [ref=e203]: 18 unconfirmed CTC changes
+                - generic [ref=e204]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e205]: Change Handshake
+            - generic [ref=e206]:
+              - generic [ref=e207]: ✓
+              - generic [ref=e208]:
+                - generic [ref=e209]: Attendance stale — 5 days
+                - generic [ref=e210]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e211]: Freshness Vitals
+            - generic [ref=e212]:
+              - generic [ref=e213]: ₹
+              - generic [ref=e214]:
+                - generic [ref=e215]: PF challan not generated
+                - generic [ref=e216]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e217]: Compliance floor
+              - button "Generate" [ref=e218] [cursor=pointer]
+        - generic [ref=e54]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e55]
+          - generic [ref=e57]:
+            - generic [ref=e58] [cursor=pointer]:
+              - generic [ref=e59]: Biometric (eSSL)
+              - generic [ref=e60]: Stale · 5 days
+            - generic [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: Leave (HRMS CSV)
+              - generic [ref=e64]: 12 hrs ago
+            - generic [ref=e66] [cursor=pointer]:
+              - generic [ref=e67]: Finance (Tally)
+              - generic [ref=e68]: Live · 4 min
+        - generic [ref=e70]:
+          - heading "The two numbers we live by" [level=2] [ref=e71]
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: First-pass accuracy
+              - generic [ref=e76]: 99.6% / target ≥99.5%
+            - generic [ref=e77]:
+              - generic [ref=e78]: Errors prevented this run
+              - generic [ref=e79]: "3"
+            - generic [ref=e80]:
+              - generic [ref=e81]: Lifecycle clock — next F&F
+              - generic [ref=e82]: 41:07:43
+            - generic [ref=e83]:
+              - generic [ref=e84]: Time-to-First-Payroll
+              - generic [ref=e85]: 2.1 biz days
+    - paragraph [ref=e86]: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+  - generic: ✅ Payroll run completed — zero post-run corrections
