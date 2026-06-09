@@ -506,47 +506,67 @@
   };
 
   // --- Login System ---
+  let currentSession = null;
+
   function switchRole(role){
     document.querySelectorAll('.role-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelector('.role-tab[onclick*="' + role + '"]').classList.add('active');
     document.getElementById(role + 'Form').classList.add('active');
   }
 
   function handleLogin(event, role){
     event.preventDefault();
-    const session = { role, user: event.target.querySelector('input').value, loginTime: new Date() };
+    const username = event.target.querySelector('input').value || 'user';
+    const session = { role, user: username, loginTime: new Date() };
     localStorage.setItem('payroll_session', JSON.stringify(session));
-    showDashboard(role);
+    currentSession = session;
+    showDashboard(role, username);
   }
 
   function logout(){
     localStorage.removeItem('payroll_session');
+    currentSession = null;
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('appContent').style.display = 'none';
+    document.getElementById('hrForm').reset();
+    document.getElementById('employeeForm').reset();
   }
 
-  function showDashboard(role){
+  function showDashboard(role, username){
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('appContent').style.display = 'block';
     if(role === 'employee') {
-      document.getElementById('appContent').innerHTML = '<div style="max-width:1180px;margin:0 auto;padding:28px;"><div class="card" style="text-align:center;"><h2>Employee Portal</h2><div class="card body" style="padding:60px;"><div style="font-size:28px;margin-bottom:16px;">📋</div><h3>My Payslips</h3><p style="color:var(--muted);margin:12px 0;">Your payslip history and F&F settlement status will appear here.</p><div style="margin-top:32px;color:var(--muted);"><strong>Session:</strong> ' + document.querySelector('.login-form.active input').value + '</div></div></div></div>';
+      const safe = String(username).replace(/[<>"']/g, '');
+      document.getElementById('appContent').innerHTML = '<div style="max-width:1180px;margin:0 auto;padding:28px;"><div class="card" style="text-align:center;"><h2>Employee Portal</h2><div class="card body" style="padding:60px;"><div style="font-size:28px;margin-bottom:16px;">📋</div><h3>My Payslips</h3><p style="color:var(--muted);margin:12px 0;">Your payslip history and F&F settlement status will appear here.</p><div style="margin-top:32px;color:var(--muted);"><strong>Session:</strong> ' + safe + '</div></div></div></div>';
     }
   }
 
   function initAuth(){
-    const session = JSON.parse(localStorage.getItem('payroll_session') || 'null');
-    if(session) {
-      showDashboard(session.role);
-    } else {
+    try {
+      const stored = localStorage.getItem('payroll_session');
+      const session = stored ? JSON.parse(stored) : null;
+      if(session && session.role) {
+        currentSession = session;
+        document.getElementById('appContent').style.display = 'block';
+        document.getElementById('loginScreen').classList.add('hidden');
+        if(session.role === 'employee') {
+          showDashboard(session.role, session.user);
+        }
+      } else {
+        document.getElementById('appContent').style.display = 'none';
+        document.getElementById('loginScreen').classList.remove('hidden');
+      }
+    } catch(e) {
+      localStorage.removeItem('payroll_session');
       document.getElementById('appContent').style.display = 'none';
       document.getElementById('loginScreen').classList.remove('hidden');
     }
   }
 
   // init
-  initAuth();
   renderList();
+  initAuth();
   // animate the gauge filling from 0 on load
   arc.style.strokeDashoffset = CIRC;
   setTimeout(()=>renderGauge(true), 250);
