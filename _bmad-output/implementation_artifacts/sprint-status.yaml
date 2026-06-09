@@ -53,8 +53,8 @@ development_status:
   1-1-readiness-service-foundation-event-model: done
   1-2-home-screen-ui-shell-gauge-component: done
   1-3-live-readiness-score-computation-gauge-animation: done
-  1-4-data-freshness-vitals-source-tracking-display: ready-for-dev
-  1-5-change-handshake-blocker-diff-review-sign-off-gate: backlog
+  1-4-data-freshness-vitals-source-tracking-display: review
+  1-5-change-handshake-blocker-diff-review-sign-off-gate: ready-for-dev
   1-6-lifecycle-to-payroll-clock-blocker-exit-countdown-escalation: backlog
   1-7-pre-flight-checklist-checks-gate-enforcement: backlog
   1-8-run-payroll-execution-prevented-error-counter: backlog
