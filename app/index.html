@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>payroll-webapp — Payroll Readiness</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #18202b;
+    --panel-2: #1f2937;
+    --line: #2b3645;
+    --txt: #e6edf3;
+    --muted: #93a1b1;
+    --green: #2ecc71;
+    --amber: #f5a623;
+    --red: #e74c3c;
+    --blue: #4f8cff;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: radial-gradient(1200px 600px at 70% -10%, #16202c 0%, var(--bg) 60%);
+    color: var(--txt);
+    min-height: 100vh;
+  }
+  header.app {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px; border-bottom: 1px solid var(--line);
+    background: rgba(15,20,25,.6); backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+  .brand small { display:block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .runinfo { text-align: right; font-size: 13px; color: var(--muted); }
+  .runinfo b { color: var(--txt); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+  .grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card h2 { margin: 0; padding: 16px 18px; font-size: 14px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .card .body { padding: 18px; }
+
+  /* Gauge */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 26px 18px 10px; }
+  .gauge { position: relative; width: 230px; height: 230px; }
+  .gauge svg { transform: rotate(-90deg); }
+  .gauge .pct { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .gauge .pct .num { font-size: 56px; font-weight: 800; line-height: 1; }
+  .gauge .pct .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+  .status-line { text-align: center; color: var(--muted); font-size: 14px; padding: 4px 18px 6px; }
+  .status-line b { color: var(--txt); }
+
+  .runbtn { display: block; width: calc(100% - 36px); margin: 8px 18px 20px; padding: 14px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: .15s; }
+  .runbtn.ready { background: var(--green); color: #06210f; }
+  .runbtn.ready:hover { filter: brightness(1.07); }
+  .runbtn.blocked { background: #36404d; color: var(--muted); cursor: not-allowed; }
+
+  /* Blockers list */
+  .blocker { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .blocker:last-child { border-bottom: 0; }
+  .blocker .ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 17px; flex: 0 0 auto; }
+  .blocker .ic.red { background: rgba(231,76,60,.15); color: var(--red); }
+  .blocker .ic.amber { background: rgba(245,166,35,.15); color: var(--amber); }
+  .blocker .meta { flex: 1; }
+  .blocker .meta .t { font-weight: 600; }
+  .blocker .meta .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .blocker .meta .tag { display:inline-block; margin-top:7px; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color: var(--muted); border:1px solid var(--line); border-radius: 20px; padding: 2px 9px; }
+  .blocker button { align-self: center; background: var(--blue); color: #021024; border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap; }
+  .blocker button:hover { filter: brightness(1.08); }
+  .resolved .meta .t { text-decoration: line-through; color: var(--muted); }
+  .resolved .ic { background: rgba(46,204,113,.15) !important; color: var(--green) !important; }
+
+  /* Vitals */
+  .vitals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 560px){ .vitals { grid-template-columns: 1fr; } }
+  .vital { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 13px; }
+  .vital .src { font-size: 13px; color: var(--muted); }
+  .vital .when { font-weight: 700; margin-top: 4px; display:flex; align-items:center; gap:7px; }
+  .pulse { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+  .pulse.green { background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1.6s infinite; }
+  .pulse.amber { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+  .pulse.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  .metrics { display:grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  .metric { background: var(--panel-2); border:1px solid var(--line); border-radius: 10px; padding: 15px; }
+  .metric .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing:.5px; }
+  .metric .v { font-size: 26px; font-weight: 800; margin-top: 6px; position: relative; }
+  .metric .v small { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .metric.good .v { color: var(--green); }
+  .metric .v.pulse-num { animation: countPulse .4s ease-out; }
+  @keyframes countPulse { 0% { transform: scale(1.3); color: var(--green); } 100% { transform: scale(1); } }
+
+  .clock { font-variant-numeric: tabular-nums; }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #06210f; font-weight: 700; padding: 13px 22px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: .25s; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .footnote { color: var(--muted); font-size: 12px; text-align:center; margin: 26px 0 8px; }
+
+  /* Errors Prevented Counter */
+  .prevented-counter { position: relative; display: inline-block; }
+  .prevented-badge { position: absolute; top: -8px; right: -8px; background: var(--green); color: #06210f; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 12px; box-shadow: 0 0 16px rgba(46,204,113,.4); animation: pulse-badge .6s ease-out; }
+  @keyframes pulse-badge { 0% { transform: scale(1.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  /* Vitals Timeline Modal */
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; }
+  .modal.show { display: flex; }
+  .modal-content { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); max-width: 540px; width: 90%; max-height: 70vh; overflow-y: auto; }
+  .modal-head { padding: 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .modal-head h3 { margin: 0; font-size: 16px; }
+  .modal-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 0; }
+  .modal-close:hover { color: var(--txt); }
+  .modal-body { padding: 18px; }
+
+  /* Timeline */
+  .timeline { position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .timeline-item { display: flex; gap: 16px; margin-bottom: 16px; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--line); border: 2px solid var(--panel); flex: 0 0 auto; position: relative; z-index: 1; }
+  .timeline-item.live .timeline-dot { background: var(--green); border-color: var(--green); box-shadow: 0 0 12px var(--green); animation: blink 1.6s infinite; }
+  .timeline-item.stale .timeline-dot { background: var(--amber); border-color: var(--amber); }
+  .timeline-item.dead .timeline-dot { background: var(--red); border-color: var(--red); }
+  .timeline-content { flex: 1; padding-top: 2px; }
+  .timeline-source { font-weight: 600; font-size: 14px; }
+  .timeline-time { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Change Handshake Modal */
+  .diff-table { width: 100%; font-size: 12px; margin-top: 12px; border-collapse: collapse; }
+  .diff-table td { padding: 8px; border-bottom: 1px solid var(--line); }
+  .diff-table .field { color: var(--muted); font-weight: 500; width: 120px; }
+  .diff-table .old { background: rgba(231,76,60,.1); color: var(--red); }
+  .diff-table .new { background: rgba(46,204,113,.1); color: var(--green); }
+  .diff-badge { display: inline-block; margin-top: 8px; padding: 2px 8px; background: rgba(245,166,35,.15); color: var(--amber); font-size: 11px; border-radius: 4px; text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
+  .change-review-btn { width: calc(100% - 0px); padding: 12px; margin-top: 12px; background: var(--blue); color: #021024; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  .change-review-btn:hover { filter: brightness(1.08); }
+
+  /* Blocker slide-out animation */
+  .blocker { animation: slideIn .3s ease-out; }
+  .blocker.exit { animation: slideOut .3s ease-in forwards; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes slideOut { to { opacity: 0; transform: translateX(20px); } }
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="brand">
+    <span class="dot" id="brandDot"></span>
+    <div>payroll-webapp <small>Readiness · June 2026 cycle · Acme Mfg Pvt Ltd</small></div>
+  </div>
+  <div class="runinfo">
+    Pay run due <b>30 Jun</b> · <b>248</b> employees<br/>
+    Time-to-First-Payroll: <b>2.1 business days</b> from data-complete
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <!-- LEFT: the readiness gauge -->
+    <section class="card">
+      <h2>Payroll Readiness Score</h2>
+      <div class="gauge-wrap">
+        <div class="gauge">
+          <svg width="230" height="230" viewBox="0 0 230 230">
+            <circle cx="115" cy="115" r="100" fill="none" stroke="#243042" stroke-width="18" />
+            <circle id="arc" cx="115" cy="115" r="100" fill="none" stroke="var(--amber)"
+                    stroke-width="18" stroke-linecap="round"
+                    stroke-dasharray="628" stroke-dashoffset="628" />
+          </svg>
+          <div class="pct"><span class="num" id="scoreNum">0</span><span class="lbl">ready</span></div>
+        </div>
+        <div class="status-line" id="statusLine">Reconciling upstream inputs…</div>
+      </div>
+      <button class="runbtn blocked" id="runBtn" disabled>🔒 Run Payroll — blocked by pre-flight</button>
+    </section>
+
+    <!-- RIGHT: blockers + supporting panels -->
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <section class="card">
+        <h2>What's blocking 100% — Pre-Flight Checklist</h2>
+        <div id="blockerList"></div>
+      </section>
+
+      <section class="card">
+        <h2>Data Freshness Vitals</h2>
+        <div class="body">
+          <div class="vitals">
+            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('essl')"><div class="src">Biometric (eSSL)</div><div class="when"><span class="pulse red"></span>Stale · 5 days</div></div>
+            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('hrms')"><div class="src">Leave (HRMS CSV)</div><div class="when"><span class="pulse amber"></span>12 hrs ago</div></div>
+            <div class="vital" style="cursor:pointer;" onclick="openVitalsModal('tally')"><div class="src">Finance (Tally)</div><div class="when"><span class="pulse green"></span>Live · 4 min</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>The two numbers we live by</h2>
+        <div class="body">
+          <div class="metrics">
+            <div class="metric good"><div class="k">First-pass accuracy</div><div class="v">99.6%<small> / target ≥99.5%</small></div></div>
+            <div class="metric good"><div class="k">Errors prevented this run</div><div class="v" id="preventedNum">0</div></div>
+            <div class="metric"><div class="k">Lifecycle clock — next F&amp;F</div><div class="v clock" id="ffClock">--:--:--</div></div>
+            <div class="metric"><div class="k">Time-to-First-Payroll</div><div class="v">2.1<small> biz days</small></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <p class="footnote">Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.</p>
+</main>
+
+<div class="toast" id="toast">✅ Payroll run completed — zero post-run corrections</div>
+
+<!-- Vitals Timeline Modal -->
+<div class="modal" id="vitalsModal">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h3 id="vitalsTitle">Source Sync Timeline</h3>
+      <button class="modal-close" onclick="closeVitalsModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="timeline" id="vitalsTimeline"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Handshake Modal -->
+<div class="modal" id="changeModal">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h3>Change Handshake — CTC Structure Diff</h3>
+      <button class="modal-close" onclick="closeChangeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin: 0 0 12px; color: var(--muted); font-size: 13px;">18 employee records changed since last payroll run. Finance pushed these edits. <strong>Payroll sign-off required to proceed.</strong></p>
+      <table class="diff-table">
+        <tr><td class="field">CTC ₹</td><td class="old">580,000 → <strong>615,000</strong></td><td>5 employees</td></tr>
+        <tr><td class="field">Basic %</td><td class="old">45% → <strong>50%</strong></td><td>Wage Code fix</td></tr>
+        <tr><td class="field">HRA Amt</td><td class="old">120,000 → <strong>125,000</strong></td><td>DA-linked rebase</td></tr>
+        <tr><td class="field">PF Amt</td><td class="new"><strong>Auto</strong> (recalc)</td><td>From new basic</td></tr>
+      </table>
+      <div class="diff-badge">⚠ AWAITING SIGN-OFF</div>
+      <button class="change-review-btn" onclick="signOffChanges()">✓ Review & Sign Off</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- Mock state: the live inputs to the Readiness Score ---
+  const blockers = [
+    { id:'exits',  sev:'red',   weight:18, icon:'⏳', title:'3 exits pending F&F',
+      desc:'F&F blocked on HR notice-waiver decision · legal deadline: 2 working days', tag:'Lifecycle Clock', action:'Settle' },
+    { id:'ctc',    sev:'amber', weight:16, icon:'✎', title:'18 unconfirmed CTC changes',
+      desc:'Finance pushed structure edits since last run · sign-off required', tag:'Change Handshake', action:'Review & sign' },
+    { id:'attend', sev:'red',   weight:12, icon:'📡', title:'Attendance stale — 5 days',
+      desc:'Biometric (eSSL) sync dead · LOP-sensitive payslips at risk', tag:'Freshness Vitals', action:'Re-sync' },
+    { id:'pf',     sev:'amber', weight:6,  icon:'₹',  title:'PF challan not generated',
+      desc:'Due by 15th · 248 employees · auto-fileable once inputs green', tag:'Compliance floor', action:'Generate' },
+  ];
+  const baseScore = 100 - blockers.reduce((s,b)=>s+b.weight,0); // starting score
+  const totalWeight = blockers.reduce((s,b)=>s+b.weight,0);
+  let resolved = new Set();
+  let prevented = 0;
+
+  const arc = document.getElementById('arc');
+  const scoreNum = document.getElementById('scoreNum');
+  const statusLine = document.getElementById('statusLine');
+  const runBtn = document.getElementById('runBtn');
+  const listEl = document.getElementById('blockerList');
+  const preventedNum = document.getElementById('preventedNum');
+  const brandDot = document.getElementById('brandDot');
+  const CIRC = 628; // 2*pi*100
+
+  function score(){
+    const regained = blockers.filter(b=>resolved.has(b.id)).reduce((s,b)=>s+b.weight,0);
+    return baseScore + regained;
+  }
+  function color(s){ return s>=100 ? 'var(--green)' : s>=80 ? 'var(--amber)' : 'var(--red)'; }
+
+  function renderGauge(animate){
+    const s = score();
+    const off = CIRC * (1 - s/100);
+    arc.style.transition = animate ? 'stroke-dashoffset .6s ease, stroke .4s' : 'none';
+    arc.style.strokeDashoffset = off;
+    arc.style.stroke = color(s);
+    scoreNum.textContent = s;
+    scoreNum.style.color = color(s);
+    brandDot.style.background = color(s);
+    brandDot.style.boxShadow = '0 0 12px ' + color(s);
+    const remaining = blockers.length - resolved.size;
+    if (s >= 100){
+      statusLine.innerHTML = '<b>All clear.</b> Confirm the green gauge — no fire drill.';
+      runBtn.className = 'runbtn ready';
+      runBtn.disabled = false;
+      runBtn.textContent = '▶ Run Payroll — 248 employees';
+    } else {
+      const parts = blockers.filter(b=>!resolved.has(b.id)).map(b=>b.title.toLowerCase());
+      statusLine.innerHTML = '<b>'+remaining+' blocker'+(remaining>1?'s':'')+'</b> · ' + parts.join(' · ');
+      runBtn.className = 'runbtn blocked';
+      runBtn.disabled = true;
+      runBtn.textContent = '🔒 Run Payroll — blocked by pre-flight';
+    }
+    preventedNum.textContent = prevented;
+  }
+
+  function renderList(){
+    listEl.innerHTML = '';
+    blockers.forEach(b=>{
+      const done = resolved.has(b.id);
+      const row = document.createElement('div');
+      row.className = 'blocker' + (done ? ' resolved' : '');
+      row.innerHTML =
+        '<div class="ic '+b.sev+'">'+(done?'✓':b.icon)+'</div>'+
+        '<div class="meta"><div class="t">'+b.title+'</div>'+
+        '<div class="d">'+b.desc+'</div><span class="tag">'+b.tag+'</span></div>'+
+        (done ? '' : '<button data-id="'+b.id+'">'+b.action+'</button>');
+      listEl.appendChild(row);
+    });
+    listEl.querySelectorAll('button').forEach(btn=>{
+      btn.onclick = ()=> {
+        if(btn.dataset.id === 'ctc') {
+          openChangeModal();
+        } else {
+          resolve(btn.dataset.id);
+        }
+      };
+    });
+  }
+
+  function resolve(id){
+    resolved.add(id);
+    prevented += 1;
+    renderList();
+    renderGauge(true);
+    // Animate the prevented counter with visual feedback
+    const prevEl = document.getElementById('preventedNum');
+    prevEl.classList.remove('pulse-num');
+    void prevEl.offsetWidth; // Trigger reflow to restart animation
+    prevEl.classList.add('pulse-num');
+    setTimeout(()=>prevEl.classList.remove('pulse-num'), 400);
+  }
+
+  // Lifecycle-to-Payroll Clock: live countdown to the legal 2-working-day F&F deadline
+  const ffClock = document.getElementById('ffClock');
+  let secs = 41*3600 + 12*60 + 5; // ~1.7 days remaining
+  setInterval(()=>{
+    secs = Math.max(0, secs-1);
+    const h = String(Math.floor(secs/3600)).padStart(2,'0');
+    const m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+    const s = String(secs%60).padStart(2,'0');
+    ffClock.textContent = h+':'+m+':'+s;
+    ffClock.style.color = secs < 12*3600 ? 'var(--red)' : secs < 24*3600 ? 'var(--amber)' : 'var(--txt)';
+  }, 1000);
+
+  // Vitals sync timeline data
+  const vitalsData = {
+    essl: {
+      name: 'Biometric (eSSL)',
+      status: 'dead',
+      timeline: [
+        { time: '5 days ago', status: 'live', desc: 'Last successful sync' },
+        { time: '4 days ago', status: 'stale', desc: 'API timeout · retried' },
+        { time: 'Now', status: 'dead', desc: 'Sync failed — auth token expired' }
+      ]
+    },
+    hrms: {
+      name: 'Leave (HRMS CSV)',
+      status: 'stale',
+      timeline: [
+        { time: '12 hours ago', status: 'live', desc: 'CSV uploaded' },
+        { time: 'Now', status: 'stale', desc: 'Awaiting next batch upload' }
+      ]
+    },
+    tally: {
+      name: 'Finance (Tally)',
+      status: 'live',
+      timeline: [
+        { time: '4 minutes ago', status: 'live', desc: 'Real-time API sync' },
+        { time: 'Next sync in 5 min', status: 'live', desc: 'Continuous polling active' }
+      ]
+    }
+  };
+
+  function openVitalsModal(source){
+    const data = vitalsData[source];
+    document.getElementById('vitalsTitle').textContent = data.name + ' — Sync Timeline';
+    const timeline = document.getElementById('vitalsTimeline');
+    timeline.innerHTML = '';
+    data.timeline.forEach((item,i)=>{
+      const div = document.createElement('div');
+      div.className = 'timeline-item '+item.status;
+      div.innerHTML =
+        '<div class="timeline-dot"></div>'+
+        '<div class="timeline-content">'+
+        '<div class="timeline-source">'+item.time+'</div>'+
+        '<div class="timeline-time">'+item.desc+'</div>'+
+        '</div>';
+      timeline.appendChild(div);
+    });
+    document.getElementById('vitalsModal').classList.add('show');
+  }
+
+  function closeVitalsModal(){
+    document.getElementById('vitalsModal').classList.remove('show');
+  }
+
+  function openChangeModal(){
+    document.getElementById('changeModal').classList.add('show');
+  }
+
+  function closeChangeModal(){
+    document.getElementById('changeModal').classList.remove('show');
+  }
+
+  function signOffChanges(){
+    closeChangeModal();
+    resolve('ctc');
+  }
+
+  // Close modals on background click
+  document.getElementById('vitalsModal').onclick = (e)=>{
+    if(e.target.id === 'vitalsModal') closeVitalsModal();
+  };
+  document.getElementById('changeModal').onclick = (e)=>{
+    if(e.target.id === 'changeModal') closeChangeModal();
+  };
+
+  // Run payroll -> toast
+  runBtn.onclick = ()=>{
+    if (runBtn.disabled) return;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 3200);
+  };
+
+  // init
+  renderList();
+  // animate the gauge filling from 0 on load
+  arc.style.strokeDashoffset = CIRC;
+  setTimeout(()=>renderGauge(true), 250);
+</script>
+</body>
+</html>
