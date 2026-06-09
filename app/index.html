@@ -146,9 +146,75 @@
   .blocker.exit { animation: slideOut .3s ease-in forwards; }
   @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes slideOut { to { opacity: 0; transform: translateX(20px); } }
+
+  /* Login Screen */
+  .login-screen { position: fixed; inset: 0; background: radial-gradient(1200px 600px at 70% -10%, #16202c 0%, var(--bg) 60%); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .login-screen.hidden { display: none; }
+  .login-box { width: 360px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; }
+  .login-box h1 { margin: 0 0 8px; font-size: 24px; color: var(--txt); }
+  .login-box .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .login-box .role-tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .login-box .role-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; border-bottom: 2px solid transparent; transition: .2s; }
+  .login-box .role-tab.active { color: var(--txt); border-bottom-color: var(--blue); }
+  .login-form { display: none; }
+  .login-form.active { display: block; }
+  .login-form .form-group { margin-bottom: 16px; }
+  .login-form label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+  .login-form input { width: 100%; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--txt); font-size: 14px; }
+  .login-form input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(79,140,255,.2); }
+  .login-form .error { color: var(--red); font-size: 12px; margin-top: 4px; }
+  .login-form .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .login-form button { width: 100%; padding: 12px; margin-top: 16px; background: var(--blue); color: #021024; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; transition: .2s; }
+  .login-form button:hover { filter: brightness(1.08); }
+  .login-form button:active { filter: brightness(0.95); }
+  .app-header-logout { position: absolute; top: 18px; right: 28px; padding: 8px 16px; background: rgba(255,255,255,.1); border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; }
+  .app-header-logout:hover { background: rgba(255,255,255,.15); color: var(--txt); }
 </style>
 </head>
 <body>
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>payroll-webapp</h1>
+    <div class="subtitle">Sign in to your account</div>
+
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="switchRole('hr')">HR Manager</button>
+      <button class="role-tab" onclick="switchRole('employee')">Employee</button>
+    </div>
+
+    <!-- HR Manager Login -->
+    <form class="login-form active" id="hrForm" onsubmit="handleLogin(event, 'hr')">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" placeholder="e.g., priya@acme.com" value="priya" />
+        <div class="hint">Demo: any username works</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" value="demo" />
+        <div class="hint">Demo: any password works</div>
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+
+    <!-- Employee Login -->
+    <form class="login-form" id="employeeForm" onsubmit="handleLogin(event, 'employee')">
+      <div class="form-group">
+        <label>Employee ID</label>
+        <input type="text" placeholder="e.g., EMP001" value="EMP001" />
+        <div class="hint">Demo: any ID works</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" value="demo" />
+        <div class="hint">Demo: any password works</div>
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
+</div>
+
 <header class="app">
   <div class="brand">
     <span class="dot" id="brandDot"></span>
@@ -158,9 +224,10 @@
     Pay run due <b>30 Jun</b> · <b>248</b> employees<br/>
     Time-to-First-Payroll: <b>2.1 business days</b> from data-complete
   </div>
+  <button class="app-header-logout" id="logoutBtn" onclick="logout()">Logout</button>
 </header>
 
-<main>
+<main id="appContent">
   <div class="grid">
     <!-- LEFT: the readiness gauge -->
     <section class="card">
@@ -438,7 +505,47 @@
     setTimeout(()=>t.classList.remove('show'), 3200);
   };
 
+  // --- Login System ---
+  function switchRole(role){
+    document.querySelectorAll('.role-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(role + 'Form').classList.add('active');
+  }
+
+  function handleLogin(event, role){
+    event.preventDefault();
+    const session = { role, user: event.target.querySelector('input').value, loginTime: new Date() };
+    localStorage.setItem('payroll_session', JSON.stringify(session));
+    showDashboard(role);
+  }
+
+  function logout(){
+    localStorage.removeItem('payroll_session');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('appContent').style.display = 'none';
+  }
+
+  function showDashboard(role){
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appContent').style.display = 'block';
+    if(role === 'employee') {
+      document.getElementById('appContent').innerHTML = '<div style="max-width:1180px;margin:0 auto;padding:28px;"><div class="card" style="text-align:center;"><h2>Employee Portal</h2><div class="card body" style="padding:60px;"><div style="font-size:28px;margin-bottom:16px;">📋</div><h3>My Payslips</h3><p style="color:var(--muted);margin:12px 0;">Your payslip history and F&F settlement status will appear here.</p><div style="margin-top:32px;color:var(--muted);"><strong>Session:</strong> ' + document.querySelector('.login-form.active input').value + '</div></div></div></div>';
+    }
+  }
+
+  function initAuth(){
+    const session = JSON.parse(localStorage.getItem('payroll_session') || 'null');
+    if(session) {
+      showDashboard(session.role);
+    } else {
+      document.getElementById('appContent').style.display = 'none';
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+  }
+
   // init
+  initAuth();
   renderList();
   // animate the gauge filling from 0 on load
   arc.style.strokeDashoffset = CIRC;
