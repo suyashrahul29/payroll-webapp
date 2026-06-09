@@ -6,31 +6,31 @@
 <title>payroll-webapp — Payroll Readiness</title>
 <style>
   :root {
-    --bg: #0f1419;
-    --panel: #18202b;
-    --panel-2: #1f2937;
-    --line: #2b3645;
-    --txt: #e6edf3;
-    --muted: #93a1b1;
-    --green: #2ecc71;
-    --amber: #f5a623;
-    --red: #e74c3c;
-    --blue: #4f8cff;
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --panel-2: #F5F7FA;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --blue: #0D9488;
     --radius: 14px;
-    --shadow: 0 6px 24px rgba(0,0,0,.35);
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-    background: radial-gradient(1200px 600px at 70% -10%, #16202c 0%, var(--bg) 60%);
+    background: #FFFFFF;
     color: var(--txt);
     min-height: 100vh;
   }
   header.app {
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 28px; border-bottom: 1px solid var(--line);
-    background: rgba(15,20,25,.6); backdrop-filter: blur(6px);
+    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
     position: sticky; top: 0; z-index: 10;
   }
   .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
@@ -58,24 +58,24 @@
   .status-line b { color: var(--txt); }
 
   .runbtn { display: block; width: calc(100% - 36px); margin: 8px 18px 20px; padding: 14px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: .15s; }
-  .runbtn.ready { background: var(--green); color: #06210f; }
-  .runbtn.ready:hover { filter: brightness(1.07); }
-  .runbtn.blocked { background: #36404d; color: var(--muted); cursor: not-allowed; }
+  .runbtn.ready { background: var(--green); color: #FFFFFF; }
+  .runbtn.ready:hover { filter: brightness(0.93); }
+  .runbtn.blocked { background: #E5E7EB; color: var(--muted); cursor: not-allowed; }
 
   /* Blockers list */
   .blocker { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
   .blocker:last-child { border-bottom: 0; }
   .blocker .ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 17px; flex: 0 0 auto; }
-  .blocker .ic.red { background: rgba(231,76,60,.15); color: var(--red); }
-  .blocker .ic.amber { background: rgba(245,166,35,.15); color: var(--amber); }
+  .blocker .ic.red { background: rgba(220,38,38,.1); color: var(--red); }
+  .blocker .ic.amber { background: rgba(217,119,6,.1); color: var(--amber); }
   .blocker .meta { flex: 1; }
   .blocker .meta .t { font-weight: 600; }
   .blocker .meta .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .blocker .meta .tag { display:inline-block; margin-top:7px; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color: var(--muted); border:1px solid var(--line); border-radius: 20px; padding: 2px 9px; }
-  .blocker button { align-self: center; background: var(--blue); color: #021024; border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap; }
+  .blocker button { align-self: center; background: var(--blue); color: #FFFFFF; border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 600; cursor: pointer; font-size: 13px; white-space: nowrap; }
   .blocker button:hover { filter: brightness(1.08); }
   .resolved .meta .t { text-decoration: line-through; color: var(--muted); }
-  .resolved .ic { background: rgba(46,204,113,.15) !important; color: var(--green) !important; }
+  .resolved .ic { background: rgba(22,163,74,.1) !important; color: var(--green) !important; }
 
   /* Vitals */
   .vitals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -99,13 +99,13 @@
   @keyframes countPulse { 0% { transform: scale(1.3); color: var(--green); } 100% { transform: scale(1); } }
 
   .clock { font-variant-numeric: tabular-nums; }
-  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #06210f; font-weight: 700; padding: 13px 22px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: .25s; }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #FFFFFF; font-weight: 700; padding: 13px 22px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: .25s; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .footnote { color: var(--muted); font-size: 12px; text-align:center; margin: 26px 0 8px; }
 
   /* Errors Prevented Counter */
   .prevented-counter { position: relative; display: inline-block; }
-  .prevented-badge { position: absolute; top: -8px; right: -8px; background: var(--green); color: #06210f; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 12px; box-shadow: 0 0 16px rgba(46,204,113,.4); animation: pulse-badge .6s ease-out; }
+  .prevented-badge { position: absolute; top: -8px; right: -8px; background: var(--green); color: #FFFFFF; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 12px; box-shadow: 0 0 16px rgba(22,163,74,.3); animation: pulse-badge .6s ease-out; }
   @keyframes pulse-badge { 0% { transform: scale(1.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
   /* Vitals Timeline Modal */
@@ -135,10 +135,10 @@
   .diff-table { width: 100%; font-size: 12px; margin-top: 12px; border-collapse: collapse; }
   .diff-table td { padding: 8px; border-bottom: 1px solid var(--line); }
   .diff-table .field { color: var(--muted); font-weight: 500; width: 120px; }
-  .diff-table .old { background: rgba(231,76,60,.1); color: var(--red); }
-  .diff-table .new { background: rgba(46,204,113,.1); color: var(--green); }
-  .diff-badge { display: inline-block; margin-top: 8px; padding: 2px 8px; background: rgba(245,166,35,.15); color: var(--amber); font-size: 11px; border-radius: 4px; text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
-  .change-review-btn { width: calc(100% - 0px); padding: 12px; margin-top: 12px; background: var(--blue); color: #021024; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  .diff-table .old { background: rgba(220,38,38,.1); color: var(--red); }
+  .diff-table .new { background: rgba(22,163,74,.1); color: var(--green); }
+  .diff-badge { display: inline-block; margin-top: 8px; padding: 2px 8px; background: rgba(217,119,6,.1); color: var(--amber); font-size: 11px; border-radius: 4px; text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
+  .change-review-btn { width: calc(100% - 0px); padding: 12px; margin-top: 12px; background: var(--blue); color: #FFFFFF; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
   .change-review-btn:hover { filter: brightness(1.08); }
 
   /* Blocker slide-out animation */
@@ -148,7 +148,7 @@
   @keyframes slideOut { to { opacity: 0; transform: translateX(20px); } }
 
   /* Login Screen */
-  .login-screen { position: fixed; inset: 0; background: radial-gradient(1200px 600px at 70% -10%, #16202c 0%, var(--bg) 60%); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .login-screen { position: fixed; inset: 0; background: #FFFFFF; display: flex; align-items: center; justify-content: center; z-index: 1000; }
   .login-screen.hidden { display: none; }
   .login-box { width: 360px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; }
   .login-box h1 { margin: 0 0 8px; font-size: 24px; color: var(--txt); }
@@ -160,15 +160,15 @@
   .login-form.active { display: block; }
   .login-form .form-group { margin-bottom: 16px; }
   .login-form label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
-  .login-form input { width: 100%; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--txt); font-size: 14px; }
-  .login-form input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(79,140,255,.2); }
+  .login-form input { width: 100%; padding: 10px 12px; background: #F9FAFB; border: 1px solid var(--line); border-radius: 8px; color: var(--txt); font-size: 14px; }
+  .login-form input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.1); }
   .login-form .error { color: var(--red); font-size: 12px; margin-top: 4px; }
   .login-form .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
-  .login-form button { width: 100%; padding: 12px; margin-top: 16px; background: var(--blue); color: #021024; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; transition: .2s; }
+  .login-form button { width: 100%; padding: 12px; margin-top: 16px; background: var(--blue); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; transition: .2s; }
   .login-form button:hover { filter: brightness(1.08); }
   .login-form button:active { filter: brightness(0.95); }
-  .app-header-logout { position: absolute; top: 18px; right: 28px; padding: 8px 16px; background: rgba(255,255,255,.1); border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; }
-  .app-header-logout:hover { background: rgba(255,255,255,.15); color: var(--txt); }
+  .app-header-logout { position: absolute; top: 18px; right: 28px; padding: 8px 16px; background: #F3F4F6; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; }
+  .app-header-logout:hover { background: #E5E7EB; color: var(--txt); }
 </style>
 </head>
 <body>
@@ -235,7 +235,7 @@
       <div class="gauge-wrap">
         <div class="gauge">
           <svg width="230" height="230" viewBox="0 0 230 230">
-            <circle cx="115" cy="115" r="100" fill="none" stroke="#243042" stroke-width="18" />
+            <circle cx="115" cy="115" r="100" fill="none" stroke="#E5E7EB" stroke-width="18" />
             <circle id="arc" cx="115" cy="115" r="100" fill="none" stroke="var(--amber)"
                     stroke-width="18" stroke-linecap="round"
                     stroke-dasharray="628" stroke-dashoffset="628" />
