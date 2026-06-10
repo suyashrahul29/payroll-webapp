@@ -38,7 +38,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-06-09
-last_updated: 2026-06-10T10:00:00Z
+last_updated: 2026-06-11T00:00:00Z
 project: payroll-webapp
 project_key: NOKEY
 tracking_system: file-system
@@ -68,7 +68,7 @@ development_status:
 
   2-1-compliance-rules-database-rule-versioning: done
   2-2-pure-calculation-core-statutory-computation-pf-esi-tds-pt: done
-  2-3-payslip-rendering-statutory-outputs-to-pdf-display: backlog
+  2-3-payslip-rendering-statutory-outputs-to-pdf-display: done
   2-4-multi-state-payslip-compliance-jurisdiction-specific-outputs: backlog
 
   epic-2-retrospective: optional
@@ -114,7 +114,7 @@ development_status:
 
   6-1-adapter-pattern-foundation-biometric-webhook-receiver: done
   6-2-finance-source-pollers-tally-zoho-books-quickbooks: backlog
-  6-3-bank-disbursement-instruction-file-generation: backlog
+  6-3-bank-disbursement-instruction-file-generation: done
   6-4-csv-employee-master-import-with-validation: done
   6-5-source-freshness-heartbeat-integration-with-readiness-dashboard: done
 

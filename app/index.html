@@ -298,6 +298,14 @@
         <div class="status-line" id="statusLine">Reconciling upstream inputs…</div>
       </div>
       <button class="runbtn blocked" id="runBtn" disabled>🔒 Run Payroll — blocked by pre-flight</button>
+      <a id="payslipLink" href="./payslip.html" target="_blank"
+         style="display:none;margin:0 18px 16px;padding:10px 14px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--txt);font-size:13px;font-weight:600;text-decoration:none;text-align:center;">
+        📄 View Payslips
+      </a>
+      <a id="disbursementLink" href="./disbursement.html" target="_blank"
+         style="display:none;margin:0 18px 16px;padding:10px 14px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--txt);font-size:13px;font-weight:600;text-decoration:none;text-align:center;">
+        ⬇ Disbursement File
+      </a>
     </section>
 
     <!-- RIGHT: blockers + supporting panels -->
@@ -654,6 +662,11 @@
   function confirmPayrollRun() {
     if (runInProgress) return; // P1: guard against double-click
     runInProgress = true;
+    // Hide links from the previous run before starting a new one
+    const _pl = document.getElementById('payslipLink');
+    if (_pl) _pl.style.display = 'none';
+    const _dl = document.getElementById('disbursementLink');
+    if (_dl) _dl.style.display = 'none';
     closeRunConfirmModal();
     const runPreventedCount = prevented; // AC-4: capture at confirm time
     runBtn.className = 'runbtn blocked';
@@ -666,6 +679,40 @@
         completePayrollRun(runPreventedCount);
       }
     }, 1500);
+  }
+
+  function buildMockDisbursementRecord(runId, period) {
+    if (!period) {
+      const now = new Date();
+      period = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    }
+    if (!runId) runId = 'RUN-' + period + '-' + String(Date.now()).slice(-3);
+    const [yr, mo] = period.split('-').map(Number);
+    const lastDay = new Date(yr, mo, 0).getDate();
+    const paymentDate = yr + '-' + String(mo).padStart(2, '0') + '-' + String(lastDay).padStart(2, '0');
+    const mockEmployees = [
+      { employeeId: 'EMP001', name: 'Aditya Sharma',   bankName: 'HDFC Bank',  accountNumber: '50100123456789', ifsc: 'HDFC0001234', netPayPaise: 4800000  },
+      { employeeId: 'EMP002', name: 'Priya Nair',       bankName: 'SBI',        accountNumber: '20123456789012', ifsc: 'SBIN0001234', netPayPaise: 3500000  },
+      { employeeId: 'EMP003', name: 'Rajan Pillai',     bankName: 'ICICI Bank', accountNumber: '006501234567',   ifsc: 'ICIC0001234', netPayPaise: 21000000 },
+      { employeeId: 'EMP004', name: 'Meena Krishnan',   bankName: 'Axis Bank',  accountNumber: '91512345678901', ifsc: 'UTIB0001234', netPayPaise: 6200000  },
+      { employeeId: 'EMP005', name: 'Sameer Desai',     bankName: 'SBI',        accountNumber: '20198765432101', ifsc: 'SBIN0005678', netPayPaise: 4100000  },
+    ];
+    mockEmployees.forEach(e => {
+      e.paymentMode = e.netPayPaise >= 20000000 ? 'RTGS' : 'NEFT';
+    });
+    const totalPayoutPaise = mockEmployees.reduce((sum, e) => sum + e.netPayPaise, 0);
+    return {
+      runId,
+      paymentDate,
+      period,
+      companyName: 'Acme Pvt Ltd',
+      debitAccountNo: '12000000000001',
+      debitIfsc: 'HDFC0000001',
+      generatedAt: new Date().toISOString(),
+      employees: mockEmployees,
+      totalPayoutPaise,
+      employeeCount: mockEmployees.length,
+    };
   }
 
   function completePayrollRun(runPreventedCount) {
@@ -683,6 +730,45 @@
     prevEl.classList.add('pulse-num');
     setTimeout(() => prevEl.classList.remove('pulse-num'), 400);
     showToast('✅ Payroll run completed — zero post-run corrections');
+    // Write payslip to localStorage so payslip.html can render it
+    const payslipRecord = {
+      runId: 'RUN-2026-06-' + String(Date.now()).slice(-3),
+      paymentDate: new Date().toISOString().slice(0, 10),
+      period: { year: 2026, month: 6, periodString: '2026-06' },
+      employee: {
+        employeeId: 'EMP001', name: 'Aditya Sharma', department: 'Engineering',
+        basicSalaryPaise: 2500000, grossSalaryPaise: 5000000,
+        ctcAnnualPaise: 70000000, jurisdiction: 'MH',
+        pfOptOut: false, esiApplicable: false,
+      },
+      outputs: {
+        grossPaise: 5000000, pfEmployeePaise: 180000, pfEmployerPaise: 180000,
+        esiEmployeePaise: 0, esiEmployerPaise: 0, tdsPaise: 0, ptPaise: 20000,
+        totalDeductionsPaise: 200000, netPayPaise: 4800000,
+        appliedRules: { pf: 'pf-in-2025-04', esi: 'esi-in-2025-04', tds: 'tds-in-2025-04', pt: 'pt-mh-2025-04' },
+      },
+      uan: 'MH/45678/01234', esiNumber: '', pan: 'ABCDE1234F',
+      pfAccountNumber: 'MH/MUM/0012345/000/0001234',
+      companyName: 'Acme Pvt Ltd', companyAddress: 'Mumbai, Maharashtra', companyPan: 'AABCA1234D',
+    };
+    try {
+      localStorage.setItem('payslip_current', JSON.stringify(payslipRecord));
+    } catch(e) { /* localStorage may be unavailable */ }
+    // Show payslips link
+    const payslipLink = document.getElementById('payslipLink');
+    if (payslipLink) payslipLink.style.display = 'inline-flex';
+    // Write disbursement record — use same runId as payslip so both documents match
+    let disbWritten = false;
+    try {
+      const disbRecord = buildMockDisbursementRecord(payslipRecord.runId, payslipRecord.period.periodString);
+      localStorage.setItem('disbursement_current', JSON.stringify(disbRecord));
+      disbWritten = true;
+    } catch(e) { /* localStorage may be unavailable */ }
+    // Only show disbursement link when the record was actually written
+    if (disbWritten) {
+      const disbLink = document.getElementById('disbursementLink');
+      if (disbLink) disbLink.style.display = 'inline-flex';
+    }
     // AC-5: reset for next cycle after 2s
     setTimeout(resetCycle, 2000);
   }
@@ -718,6 +804,7 @@
     sources[0].last_synced_at = new Date(Date.now() - 5*86400*1000);
     renderList();
     renderGauge(false); // no sweep animation on reset
+    // payslipLink and disbursementLink remain visible until the next run starts (confirmPayrollRun hides them)
   }
 
   // Lifecycle-to-Payroll Clock: live countdown to the legal 2-working-day F&F deadline

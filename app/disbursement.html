@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Disbursement File — Greenlit Payroll</title>
+<style>
+  /* ── Design tokens (mirrors index.html) ── */
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --blue: #0D9488;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+  }
+
+  /* ── Screen header ── */
+  header.app {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+  .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--panel);
+    color: var(--txt);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--line); }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+  .btn-primary:hover { background: #15803d; }
+
+  /* ── Main layout ── */
+  main { max-width: 1100px; margin: 32px auto; padding: 0 24px 48px; }
+
+  /* ── Run summary header ── */
+  .run-header {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .run-header h1 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--txt);
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 10px;
+  }
+  .run-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .meta-value { font-size: 14px; font-weight: 700; color: var(--txt); }
+  .meta-value.highlight { color: var(--green); font-size: 16px; }
+
+  /* ── Table card ── */
+  .table-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .table-card thead tr {
+    background: var(--panel);
+    border-bottom: 2px solid var(--line);
+  }
+  .table-card th {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .table-card th:last-child,
+  .table-card td:last-child { text-align: center; }
+  .table-card th.num-col,
+  .table-card td.num-col { text-align: right; font-variant-numeric: tabular-nums; }
+  .table-card td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--txt);
+  }
+  .table-card tbody tr:last-child td { border-bottom: none; }
+  .table-card tbody tr:hover { background: #f9fafb; }
+
+  /* Payment mode badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-neft { background: rgba(13,148,136,.12); color: var(--blue); }
+  .badge-rtgs { background: rgba(217,119,6,.12); color: var(--amber); }
+
+  /* ── Actions bar ── */
+  .actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .actions-bar h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--txt);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .run-meta { grid-template-columns: 1fr 1fr; }
+    .table-card { overflow-x: auto; }
+  }
+
+  /* ════════════════════════════════════════════════
+     PRINT — A4 landscape, white, no chrome
+     ════════════════════════════════════════════════ */
+  @media print {
+    :root {
+      --bg: #ffffff;
+      --surface: #f8f8f8;
+      --panel: #f8f8f8;
+      --txt: #111111;
+      --muted: #555555;
+      --line: #dddddd;
+    }
+    .no-print { display: none !important; }
+    header.app { display: none !important; }
+    body { background: white; }
+    main { max-width: 100%; margin: 0; padding: 0; }
+    .run-header { box-shadow: none; border-radius: 0; }
+    .table-card { box-shadow: none; border-radius: 0; }
+    @page {
+      size: A4 landscape;
+      margin: 12mm;
+    }
+    .table-card table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Screen header (hidden on print) ── -->
+<header class="app no-print">
+  <div class="brand">
+    <div class="dot"></div>
+    Greenlit Payroll
+  </div>
+  <div class="header-actions">
+    <a href="./index.html" class="btn">← Back to Dashboard</a>
+    <button class="btn btn-primary" onclick="downloadCSV()">⬇ Download CSV</button>
+  </div>
+</header>
+
+<main>
+  <!-- Run summary header -->
+  <div class="run-header">
+    <h1>Bank Disbursement Instruction</h1>
+    <div class="run-meta" id="runMeta">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- Employee table -->
+  <div class="actions-bar">
+    <h2>Employee Payout List</h2>
+    <button class="btn btn-primary no-print" onclick="downloadCSV()">⬇ Download CSV</button>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Bank Name</th>
+          <th>Account Number</th>
+          <th>IFSC Code</th>
+          <th class="num-col">Net Pay (₹)</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody id="employeeTableBody">
+        <!-- populated by JS -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+  /* ── Escape HTML ── */
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  /* ── Format paise as ₹ with Indian lakh grouping (for header total) ── */
+  function formatPaiseIN(paise) {
+    const rupees = paise / 100;
+    return '₹' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(rupees);
+  }
+
+  /* ── Format paise as plain rupee decimal (for table + CSV per AC-6) ── */
+  function formatPaisePlain(paise) {
+    return (paise / 100).toFixed(2);
+  }
+
+  /* ── Format ISO date for display — parse date-only strings as local noon to avoid UTC off-by-one in IST ── */
+  function fmtDate(iso) {
+    const s = String(iso);
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(s + 'T12:00:00') : new Date(s);
+    return isNaN(d) ? iso : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  /* ── CSV quoting helper — also guards against spreadsheet formula injection ── */
+  function csvQuote(str) {
+    const s = String(str);
+    // Prefix formula-trigger characters so Excel/Sheets don't evaluate the cell
+    const prefixed = /^[=+\-@]/.test(s) ? '\t' + s : s;
+    if (prefixed.includes(',') || prefixed.includes('"') || prefixed.includes('\n')) {
+      return '"' + prefixed.replace(/"/g, '""') + '"';
+    }
+    return prefixed;
+  }
+
+  /* ── Shared sort: deterministic order by employeeId ascending ── */
+  function getSortedEmployees(record) {
+    return record.employees.slice().sort((a, b) => a.employeeId.localeCompare(b.employeeId));
+  }
+
+  /* ── AC-5: Pure CSV generator — no DOM access, deterministic order by employeeId ── */
+  function generateDisbursementCSV(record) {
+    const header = [
+      'Sr. No.', 'Employee ID', 'Employee Name', 'Bank Name',
+      'Account Number', 'IFSC Code', 'Net Pay (INR)', 'Payment Mode',
+      'Narration', 'Debit Account', 'Debit IFSC'
+    ].join(',');
+    const sorted = getSortedEmployees(record);
+    const rows = sorted.map((e, i) => [
+      i + 1,
+      csvQuote(e.employeeId),
+      csvQuote(e.name),
+      csvQuote(e.bankName),
+      csvQuote(e.accountNumber),
+      csvQuote(e.ifsc),
+      formatPaisePlain(e.netPayPaise),
+      e.paymentMode,
+      csvQuote('Salary ' + record.period),
+      csvQuote(record.debitAccountNo),
+      csvQuote(record.debitIfsc),
+    ].join(','));
+    return [header, ...rows].join('\n');
+  }
+
+  /* ── AC-4: Download CSV via Blob URL ── */
+  function downloadCSV() {
+    if (!currentRecord) return;
+    const csv = generateDisbursementCSV(currentRecord);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'payroll-disbursement-' + currentRecord.period + '-' + currentRecord.runId + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /* ── AC-8: Mock fallback (5 representative employees) ── */
+  const MOCK_DISBURSEMENT = {
+    runId: 'RUN-2026-06-001',
+    paymentDate: '2026-06-30',
+    period: '2026-06',
+    companyName: 'Acme Pvt Ltd',
+    debitAccountNo: '12000000000001',
+    debitIfsc: 'HDFC0000001',
+    generatedAt: '2026-06-10T12:00:00.000Z',
+    employees: [
+      { employeeId: 'EMP001', name: 'Aditya Sharma',  bankName: 'HDFC Bank',  accountNumber: '50100123456789', ifsc: 'HDFC0001234', netPayPaise: 4800000,  paymentMode: 'NEFT' },
+      { employeeId: 'EMP002', name: 'Priya Nair',     bankName: 'SBI',        accountNumber: '20123456789012', ifsc: 'SBIN0001234', netPayPaise: 3500000,  paymentMode: 'NEFT' },
+      { employeeId: 'EMP003', name: 'Rajan Pillai',   bankName: 'ICICI Bank', accountNumber: '006501234567',   ifsc: 'ICIC0001234', netPayPaise: 21000000, paymentMode: 'RTGS' },
+      { employeeId: 'EMP004', name: 'Meena Krishnan', bankName: 'Axis Bank',  accountNumber: '91512345678901', ifsc: 'UTIB0001234', netPayPaise: 6200000,  paymentMode: 'NEFT' },
+      { employeeId: 'EMP005', name: 'Sameer Desai',   bankName: 'SBI',        accountNumber: '20198765432101', ifsc: 'SBIN0005678', netPayPaise: 4100000,  paymentMode: 'NEFT' },
+    ],
+    totalPayoutPaise: 39600000,
+    employeeCount: 5,
+  };
+
+  /* ── AC-3: Render header and table ── */
+  function renderPage(record) {
+    const periodDisplay = new Date(record.period + '-01')
+      .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+
+    document.title = 'Disbursement — ' + record.runId + ' — Greenlit Payroll';
+
+    document.getElementById('runMeta').innerHTML = `
+      <div class="meta-item">
+        <span class="meta-label">Run ID</span>
+        <span class="meta-value">${esc(record.runId)}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Period</span>
+        <span class="meta-value">${esc(periodDisplay)}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Payment Date</span>
+        <span class="meta-value">${esc(fmtDate(record.paymentDate))}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Company</span>
+        <span class="meta-value">${esc(record.companyName)}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Total Payout</span>
+        <span class="meta-value highlight">${esc(formatPaiseIN(record.totalPayoutPaise))}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Employees</span>
+        <span class="meta-value">${esc(record.employeeCount)}</span>
+      </div>
+    `;
+
+    const sorted = getSortedEmployees(record);
+    const rows = sorted.map((e, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${esc(e.employeeId)}</td>
+        <td>${esc(e.name)}</td>
+        <td>${esc(e.bankName)}</td>
+        <td style="font-family:monospace;letter-spacing:.3px">${esc(e.accountNumber)}</td>
+        <td style="font-family:monospace">${esc(e.ifsc)}</td>
+        <td class="num-col">${esc(formatPaisePlain(e.netPayPaise))}</td>
+        <td><span class="badge ${e.paymentMode === 'RTGS' ? 'badge-rtgs' : 'badge-neft'}">${esc(e.paymentMode)}</span></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('employeeTableBody').innerHTML = rows;
+  }
+
+  /* ── Boot: read localStorage or fall back to mock ── */
+  let currentRecord = null;
+  (function init() {
+    try {
+      const stored = localStorage.getItem('disbursement_current');
+      if (stored) currentRecord = JSON.parse(stored);
+    } catch(e) { /* localStorage unavailable or corrupt */ }
+    currentRecord = currentRecord || MOCK_DISBURSEMENT;
+    renderPage(currentRecord);
+  })();
+</script>
+</body>
+</html>
