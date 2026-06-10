@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Employee Portal — payroll-webapp</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --panel-2: #F5F7FA;
+    --panel-subtle: #FAFBFC;
+    --surface: #F3F4F6;
+    --input-bg: #F9FAFB;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --blue: #0D9488;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header.app {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px; border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; text-decoration: none; color: var(--txt); }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 12px var(--blue); }
+  .brand small { display:block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .name-chip { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--txt); }
+  .tenant-badge { background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.3); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--green); font-weight: 600; }
+  .logout-btn { padding: 8px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: none; transition: .15s; }
+  .logout-btn:hover { background: var(--line); color: var(--txt); }
+
+  /* ── Login ── */
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); padding: 24px; }
+  .login-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 36px 32px; }
+  .login-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+  .login-brand .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 10px var(--blue); }
+  .login-heading { font-size: 22px; font-weight: 800; margin: 0 0 4px; color: var(--txt); }
+  .login-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+  .form-group input {
+    width: 100%; padding: 11px 13px; background: var(--input-bg);
+    border: 1px solid var(--line); border-radius: 8px;
+    color: var(--txt); font-size: 14px; font-family: inherit;
+    transition: .15s;
+  }
+  .form-group input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(13,148,136,.12); }
+  .login-btn {
+    width: 100%; padding: 13px; margin-top: 8px;
+    background: var(--blue); color: var(--bg);
+    border: none; border-radius: 9px;
+    font-weight: 700; font-size: 15px; cursor: pointer;
+    transition: .15s; min-height: 48px;
+  }
+  .login-btn:hover { filter: brightness(1.08); }
+  .login-btn:active { filter: brightness(0.95); }
+  .login-error { color: var(--red); font-size: 13px; margin-top: 12px; padding: 10px 13px; background: rgba(220,38,38,.06); border: 1px solid rgba(220,38,38,.15); border-radius: 8px; display: none; }
+  .login-error.show { display: block; }
+  .login-hint { color: var(--muted); font-size: 12px; margin-top: 20px; text-align: center; line-height: 1.6; }
+  .login-hint code { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+
+  /* ── Dashboard ── */
+  main.portal { max-width: 900px; margin: 0 auto; padding: 28px; }
+  @media (max-width: 600px) { main.portal { padding: 16px; } }
+
+  /* ── Tabs ── */
+  .tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--line); margin-bottom: 24px; }
+  .tab-btn {
+    padding: 11px 22px; border: none; background: none;
+    color: var(--muted); font-size: 14px; font-weight: 600;
+    cursor: pointer; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: .15s; font-family: inherit;
+    min-height: 44px;
+  }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn:hover:not(.active) { color: var(--txt); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Card ── */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card-head { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .card-head h2 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+  .card-body { padding: 0; }
+
+  /* ── Payslip rows ── */
+  .payslip-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; gap: 12px; flex-wrap: wrap;
+  }
+  .payslip-month { font-weight: 700; font-size: 15px; flex: 1; min-width: 100px; }
+  .payslip-amounts { display: flex; gap: 24px; flex-wrap: wrap; }
+  .payslip-amt-item { text-align: right; }
+  .payslip-amt-item .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .payslip-amt-item .value { font-size: 15px; font-weight: 700; margin-top: 2px; }
+  .payslip-amt-item .value.net { color: var(--green); }
+  .view-btn {
+    padding: 8px 16px; background: var(--blue); color: var(--bg);
+    border: none; border-radius: 8px; font-weight: 600;
+    font-size: 13px; cursor: pointer; transition: .15s;
+    white-space: nowrap; min-height: 36px;
+  }
+  .view-btn:hover { filter: brightness(1.08); }
+
+  /* ── Payslip expanded detail ── */
+  .payslip-detail {
+    display: none; background: var(--panel-subtle); border-top: 1px solid var(--line);
+    padding: 20px; animation: fadeDown .2s ease-out;
+  }
+  .payslip-detail.open { display: block; }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; }
+  .detail-item .dk { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .detail-item .dv { font-size: 16px; font-weight: 700; margin-top: 4px; }
+  .detail-item .dv.net { color: var(--green); }
+  .detail-item .dv.deduct { color: var(--red); }
+
+  .detail-actions { display: flex; gap: 10px; margin-top: 16px; }
+  .pdf-btn {
+    padding: 9px 18px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--muted); border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s;
+    min-height: 40px;
+  }
+  .pdf-btn:hover { background: var(--panel); color: var(--txt); }
+
+  /* ── Earnings / Deductions two-column table ── */
+  .ps-earn-deduct { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+  .ps-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .ps-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .ps-table td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .ps-table tr:last-child td { border-bottom: none; }
+  .ps-table td:last-child { text-align: right; font-weight: 600; white-space: nowrap; }
+  .ps-table td.deduct { color: var(--red); }
+
+  /* ── Net pay box ── */
+  .net-pay-box {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.25);
+    border-radius: 10px; padding: 14px 18px; margin: 14px 0;
+  }
+  .net-pay-box .np-label { font-size: 13px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .5px; }
+  .net-pay-box .np-value { font-size: 22px; font-weight: 800; color: var(--green); }
+
+  /* ── Statutory disclosures ── */
+  .ps-disclosures {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px; margin-top: 14px;
+  }
+  .disc-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 10px; }
+  .disc-grid { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-bottom: 10px; }
+  .disc-item { display: flex; flex-direction: column; gap: 2px; }
+  .disc-k { font-size: 10px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+  .disc-v { font-size: 13px; font-weight: 700; font-family: monospace; color: var(--txt); }
+  .disc-notice { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; font-style: italic; }
+
+  /* ── Pagination ── */
+  .pagination-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-top: 1px solid var(--line);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .pagination-info { font-size: 13px; color: var(--muted); }
+  .pagination-btns { display: flex; gap: 8px; }
+  .page-btn {
+    padding: 7px 16px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--txt); border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s;
+    min-height: 36px; font-family: inherit;
+  }
+  .page-btn:hover:not(:disabled) { background: var(--panel); }
+  .page-btn:disabled { opacity: 0.35; cursor: default; }
+
+  /* ── F&F card ── */
+  .ff-card { padding: 24px; }
+  .ff-title { font-size: 18px; font-weight: 800; margin: 0 0 18px; }
+  .ff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .ff-item .fk { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .ff-item .fv { font-size: 16px; font-weight: 700; margin-top: 5px; }
+  .ff-item .fv.amount { color: var(--green); }
+  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+  .status-badge.pending { background: rgba(217,119,6,.1); color: var(--amber); border: 1px solid rgba(217,119,6,.3); }
+  .status-badge.settled { background: rgba(22,163,74,.1); color: var(--green); border: 1px solid rgba(22,163,74,.3); }
+  .ff-note { margin-top: 18px; padding: 13px 16px; background: rgba(217,119,6,.06); border: 1px solid rgba(217,119,6,.2); border-radius: 10px; font-size: 13px; color: var(--amber); }
+
+  /* ── F&F Settled confirmation header ── */
+  .ff-settled-header {
+    display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px;
+    padding: 16px; background: rgba(22,163,74,.06);
+    border: 1px solid rgba(22,163,74,.2); border-radius: 10px;
+  }
+  .ff-settled-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(22,163,74,.12); color: var(--green);
+    font-size: 18px; font-weight: 800; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .ff-settled-title { font-size: 18px; font-weight: 800; color: var(--green); }
+  .ff-settled-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+  /* ── Security violation banner ── */
+  .security-banner {
+    position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .security-banner .inner {
+    background: var(--bg); border: 2px solid var(--red); border-radius: var(--radius);
+    padding: 32px; max-width: 400px; text-align: center;
+  }
+  .security-banner .icon { font-size: 40px; margin-bottom: 12px; }
+  .security-banner h2 { margin: 0 0 8px; color: var(--red); font-size: 20px; }
+  .security-banner p { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+  .security-banner button {
+    padding: 12px 28px; background: var(--red); color: var(--bg);
+    border: none; border-radius: 8px; font-weight: 700; cursor: pointer;
+    font-size: 14px; min-height: 44px;
+  }
+
+  /* ── Empty state ── */
+  .empty-state { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    header.app { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+    .payslip-row { flex-direction: column; align-items: flex-start; }
+    .payslip-amounts { flex-direction: column; gap: 8px; }
+    .payslip-amt-item { text-align: left; }
+    .login-card { padding: 28px 20px; }
+    .tab-btn { padding: 10px 14px; font-size: 13px; }
+    .detail-grid { grid-template-columns: 1fr 1fr; }
+    .ff-grid { grid-template-columns: 1fr 1fr; }
+    .ff-settled-header { flex-direction: column; gap: 10px; }
+    .ps-earn-deduct { grid-template-columns: 1fr; }
+    .net-pay-box .np-value { font-size: 18px; }
+    .view-btn { min-height: 44px; padding: 10px 16px; }
+    .pdf-btn { min-height: 44px; }
+  }
+
+  /* ── Print styles ── */
+  @media print {
+    header.app, .login-wrap, #loginWrap, #appHeader,
+    .tab-bar, .pagination-bar, .card-head,
+    .payslip-row, .pdf-btn, .ps-block { display: none !important; }
+
+    /* Class-based fallback works in all browsers including Firefox <121 */
+    body[data-print-idx] .ps-block.print-block { display: block !important; }
+    /* :has() selector as progressive enhancement for supporting browsers */
+    body[data-print-idx] .ps-block:has(.payslip-detail.print-target) { display: block !important; }
+
+    .payslip-detail { display: none !important; }
+    body[data-print-idx] .payslip-detail.print-target { display: block !important; }
+
+    body { background: var(--bg); margin: 0; }
+    .card { box-shadow: none; border: none; border-radius: 0; }
+    .portal { padding: 0; max-width: 100%; }
+
+    @page { size: A4 portrait; margin: 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+// ─────────────────────────────────────────────
+// MOCK DATA  (3 employees, 2 tenants)
+// Each employee has 14 months of payslips (2 pre-dating the 12-month window for AC-4).
+// ptPaise: Maharashtra = ₹200/month (20000p), ₹300 in Feb (30000p).
+//          Tamil Nadu  = ₹208/month (20800p) all months.
+// ─────────────────────────────────────────────
+
+// Helper: build a payslip array from base deduction config.
+// Months are April 2025 → May 2026 (14 entries; first 2 fall outside the 12-month window).
+function _mkPayslips(gross, pf, esi, tds, ptNormal, ptFeb) {
+  const spec = [
+    { m: 'April 2025',     d: '2025-04-30', feb: false },
+    { m: 'May 2025',       d: '2025-05-31', feb: false },
+    { m: 'June 2025',      d: '2025-06-30', feb: false },
+    { m: 'July 2025',      d: '2025-07-31', feb: false },
+    { m: 'August 2025',    d: '2025-08-31', feb: false },
+    { m: 'September 2025', d: '2025-09-30', feb: false },
+    { m: 'October 2025',   d: '2025-10-31', feb: false },
+    { m: 'November 2025',  d: '2025-11-30', feb: false },
+    { m: 'December 2025',  d: '2025-12-31', feb: false },
+    { m: 'January 2026',   d: '2026-01-31', feb: false },
+    { m: 'February 2026',  d: '2026-02-28', feb: true  },
+    { m: 'March 2026',     d: '2026-03-31', feb: false },
+    { m: 'April 2026',     d: '2026-04-30', feb: false },
+    { m: 'May 2026',       d: '2026-05-31', feb: false },
+  ];
+  return spec.map(s => {
+    const pt = s.feb ? ptFeb : ptNormal;
+    return { month: s.m, grossPaise: gross, pfPaise: pf, esiPaise: esi, tdsPaise: tds, ptPaise: pt, netPaise: gross - pf - esi - tds - pt, payDate: s.d };
+  });
+}
+
+const MOCK_EMPLOYEES = [
+  {
+    employeeId: 'EMP001',
+    email: 'priya.sharma@acme.in',
+    name: 'Priya Sharma',
+    tenantId: 'tenant-acme',
+    department: 'Engineering',
+    isExiting: false,
+    uan: 'UAN100123456789',
+    esiNumber: '31-00-123456-000',
+    pan: 'ABCPE1234F',
+    // Maharashtra: PT ₹200 normal, ₹300 Feb
+    payslips: _mkPayslips(8500000, 612000, 63750, 614250, 20000, 30000)
+  },
+  {
+    employeeId: 'EMP002',
+    email: 'raj.mehta@acme.in',
+    name: 'Raj Mehta',
+    tenantId: 'tenant-acme',
+    department: 'Finance',
+    isExiting: true,
+    uan: 'UAN100234567890',
+    esiNumber: '',
+    pan: 'BCFMR1234G',
+    // Maharashtra, ESI-exempt (CTC > ₹21,000/month)
+    payslips: _mkPayslips(12000000, 864000, 0, 1086000, 20000, 30000),
+    ff: {
+      lastWorkingDay: '2026-06-20',
+      deadline: '2026-06-24',
+      status: 'pending',
+      amount: 12500000,
+      settledAmount: 12500000,
+      settledDate: '2026-06-23',
+      paymentMethod: 'Bank Transfer (NEFT)'
+    }
+  },
+  {
+    employeeId: 'EMP003',
+    email: 'anita.nair@beta.in',
+    name: 'Anita Nair',
+    tenantId: 'tenant-beta',
+    department: 'HR',
+    isExiting: false,
+    uan: 'UAN100345678901',
+    esiNumber: '53-00-654321-000',
+    pan: 'CGNNA1234H',
+    // Tamil Nadu: PT ₹208 all months
+    payslips: _mkPayslips(7200000, 518400, 54000, 579600, 20800, 20800)
+  },
+  {
+    employeeId: 'EMP004',
+    email: 'meera.kapoor@acme.in',
+    name: 'Meera Kapoor',
+    tenantId: 'tenant-acme',
+    department: 'Marketing',
+    isExiting: true,
+    uan: 'UAN100456789012',
+    esiNumber: '31-00-234567-001',
+    pan: 'DGKMK5678J',
+    // Maharashtra: PT ₹200 normal, ₹300 Feb
+    payslips: _mkPayslips(9000000, 648000, 67500, 784500, 20000, 30000),
+    ff: {
+      lastWorkingDay: '2026-05-31',
+      deadline: '2026-06-04',
+      status: 'settled',
+      amount: 14200000,
+      settledAmount: 14200000,
+      settledDate: '2026-06-03',
+      paymentMethod: 'Bank Transfer (NEFT)'
+    }
+  }
+];
+
+// ─────────────────────────────────────────────
+// CURRENCY HELPERS
+// ─────────────────────────────────────────────
+function paiseToCurrency(paise) {
+  if (!Number.isFinite(paise)) return '₹—';
+  const rupees = Math.round(paise / 100);
+  return '₹' + rupees.toLocaleString('en-IN');
+}
+
+// Parse date-only ISO strings (YYYY-MM-DD) as local time to avoid UTC midnight
+// shifting dates one day back for IST (UTC+5:30) users.
+function formatDate(iso) {
+  if (!iso) return '—';
+  const parts = iso.split('T')[0].split('-');
+  const d = parts.length === 3
+    ? new Date(+parts[0], +parts[1] - 1, +parts[2])
+    : new Date(iso);
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+// ─────────────────────────────────────────────
+// SESSION  (localStorage key: portal_session)
+// ─────────────────────────────────────────────
+const SESSION_KEY = 'portal_session';
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) { return null; }
+}
+
+function setSession(emp) {
+  try {
+    const s = { employeeId: emp.employeeId, tenantId: emp.tenantId, name: emp.name, department: emp.department, isExiting: emp.isExiting };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  } catch(e) {}
+}
+
+function clearSession() {
+  try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
+// TENANT ISOLATION CHECK
+// Called before every data access
+// ─────────────────────────────────────────────
+function verifySession(session, employee) {
+  if (!session || !employee) return false;
+  if (session.tenantId !== employee.tenantId) return false;
+  if (session.employeeId !== employee.employeeId) return false;
+  return true;
+}
+
+function enforceIsolation(session) {
+  if (!session) return false;
+  const emp = MOCK_EMPLOYEES.find(e => e.employeeId === session.employeeId);
+  if (!emp) {
+    showSecurityViolation();
+    return false;
+  }
+  if (emp.tenantId !== session.tenantId) {
+    showSecurityViolation();
+    return false;
+  }
+  return true;
+}
+
+function showSecurityViolation() {
+  clearSession();
+  const banner = document.getElementById('securityBanner');
+  if (banner) banner.style.display = 'flex';
+}
+
+// ─────────────────────────────────────────────
+// RENDER: LOGIN
+// ─────────────────────────────────────────────
+function renderLogin() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('dashWrap').style.display = 'none';
+  document.getElementById('appHeader').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+// RENDER: DASHBOARD
+// ─────────────────────────────────────────────
+function renderDashboard(session) {
+  if (!session) { renderLogin(); return; }
+
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('appHeader').style.display = 'flex';
+  document.getElementById('dashWrap').style.display = 'block';
+
+  document.getElementById('nameChip').textContent = session.name;
+  document.getElementById('deptChip').textContent = session.department;
+
+  const emp = MOCK_EMPLOYEES.find(e => e.employeeId === session.employeeId);
+  if (!emp || !enforceIsolation(session)) {
+    renderLogin();
+    return;
+  }
+
+  const tabBar = document.getElementById('tabBar');
+  tabBar.innerHTML = '';
+  const tabs = [{ id: 'payslips', label: 'Payslips' }];
+  if (session.isExiting && emp.ff) tabs.push({ id: 'ff', label: 'F&F Status' });
+
+  tabs.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = t.label;
+    btn.setAttribute('data-tab', t.id);
+    btn.onclick = () => switchTab(t.id);
+    tabBar.appendChild(btn);
+  });
+
+  renderPayslips(emp, session);
+
+  if (session.isExiting && emp.ff) {
+    renderFF(emp);
+  }
+
+  switchTab('payslips');
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tabId));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === tabId + 'Panel'));
+}
+
+// ─────────────────────────────────────────────
+// PAYSLIPS — state
+// ─────────────────────────────────────────────
+let _payslipsState = null;
+let _currentPage = 1;
+const PAGE_SIZE = 6;
+
+function renderPayslips(emp, session) {
+  // Filter to last 12 months, sort most-recent-first
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - 1);
+  const filtered = (emp.payslips || [])
+    .filter(ps => new Date(ps.payDate) >= cutoff)
+    .sort((a, b) => new Date(b.payDate) - new Date(a.payDate));
+
+  _payslipsState = { emp, session, filtered };
+  _currentPage = 1;
+  renderPayslipsPage();
+}
+
+function renderPayslipsPage() {
+  if (!_payslipsState) return;
+  const { emp, session, filtered } = _payslipsState;
+  const container = document.getElementById('payslipsList');
+  container.innerHTML = '';
+
+  // Isolation check must precede any render, including the empty-state path
+  if (!verifySession(session, emp)) return;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state">No payslips found for the last 12 months.</div>';
+    return;
+  }
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const startIdx = (_currentPage - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, filtered.length);
+  const pageItems = filtered.slice(startIdx, endIdx);
+
+  pageItems.forEach((ps, pagePos) => {
+    const absIdx = startIdx + pagePos;
+
+    const block = document.createElement('div');
+    block.className = 'ps-block';
+    block.setAttribute('data-block-idx', absIdx);
+    block.style.cssText = 'border-bottom: 1px solid var(--line);';
+
+    const row = document.createElement('div');
+    row.className = 'payslip-row';
+    row.innerHTML = `
+      <div class="payslip-month">${ps.month}</div>
+      <div class="payslip-amounts">
+        <div class="payslip-amt-item">
+          <div class="label">Gross</div>
+          <div class="value">${paiseToCurrency(ps.grossPaise)}</div>
+        </div>
+        <div class="payslip-amt-item">
+          <div class="label">Net Pay</div>
+          <div class="value net">${paiseToCurrency(ps.netPaise)}</div>
+        </div>
+      </div>
+      <button class="view-btn" onclick="toggleDetail(${absIdx})">View</button>
+    `;
+
+    const esiRow = ps.esiPaise > 0
+      ? `<tr><td>ESI</td><td class="deduct">− ${paiseToCurrency(ps.esiPaise)}</td></tr>`
+      : '';
+    const ptRow = ps.ptPaise > 0
+      ? `<tr><td>Professional Tax (PT)</td><td class="deduct">− ${paiseToCurrency(ps.ptPaise)}</td></tr>`
+      : '';
+    const esiDisc = emp.esiNumber
+      ? `<div class="disc-item"><span class="disc-k">ESI Number</span><span class="disc-v">${emp.esiNumber}</span></div>`
+      : '';
+
+    const detail = document.createElement('div');
+    detail.className = 'payslip-detail';
+    detail.id = 'detail-' + absIdx;
+    detail.innerHTML = `
+      <div class="detail-grid">
+        <div class="detail-item"><div class="dk">Employee</div><div class="dv">${emp.name}</div></div>
+        <div class="detail-item"><div class="dk">Department</div><div class="dv">${emp.department}</div></div>
+        <div class="detail-item"><div class="dk">Month</div><div class="dv">${ps.month}</div></div>
+        <div class="detail-item"><div class="dk">Payment Date</div><div class="dv">${formatDate(ps.payDate)}</div></div>
+      </div>
+      <div class="ps-earn-deduct">
+        <div>
+          <div class="ps-section-title">Earnings</div>
+          <table class="ps-table">
+            <tr><td>Gross Pay</td><td>${paiseToCurrency(ps.grossPaise)}</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="ps-section-title">Deductions</div>
+          <table class="ps-table">
+            <tr><td>Provident Fund (PF)</td><td class="deduct">− ${paiseToCurrency(ps.pfPaise)}</td></tr>
+            ${esiRow}
+            <tr><td>TDS</td><td class="deduct">− ${paiseToCurrency(ps.tdsPaise)}</td></tr>
+            ${ptRow}
+          </table>
+        </div>
+      </div>
+      <div class="net-pay-box">
+        <span class="np-label">Net Pay</span>
+        <span class="np-value">${paiseToCurrency(ps.netPaise)}</span>
+      </div>
+      <div class="ps-disclosures">
+        <div class="disc-title">Statutory Details</div>
+        <div class="disc-grid">
+          <div class="disc-item"><span class="disc-k">UAN (PF)</span><span class="disc-v">${emp.uan}</span></div>
+          ${esiDisc}
+          <div class="disc-item"><span class="disc-k">PAN</span><span class="disc-v">${emp.pan}</span></div>
+        </div>
+        <div class="disc-notice">This payslip is computer-generated and does not require a signature.</div>
+      </div>
+      <div class="detail-actions">
+        <button class="pdf-btn no-print" onclick="printPayslip(${absIdx})">⬇ Download PDF</button>
+      </div>
+    `;
+
+    block.appendChild(row);
+    block.appendChild(detail);
+    container.appendChild(block);
+  });
+
+  // Remove last block's border
+  const lastBlock = container.lastElementChild;
+  if (lastBlock && lastBlock.classList.contains('ps-block')) {
+    lastBlock.style.borderBottom = 'none';
+  }
+
+  // Pagination bar — always rendered so controls are structurally present
+  const bar = document.createElement('div');
+  bar.className = 'pagination-bar';
+  bar.innerHTML = `
+    <span class="pagination-info">Showing ${startIdx + 1}–${endIdx} of ${filtered.length}</span>
+    <div class="pagination-btns">
+      <button class="page-btn" onclick="goToPage(${_currentPage - 1})" ${_currentPage === 1 ? 'disabled' : ''}>← Prev</button>
+      <button class="page-btn" onclick="goToPage(${_currentPage + 1})" ${_currentPage === totalPages ? 'disabled' : ''}>Next →</button>
+    </div>
+  `;
+  container.appendChild(bar);
+}
+
+function goToPage(page) {
+  if (!_payslipsState) return;
+  const totalPages = Math.ceil(_payslipsState.filtered.length / PAGE_SIZE);
+  _currentPage = Math.max(1, Math.min(page, totalPages));
+  renderPayslipsPage();
+}
+
+function toggleDetail(absIdx) {
+  const detail = document.getElementById('detail-' + absIdx);
+  if (!detail) return;
+  const isOpen = detail.classList.contains('open');
+
+  // Close all currently open details and reset their buttons
+  document.querySelectorAll('.payslip-detail.open').forEach(d => {
+    d.classList.remove('open');
+    const block = d.closest('[data-block-idx]');
+    if (block) {
+      const btn = block.querySelector('.view-btn');
+      if (btn) btn.textContent = 'View';
+    }
+  });
+
+  // Toggle the clicked detail
+  if (!isOpen) {
+    detail.classList.add('open');
+    const block = detail.closest('[data-block-idx]');
+    if (block) {
+      const btn = block.querySelector('.view-btn');
+      if (btn) btn.textContent = 'Close';
+    }
+  }
+}
+
+function printPayslip(absIdx) {
+  const detail = document.getElementById('detail-' + absIdx);
+  if (!detail) return;
+  const block = detail.closest('.ps-block');
+  detail.classList.add('print-target');
+  if (block) block.classList.add('print-block');
+  document.body.setAttribute('data-print-idx', absIdx);
+  // Use afterprint to clean up — window.print() may return before the print
+  // dialog renders on mobile browsers, so synchronous cleanup causes blank PDFs.
+  window.addEventListener('afterprint', function cleanup() {
+    detail.classList.remove('print-target');
+    if (block) block.classList.remove('print-block');
+    document.body.removeAttribute('data-print-idx');
+    window.removeEventListener('afterprint', cleanup);
+  });
+  window.print();
+}
+
+// ─────────────────────────────────────────────
+// F&F STATUS
+// ─────────────────────────────────────────────
+function renderFF(emp) {
+  const ff = emp.ff;
+  const container = document.getElementById('ffContent');
+
+  // AC-4: check if settled via operator action in index.html (story 1-6 writes ff_settled_<empId>)
+  let isSettled = ff.status === 'settled';
+  try {
+    const raw = localStorage.getItem('ff_settled_' + emp.employeeId);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.settledAt) isSettled = true;
+    }
+  } catch(e) {}
+
+  if (isSettled) {
+    renderFFSettled(container, ff);
+  } else {
+    renderFFPending(container, ff);
+  }
+}
+
+function renderFFSettled(container, ff) {
+  container.innerHTML = `
+    <div class="ff-card">
+      <div class="ff-settled-header">
+        <span class="ff-settled-icon">✓</span>
+        <div>
+          <div class="ff-settled-title">F&amp;F Settled</div>
+          <div class="ff-settled-sub">Your full &amp; final settlement has been processed and credited.</div>
+        </div>
+      </div>
+      <div class="ff-grid">
+        <div class="ff-item"><div class="fk">Settlement Amount</div><div class="fv amount">${paiseToCurrency(ff.settledAmount || ff.amount)}</div></div>
+        <div class="ff-item"><div class="fk">Payment Date</div><div class="fv">${formatDate(ff.settledDate)}</div></div>
+        <div class="ff-item"><div class="fk">Payment Method</div><div class="fv">${ff.paymentMethod || 'Bank Transfer (NEFT)'}</div></div>
+        <div class="ff-item"><div class="fk">Last Working Day</div><div class="fv">${formatDate(ff.lastWorkingDay)}</div></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderFFPending(container, ff) {
+  container.innerHTML = `
+    <div class="ff-card">
+      <div class="ff-title">Full &amp; Final Settlement</div>
+      <div style="margin-bottom:16px;">
+        <span class="status-badge pending">F&amp;F Pending</span>
+        <span style="margin-left:10px; font-size:13px; color:var(--muted);">Settlement deadline: ${formatDate(ff.deadline)}</span>
+      </div>
+      <div class="ff-grid">
+        <div class="ff-item"><div class="fk">Last Working Day</div><div class="fv">${formatDate(ff.lastWorkingDay)}</div></div>
+        <div class="ff-item"><div class="fk">Statutory Deadline</div><div class="fv">${formatDate(ff.deadline)}</div></div>
+        <div class="ff-item"><div class="fk">Estimated Amount</div><div class="fv">${paiseToCurrency(ff.amount)}</div></div>
+        <div class="ff-item"><div class="fk">Payment Method</div><div class="fv">${ff.paymentMethod || 'Bank Transfer (NEFT)'}</div></div>
+      </div>
+      <div class="ff-note">⏳ Settlement is being processed. You will be notified once the amount is credited.</div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// LOGIN HANDLER
+// ─────────────────────────────────────────────
+function handleLogin(e) {
+  e.preventDefault();
+  const emailVal = document.getElementById('emailInput').value.trim().toLowerCase();
+  const empIdVal = document.getElementById('empIdInput').value.trim().toUpperCase();
+  const errorEl = document.getElementById('loginError');
+
+  const emp = MOCK_EMPLOYEES.find(
+    e => e.email.toLowerCase() === emailVal && e.employeeId === empIdVal
+  );
+
+  if (!emp) {
+    errorEl.textContent = 'Employee not found. Check your Employee ID and email.';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  errorEl.classList.remove('show');
+  setSession(emp);
+  renderDashboard(getSession());
+}
+
+// ─────────────────────────────────────────────
+// LOGOUT
+// ─────────────────────────────────────────────
+function logout() {
+  clearSession();
+  renderLogin();
+}
+
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (session && enforceIsolation(session)) {
+    renderDashboard(session);
+  } else {
+    renderLogin();
+  }
+
+  window.addEventListener('storage', (event) => {
+    const s = getSession();
+    if (!s) { renderLogin(); return; }
+
+    // AC-4: re-render F&F live when operator settles in index.html
+    if (event.key && event.key.startsWith('ff_settled_')) {
+      if (event.key === 'ff_settled_' + s.employeeId) {
+        const emp = MOCK_EMPLOYEES.find(e => e.employeeId === s.employeeId);
+        if (emp && emp.ff) renderFF(emp);
+      }
+      return;
+    }
+
+    if (!enforceIsolation(s)) {
+      // enforceIsolation already called showSecurityViolation(); redirect to login
+      renderLogin();
+    }
+  });
+});
+</script>
+
+<!-- Security Violation Banner -->
+<div id="securityBanner" style="display:none;" class="security-banner">
+  <div class="inner">
+    <div class="icon">🔐</div>
+    <h2>Session Security Violation</h2>
+    <p>Session security violation — please log in again.<br/>Your session was invalid and has been terminated.</p>
+    <button onclick="document.getElementById('securityBanner').style.display='none'; renderLogin();">Log In Again</button>
+  </div>
+</div>
+
+<!-- App Header (hidden until logged in) -->
+<header class="app" id="appHeader" style="display:none;">
+  <a class="brand" href="index.html">
+    <span class="dot"></span>
+    <div>Employee Portal <small>payroll-webapp · Read-only access</small></div>
+  </a>
+  <div class="header-right">
+    <span class="tenant-badge">🔒 Tenant-isolated · Viewing your records only</span>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+      <span class="name-chip" id="nameChip"></span>
+      <span style="font-size:11px; color:var(--muted);" id="deptChip"></span>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<!-- Login Screen -->
+<div id="loginWrap" class="login-wrap" style="display:none;">
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="dot"></span>
+      payroll-webapp
+    </div>
+    <h1 class="login-heading">Employee Portal</h1>
+    <p class="login-sub">Read-only access · Your payslips and F&amp;F status</p>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Work Email</label>
+        <input type="email" id="emailInput" placeholder="e.g. priya.sharma@acme.in" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label>Employee ID</label>
+        <input type="text" id="empIdInput" placeholder="e.g. EMP001" autocomplete="off" required />
+      </div>
+      <button type="submit" class="login-btn">Login →</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+
+    <div class="login-hint">
+      Demo credentials:<br/>
+      <code>priya.sharma@acme.in</code> / <code>EMP001</code> (Engineering)<br/>
+      <code>raj.mehta@acme.in</code> / <code>EMP002</code> (Finance · exiting)<br/>
+      <code>anita.nair@beta.in</code> / <code>EMP003</code> (HR · tenant-beta)<br/>
+      <code>meera.kapoor@acme.in</code> / <code>EMP004</code> (Marketing · settled F&amp;F)
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard (hidden until logged in) -->
+<div id="dashWrap" style="display:none;">
+  <main class="portal">
+    <div id="tabBar" class="tab-bar"></div>
+
+    <!-- Payslips Tab -->
+    <div class="tab-panel" id="payslipsPanel">
+      <div class="card">
+        <div class="card-head">
+          <h2>Your Payslips</h2>
+        </div>
+        <div class="card-body" id="payslipsList"></div>
+      </div>
+    </div>
+
+    <!-- F&F Tab -->
+    <div class="tab-panel" id="ffPanel">
+      <div class="card">
+        <div class="card-body" id="ffContent"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

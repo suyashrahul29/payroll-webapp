@@ -276,7 +276,7 @@
 <!-- F&F Warning Banner (shown when < 24h remaining) -->
 <div class="ff-warning-banner" id="ffWarningBanner">
   <span class="ff-warn-icon">⚠️</span>
-  <span id="ffWarningText">F&amp;F DEADLINE AT RISK — Vivek Tiwari · ~18 hours remaining · Priya Sharma (HR)</span>
+  <span id="ffWarningText">F&amp;F DEADLINE AT RISK — Raj Mehta · ~18 hours remaining · Priya Sharma (HR)</span>
   <button class="ff-warn-dismiss" onclick="bannerDismissed=true;document.getElementById('ffWarningBanner').classList.remove('show')" aria-label="Dismiss">×</button>
 </div>
 
@@ -388,16 +388,16 @@
 <div class="modal" id="ffModal">
   <div class="modal-content" style="max-width:520px;">
     <div class="modal-head">
-      <h3>Settle Full &amp; Final — Vivek Tiwari</h3>
+      <h3>Settle Full &amp; Final — Raj Mehta</h3>
       <button class="modal-close" onclick="closeFFModal()">×</button>
     </div>
     <div class="modal-body">
       <!-- Employee Details -->
       <div class="ff-modal-section">
         <h4>Exit Details</h4>
-        <div class="ff-detail-row"><span class="lbl">Employee</span><span class="val">Vivek Tiwari (EMP047)</span></div>
-        <div class="ff-detail-row"><span class="lbl">Last Working Day</span><span class="val">10 Jun 2026</span></div>
-        <div class="ff-detail-row"><span class="lbl">Statutory Deadline</span><span class="val" style="color:var(--amber)">12 Jun 2026 (Thu) — 2 working days</span></div>
+        <div class="ff-detail-row"><span class="lbl">Employee</span><span class="val">Raj Mehta (EMP002)</span></div>
+        <div class="ff-detail-row"><span class="lbl">Last Working Day</span><span class="val">20 Jun 2026</span></div>
+        <div class="ff-detail-row"><span class="lbl">Statutory Deadline</span><span class="val" style="color:var(--amber)">24 Jun 2026 (Tue) — 2 working days</span></div>
         <div class="ff-detail-row"><span class="lbl">HR Signatory</span><span class="val">Priya Sharma</span></div>
         <div class="ff-detail-row"><span class="lbl">Time Remaining</span><span class="val" id="ffModalCountdown" style="color:var(--amber)">~18 hrs</span></div>
       </div>
@@ -482,14 +482,14 @@
   ];
 
   // --- Mock F&F exit data (Story 1-6) ---
-  // Vivek Tiwari, last WD: 2026-06-10, deadline: 2026-06-12 (2 working days; 2026-06-11 = holiday)
+  // Raj Mehta (EMP002), last WD: 2026-06-20, deadline: 2026-06-24 (2 working days)
   // Mock: 18h remaining → warning state (< 24h)
   const ffExitData = {
-    employee: 'Vivek Tiwari',
-    employeeId: 'EMP047',
-    lastWorkingDay: '10 Jun 2026',
-    deadline: '12 Jun 2026',
-    deadlineShort: 'Thu 12 Jun',
+    employee: 'Raj Mehta',
+    employeeId: 'EMP002',
+    lastWorkingDay: '20 Jun 2026',
+    deadline: '24 Jun 2026',
+    deadlineShort: 'Tue 24 Jun',
     hrSignatory: 'Priya Sharma',
     hoursRemaining: 18,  // mock: triggers warning state
     amountPaise: 12500000,  // ₹1,25,000 in paise
@@ -499,7 +499,7 @@
   // --- Mock state: the live inputs to the Readiness Score ---
   const blockers = [
     { id:'exits',  sev:'amber', weight:18, icon:'🕐', title:'1 exit pending F&F',
-      desc:'Vivek Tiwari · F&F deadline: Thu 12 Jun 2026 · HR signatory: Priya Sharma', tag:'Lifecycle Clock', action:'Settle →' },
+      desc:'Raj Mehta · F&F deadline: Tue 24 Jun 2026 · HR signatory: Priya Sharma', tag:'Lifecycle Clock', action:'Settle →' },
     { id:'ctc',    sev:'amber', weight:16, icon:'✎', title:'18 unconfirmed CTC changes',
       desc:'Finance pushed structure edits since last run · sign-off required', tag:'Change Handshake', action:'Review & sign' },
     { id:'attend', sev:'red',   weight:12, icon:'📡', title:'Attendance stale — 5 days',
@@ -1264,7 +1264,7 @@
     // Resolve the exits blocker (triggers gauge recompute)
     closeFFModal();
     resolve('exits');
-    showToast('✅ F&F Settled for Vivek Tiwari — ₹1,25,000 via ' + (ffSelectedMethod === 'bank' ? 'Bank Transfer' : 'Cash'));
+    showToast('✅ F&F Settled for Raj Mehta — ₹1,25,000 via ' + (ffSelectedMethod === 'bank' ? 'Bank Transfer' : 'Cash'));
   }
 
   // Close modals on background click
