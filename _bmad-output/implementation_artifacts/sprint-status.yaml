@@ -38,7 +38,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-06-09
-last_updated: 2026-06-11T00:00:00Z
+last_updated: 2026-06-11T16:00:00Z
 project: payroll-webapp
 project_key: NOKEY
 tracking_system: file-system
@@ -101,8 +101,8 @@ development_status:
   epic-5: in-progress
 
   5-1-employee-portal-authentication-tenant-isolation: done
-  5-2-payslip-list-detail-view: backlog
-  5-3-f-f-status-for-exiting-employees: backlog
+  5-2-payslip-list-detail-view: done
+  5-3-f-f-status-for-exiting-employees: done
   5-4-mobile-friendly-responsive-design: backlog
 
   epic-5-retrospective: optional
