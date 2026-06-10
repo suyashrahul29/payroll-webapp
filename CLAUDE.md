@@ -71,5 +71,5 @@ When extending the prototype, **every feature must visibly serve accuracy or tim
 Full HRMS suite · deep bidirectional HRMS sync (CSV import only) · gig/contractor payout rails ·
 multi-country payroll · enterprise (500+) configs.
 
-## NOTE
-Build in such a way that you use less tokens and also build fast.
+## BRANDING AND PRIMARY COLOURS
+Refer @greenlit_logo_and_app_icon.svg

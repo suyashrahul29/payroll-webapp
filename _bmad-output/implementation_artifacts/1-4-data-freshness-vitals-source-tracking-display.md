@@ -393,7 +393,28 @@ Key learning from this story:
 
 ## Story Completion Tracking
 
-**Status**: review
+**Status**: done
 **Created**: 2026-06-10
 **Completed**: 2026-06-10
 **Implementation Ready**: Yes — all acceptance criteria met, all tests pass, ready for code review
+
+---
+
+### Review Findings
+
+- [x] [Review][Decision] Display label format — abbreviated format ("Stale · 12h") accepted as intentional UI brevity
+
+- [x] [Review][Patch] XSS: source.name/status injected unsanitized into innerHTML [app/index.html: renderSources, openSourceModal]
+- [x] [Review][Patch] stale_since_timestamp and dead_since_timestamp missing from API sources array [src/domain/events.ts, src/domain/readiness/service.ts]
+- [x] [Review][Patch] sources field marked .optional() in Zod schema but service always populates it — should be required [src/domain/events.ts]
+- [x] [Review][Patch] getRelativeTimeString: no guard against negative secondsAgo on clock skew [app/index.html: getRelativeTimeString]
+- [x] [Review][Patch] Mock data: HRMS CSV marked stale at 12h — spec threshold is 24h+ [app/index.html: sources const]
+- [x] [Review][Patch] getRelativeTimeString: returns "Live · 0 min" for sub-minute syncs — show "just now" [app/index.html: getRelativeTimeString]
+- [x] [Review][Patch] getRelativeTimeString: stale branch shows only hours even for multi-day staleness — add days fallback [app/index.html: getRelativeTimeString]
+
+- [x] [Review][Defer] Threshold constants: staleness_threshold_seconds defaults to 7200 (2h) not 24h as spec requires [src/domain/readiness/source-freshness.ts] — deferred, pre-existing
+- [x] [Review][Defer] Dead threshold in determineFreshnessState is 86400s (24h) not 172800s (48h) as per AC-5 [src/domain/readiness/source-freshness.ts] — deferred, pre-existing
+- [x] [Review][Defer] markAsStale accepts DEAD state without guard — AC-4 state machine violation [src/domain/readiness/source-freshness.ts] — deferred, pre-existing
+- [x] [Review][Defer] detectSourceType checks PascalCase IDs ("eSSL", "ZK") but canonical IDs are kebab-case — always returns MANUAL [src/domain/readiness/source-freshness.ts] — deferred, pre-existing
+- [x] [Review][Defer] renderSources wipes and rebuilds entire DOM on every updateUI call — DOM thrashing [app/index.html] — deferred, pre-existing pattern
+- [x] [Review][Defer] openVitalsModal dead code still present alongside new openSourceModal [app/index.html] — deferred, pre-existing

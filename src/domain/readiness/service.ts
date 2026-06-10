@@ -28,7 +28,20 @@ import {
   markAsStale,
   markAsDead,
 } from "../models/source-freshness.js";
+import {
+  ChangeRecord,
+  createChangeRecord,
+  resolveChangeRecord,
+  isPendingChange,
+} from "../models/change-record.js";
 import { computeScore } from "./score.js";
+
+export interface PreFlightCheckResult {
+  check: string;
+  check_id: string;
+  status: 'PASS' | 'FAIL';
+  blocker_if_fail: Blocker | null;
+}
 
 /**
  * ReadinessService
@@ -46,6 +59,7 @@ export class ReadinessService extends EventEmitter {
     {
       blockers: Map<string, Blocker>;
       sourceFreshness: Map<string, SourceFreshness>;
+      pendingChanges: Map<string, ChangeRecord>;
     }
   > = new Map();
 
@@ -92,11 +106,13 @@ export class ReadinessService extends EventEmitter {
   ): {
     blockers: Map<string, Blocker>;
     sourceFreshness: Map<string, SourceFreshness>;
+    pendingChanges: Map<string, ChangeRecord>;
   } {
     if (!this.state.has(tenant_id)) {
       this.state.set(tenant_id, {
         blockers: new Map(),
         sourceFreshness: new Map(),
+        pendingChanges: new Map(),
       });
     }
     return this.state.get(tenant_id)!;
@@ -126,8 +142,21 @@ export class ReadinessService extends EventEmitter {
         name: this.formatSourceName(src.source_name),
         status,
         last_synced_at: src.last_success_at,
+        stale_since_timestamp: status === "stale" ? src.updated_at : undefined,
+        dead_since_timestamp: status === "dead" ? src.updated_at : undefined,
       };
     });
+
+    const pendingChanges = Array.from(tenantState.pendingChanges.values()).map(r => ({
+      id: r.id,
+      employee_id: r.employee_id,
+      employee_name: r.employee_name,
+      old_ctc: r.old_ctc,
+      new_ctc: r.new_ctc,
+      effective_date: r.effective_date,
+      signatory: r.signatory,
+      status: r.status,
+    }));
 
     return {
       tenant_id,
@@ -140,6 +169,7 @@ export class ReadinessService extends EventEmitter {
         action_button: this.getActionButton(b.blocker_type),
       })),
       sources,
+      pending_changes: pendingChanges,
       dead_sources: scoreResult.deadSources,
       timestamp: new Date(),
     };
@@ -259,6 +289,7 @@ export class ReadinessService extends EventEmitter {
     );
 
     if (!existingBlocker) {
+      const sourceType = this.detectSourceType(event.source_id);
       const blocker = createBlocker(
         `blocker-${event.source_id}-stale`,
         event.tenant_id,
@@ -266,7 +297,9 @@ export class ReadinessService extends EventEmitter {
         "Data Freshness",
         Severity.MEDIUM,
         `${event.source_id} is stale — last synced ${new Date(event.staleness_threshold_exceeded_at).toLocaleDateString()}`,
-        [event.source_id]
+        [event.source_id],
+        false,
+        sourceType
       );
       tenantState.blockers.set(blocker.id, blocker);
     }
@@ -310,6 +343,7 @@ export class ReadinessService extends EventEmitter {
       tenantState.blockers.delete(existingBlocker.id);
     }
 
+    const deadSourceType = this.detectSourceType(event.source_id);
     const blocker = createBlocker(
       `blocker-${event.source_id}-dead`,
       event.tenant_id,
@@ -318,7 +352,8 @@ export class ReadinessService extends EventEmitter {
       Severity.HIGH,
       `${event.source_id} sync dead — no successful sync in 24h. Payroll at risk.`,
       [event.source_id],
-      true // is_dead_source flag
+      true, // is_dead_source flag
+      deadSourceType
     );
     tenantState.blockers.set(blocker.id, blocker);
 
@@ -328,32 +363,105 @@ export class ReadinessService extends EventEmitter {
   private handleChangeDetected(event: ChangeDetected): void {
     const tenantState = this.getTenantState(event.tenant_id);
 
-    // Create CHANGE_HANDSHAKE blocker
-    const change_ids = event.change_set.map((_, i) =>
-      `change-${i}`
+    // Store each change record; skip if a record for this employee already exists and is pending
+    const newRecordIds: string[] = [];
+    event.change_set.forEach((change, i) => {
+      const existingPending = Array.from(tenantState.pendingChanges.values()).find(
+        r => r.employee_id === change.employee_id && isPendingChange(r)
+      );
+      if (!existingPending) {
+        const recordId = `change-${event.tenant_id}-${change.employee_id}-${Date.now()}-${i}`;
+        const record = createChangeRecord(
+          recordId,
+          event.tenant_id,
+          change.employee_id,
+          change.employee_name,
+          change.old_ctc,
+          change.new_ctc,
+          change.effective_date,
+          change.signatory
+        );
+        tenantState.pendingChanges.set(recordId, record);
+        newRecordIds.push(recordId);
+      }
+    });
+
+    if (newRecordIds.length === 0) {
+      return;
+    }
+
+    // Remove any existing CHANGE_HANDSHAKE blocker and create a fresh one with updated count
+    const existingBlocker = Array.from(tenantState.blockers.values()).find(
+      b => b.blocker_type === BlockerType.CHANGE_HANDSHAKE && !b.resolved_at
     );
+    if (existingBlocker) {
+      tenantState.blockers.delete(existingBlocker.id);
+    }
+
+    const allPendingIds = Array.from(tenantState.pendingChanges.values())
+      .filter(isPendingChange)
+      .map(r => r.id);
+
     const blocker = createBlocker(
       `blocker-change-${Date.now()}`,
       event.tenant_id,
       BlockerType.CHANGE_HANDSHAKE,
       "CTC/Structure Changes",
       Severity.MEDIUM,
-      `${event.change_set.length} unconfirmed CTC changes awaiting review and sign-off`,
-      change_ids
+      `${allPendingIds.length} unconfirmed CTC changes awaiting review and sign-off`,
+      allPendingIds
     );
 
     tenantState.blockers.set(blocker.id, blocker);
+    this.recomputeAndEmitScore(event.tenant_id);
+  }
+
+  private handleChangeSignedOff(event: ChangeSignedOff): void {
+    const tenantState = this.getTenantState(event.tenant_id);
+
+    const record = tenantState.pendingChanges.get(event.change_id);
+    if (!record) return;
+
+    const updated = resolveChangeRecord(record, event.action, event.signed_by, event.timestamp);
+    tenantState.pendingChanges.set(event.change_id, updated);
+
+    const remainingPending = Array.from(tenantState.pendingChanges.values()).filter(isPendingChange);
+
+    // Remove current CHANGE_HANDSHAKE blocker
+    const existingBlocker = Array.from(tenantState.blockers.values()).find(
+      b => b.blocker_type === BlockerType.CHANGE_HANDSHAKE && !b.resolved_at
+    );
+    if (existingBlocker) {
+      tenantState.blockers.delete(existingBlocker.id);
+    }
+
+    if (remainingPending.length > 0) {
+      // Recreate blocker with updated count
+      const blocker = createBlocker(
+        `blocker-change-${Date.now()}`,
+        event.tenant_id,
+        BlockerType.CHANGE_HANDSHAKE,
+        "CTC/Structure Changes",
+        Severity.MEDIUM,
+        `${remainingPending.length} unconfirmed CTC changes awaiting review and sign-off`,
+        remainingPending.map(r => r.id)
+      );
+      tenantState.blockers.set(blocker.id, blocker);
+    }
 
     this.recomputeAndEmitScore(event.tenant_id);
   }
 
-  private handleChangeSignedOff(_event: ChangeSignedOff): void {
-    // Implementation for future: mark change as signed off
-    // For now, this is handled by external logic
-  }
-
   private handleExitRecorded(event: ExitRecorded): void {
     const tenantState = this.getTenantState(event.tenant_id);
+
+    // Compute statutory 2-working-day deadline (no public holidays)
+    const deadline = this.computeWorkingDayDeadline(event.last_working_day, 2, []);
+    const deadlineStr = deadline.toLocaleDateString("en-IN", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
 
     // Create LIFECYCLE_CLOCK blocker
     const blocker = createBlocker(
@@ -362,13 +470,58 @@ export class ReadinessService extends EventEmitter {
       BlockerType.LIFECYCLE_CLOCK,
       "Exit Settlement",
       Severity.HIGH,
-      `Employee ${event.employee_id} exit pending F&F — legal deadline: 2 working days`,
+      `Employee ${event.employee_id} exit pending F&F — deadline: ${deadlineStr}`,
       [event.employee_id]
     );
 
     tenantState.blockers.set(blocker.id, blocker);
 
     this.recomputeAndEmitScore(event.tenant_id);
+  }
+
+  /**
+   * Compute the deadline date by adding `workingDays` working days (Mon–Fri)
+   * to `startDate`, skipping any dates listed in `holidays`.
+   *
+   * AC-7: if 2026-06-11 is in `holidays` and startDate is 2026-06-10,
+   * adding 2 working days yields 2026-06-13 (not 2026-06-12).
+   */
+  public computeWorkingDayDeadline(
+    startDate: Date,
+    workingDays: number,
+    holidays: Date[]
+  ): Date {
+    // Normalise holidays to midnight UTC for comparison
+    const holidaySet = new Set(
+      holidays.map(d => {
+        const n = new Date(d);
+        n.setUTCHours(0, 0, 0, 0);
+        return n.getTime();
+      })
+    );
+
+    const isHoliday = (d: Date): boolean => {
+      const n = new Date(d);
+      n.setUTCHours(0, 0, 0, 0);
+      return holidaySet.has(n.getTime());
+    };
+
+    const isWeekend = (d: Date): boolean => {
+      const day = d.getDay(); // 0 = Sun, 6 = Sat
+      return day === 0 || day === 6;
+    };
+
+    let current = new Date(startDate);
+    let added = 0;
+
+    while (added < workingDays) {
+      current.setDate(current.getDate() + 1);
+      if (!isWeekend(current) && !isHoliday(current)) {
+        added++;
+      }
+    }
+
+    return current;
   }
 
   private handleFFSettled(event: FFSettled): void {
@@ -440,6 +593,59 @@ export class ReadinessService extends EventEmitter {
   }
 
   /**
+   * Evaluate all 4 pre-flight checks against current tenant state.
+   * Pure query method — does not modify state.
+   */
+  public runPreFlightChecks(tenant_id: string): PreFlightCheckResult[] {
+    const tenantState = this.getTenantState(tenant_id);
+
+    const active = (type: BlockerType): Blocker | null =>
+      Array.from(tenantState.blockers.values()).find(
+        b => b.blocker_type === type && b.resolved_at === null
+      ) ?? null;
+
+    // Attendance check is scoped to biometric sources only (spec constraint)
+    const attendanceBlocker =
+      Array.from(tenantState.blockers.values()).find(
+        b =>
+          b.blocker_type === BlockerType.FRESHNESS_VITALS &&
+          b.resolved_at === null &&
+          b.source_type === SourceType.BIOMETRIC
+      ) ?? null;
+
+    const exitsBlocker = active(BlockerType.LIFECYCLE_CLOCK);
+    const ctcBlocker = active(BlockerType.CHANGE_HANDSHAKE);
+    const complianceBlocker = active(BlockerType.PREFLIGHT);
+
+    return [
+      {
+        check: 'Attendance synced in last 2 hours',
+        check_id: 'attendance-fresh',
+        status: attendanceBlocker ? 'FAIL' : 'PASS',
+        blocker_if_fail: attendanceBlocker,
+      },
+      {
+        check: 'No pending exits without F&F settled',
+        check_id: 'exits-settled',
+        status: exitsBlocker ? 'FAIL' : 'PASS',
+        blocker_if_fail: exitsBlocker,
+      },
+      {
+        check: 'No unacknowledged CTC changes',
+        check_id: 'ctc-acknowledged',
+        status: ctcBlocker ? 'FAIL' : 'PASS',
+        blocker_if_fail: ctcBlocker,
+      },
+      {
+        check: 'Compliance defaults validated',
+        check_id: 'compliance-validated',
+        status: complianceBlocker ? 'FAIL' : 'PASS',
+        blocker_if_fail: complianceBlocker,
+      },
+    ];
+  }
+
+  /**
    * Recompute the score and emit event if score changed significantly
    */
   private recomputeAndEmitScore(tenant_id: string): void {
@@ -453,24 +659,26 @@ export class ReadinessService extends EventEmitter {
    * Detect source type from source name
    */
   private detectSourceType(source_id: string): SourceType {
+    const lower = source_id.toLowerCase();
     if (
-      source_id.includes("eSSL") ||
-      source_id.includes("ZK") ||
-      source_id.includes("Biomax") ||
-      source_id.includes("Matrix")
+      lower.includes("essl") ||
+      lower.includes("zk") ||
+      lower.includes("biomax") ||
+      lower.includes("matrix") ||
+      lower.includes("biometric")
     ) {
       return SourceType.BIOMETRIC;
     }
 
     if (
-      source_id.includes("Tally") ||
-      source_id.includes("Zoho") ||
-      source_id.includes("QB")
+      lower.includes("tally") ||
+      lower.includes("zoho") ||
+      lower.includes("qb")
     ) {
       return SourceType.FINANCE;
     }
 
-    if (source_id.includes("Bank") || source_id.includes("Disbursement")) {
+    if (lower.includes("bank") || lower.includes("disbursement")) {
       return SourceType.BANK;
     }
 

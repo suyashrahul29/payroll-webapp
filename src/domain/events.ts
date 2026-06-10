@@ -71,8 +71,10 @@ export const ChangeDetectedSchema = z.object({
   change_set: z.array(
     z.object({
       employee_id: z.string(),
+      employee_name: z.string(),
       old_ctc: z.number().int(),
       new_ctc: z.number().int(),
+      effective_date: z.date(),
       signatory: z.string(),
     })
   ),
@@ -84,6 +86,7 @@ export const ChangeSignedOffSchema = z.object({
   tenant_id: z.string().uuid(),
   change_id: z.string(),
   signed_by: z.string(),
+  action: z.enum(["signed_off", "held", "rejected"]),
   timestamp: z.date(),
 });
 export type ChangeSignedOff = z.infer<typeof ChangeSignedOffSchema>;
@@ -132,6 +135,20 @@ export const ReadinessScoreChangedSchema = z.object({
       name: z.string(),
       status: z.enum(["live", "stale", "dead"]),
       last_synced_at: z.date().nullable(),
+      stale_since_timestamp: z.date().optional(),
+      dead_since_timestamp: z.date().optional(),
+    })
+  ),
+  pending_changes: z.array(
+    z.object({
+      id: z.string(),
+      employee_id: z.string(),
+      employee_name: z.string(),
+      old_ctc: z.number().int(),
+      new_ctc: z.number().int(),
+      effective_date: z.date(),
+      signatory: z.string(),
+      status: z.enum(["pending", "signed_off", "held", "rejected"]),
     })
   ).optional(),
   dead_sources: z.boolean(),
@@ -145,6 +162,23 @@ export type ReadinessScoreChanged = z.infer<
 // UNIFIED EVENT TYPE
 // ============================================================================
 
+/** Event: All data-complete conditions met; TTFP clock can start */
+export const DataCompleteSchema = z.object({
+  type: z.literal("DataComplete"),
+  tenantId: z.string(),
+  timestamp: z.date(),
+  employeeCount: z.number().int(),
+});
+export type DataComplete = z.infer<typeof DataCompleteSchema>;
+
+/** Event: Time-to-First-Payroll clock has started */
+export const TimeToFirstPayrollStartedSchema = z.object({
+  type: z.literal("TimeToFirstPayrollStarted"),
+  tenantId: z.string(),
+  startedAt: z.date(),
+});
+export type TimeToFirstPayrollStarted = z.infer<typeof TimeToFirstPayrollStartedSchema>;
+
 export type DomainEvent =
   | SourceSynced
   | SourceWentStale
@@ -154,7 +188,9 @@ export type DomainEvent =
   | ExitRecorded
   | FFSettled
   | PreFlightItemChanged
-  | ReadinessScoreChanged;
+  | ReadinessScoreChanged
+  | DataComplete
+  | TimeToFirstPayrollStarted;
 
 /**
  * Validate an event payload against its schema

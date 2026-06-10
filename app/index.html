@@ -99,9 +99,10 @@
   @keyframes countPulse { 0% { transform: scale(1.3); color: var(--green); } 100% { transform: scale(1); } }
 
   .clock { font-variant-numeric: tabular-nums; }
-  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #FFFFFF; font-weight: 700; padding: 13px 22px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: .25s; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px); background: var(--green); color: #FFFFFF; font-weight: 700; padding: 13px 22px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: .25s; cursor: pointer; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
   .footnote { color: var(--muted); font-size: 12px; text-align:center; margin: 26px 0 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Errors Prevented Counter */
   .prevented-counter { position: relative; display: inline-block; }
@@ -133,13 +134,23 @@
 
   /* Change Handshake Modal */
   .diff-table { width: 100%; font-size: 12px; margin-top: 12px; border-collapse: collapse; }
-  .diff-table td { padding: 8px; border-bottom: 1px solid var(--line); }
-  .diff-table .field { color: var(--muted); font-weight: 500; width: 120px; }
-  .diff-table .old { background: rgba(220,38,38,.1); color: var(--red); }
-  .diff-table .new { background: rgba(22,163,74,.1); color: var(--green); }
+  .diff-table th { padding: 8px; text-align: left; color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; border-bottom: 1px solid var(--line); }
+  .diff-table td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .diff-table .ctc-old { color: var(--red); }
+  .diff-table .ctc-new { color: var(--green); font-weight: 600; }
+  .diff-table .eff-date { color: var(--muted); font-size: 11px; }
+  .diff-action { display: flex; gap: 6px; }
+  .diff-action label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-size: 11px; padding: 3px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); transition: all .15s; }
+  .diff-action input[type=radio] { display: none; }
+  .diff-action input[type=radio]:checked + span { font-weight: 700; }
+  .diff-action label.opt-sign:has(input:checked) { background: rgba(46,204,113,.12); color: var(--green); border-color: var(--green); }
+  .diff-action label.opt-hold:has(input:checked) { background: rgba(245,166,35,.12); color: var(--amber); border-color: var(--amber); }
+  .diff-action label.opt-reject:has(input:checked) { background: rgba(231,76,60,.12); color: var(--red); border-color: var(--red); }
   .diff-badge { display: inline-block; margin-top: 8px; padding: 2px 8px; background: rgba(217,119,6,.1); color: var(--amber); font-size: 11px; border-radius: 4px; text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
-  .change-review-btn { width: calc(100% - 0px); padding: 12px; margin-top: 12px; background: var(--blue); color: #FFFFFF; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  .change-review-btn { width: 100%; padding: 12px; margin-top: 12px; background: var(--blue); color: #FFFFFF; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
   .change-review-btn:hover { filter: brightness(1.08); }
+  .change-review-btn:disabled { background: #36404d; color: var(--muted); cursor: default; }
+  .diff-scroll { max-height: 340px; overflow-y: auto; }
 
   /* Blocker slide-out animation */
   .blocker { animation: slideIn .3s ease-out; }
@@ -169,6 +180,36 @@
   .login-form button:active { filter: brightness(0.95); }
   .app-header-logout { position: absolute; top: 18px; right: 28px; padding: 8px 16px; background: #F3F4F6; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; }
   .app-header-logout:hover { background: #E5E7EB; color: var(--txt); }
+
+  /* F&F Warning Banner */
+  .ff-warning-banner { display: none; background: rgba(217,119,6,.1); border-bottom: 2px solid var(--amber); padding: 12px 28px; font-size: 14px; font-weight: 600; color: #92400E; position: sticky; top: 61px; z-index: 9; }
+  .ff-warning-banner.show { display: flex; align-items: center; gap: 10px; }
+  .ff-warning-banner.critical { background: rgba(220,38,38,.08); border-color: var(--red); color: #7F1D1D; }
+  .ff-warning-banner .ff-warn-icon { font-size: 16px; flex: 0 0 auto; }
+  .ff-warning-banner .ff-warn-dismiss { margin-left: auto; background: none; border: none; cursor: pointer; color: inherit; font-size: 16px; opacity: .6; }
+  .ff-warning-banner .ff-warn-dismiss:hover { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .ff-warning-banner { transition: none; } }
+
+  /* F&F Settlement Modal */
+  .ff-modal-section { margin: 16px 0; }
+  .ff-modal-section h4 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .ff-detail-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .ff-detail-row:last-child { border-bottom: none; }
+  .ff-detail-row .lbl { color: var(--muted); }
+  .ff-detail-row .val { font-weight: 600; }
+  .ff-amount-total { display: flex; justify-content: space-between; padding: 10px 0 4px; font-size: 16px; font-weight: 800; }
+  .ff-amount-total .val { color: var(--green); }
+  .ff-method-row { display: flex; gap: 10px; margin: 10px 0; }
+  .ff-method-btn { flex: 1; padding: 10px; border: 2px solid var(--line); border-radius: 8px; background: none; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); transition: .15s; }
+  .ff-method-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(13,148,136,.06); }
+  .ff-check-list { list-style: none; margin: 0; padding: 0; }
+  .ff-check-list li { display: flex; align-items: center; gap: 8px; padding: 7px 0; font-size: 14px; border-bottom: 1px solid var(--line); }
+  .ff-check-list li:last-child { border-bottom: none; }
+  .ff-check-list input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--blue); cursor: pointer; }
+  .ff-confirm-btn { width: 100%; padding: 13px; margin-top: 16px; background: var(--green); color: #FFFFFF; border: 0; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; }
+  .ff-confirm-btn:hover { filter: brightness(.93); }
+  .ff-settled-badge { display: inline-block; padding: 4px 12px; background: rgba(22,163,74,.1); color: var(--green); border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  @media (prefers-reduced-motion: reduce) { .ff-confirm-btn { transition: none; } }
 </style>
 </head>
 <body>
@@ -224,8 +265,20 @@
     Pay run due <b>30 Jun</b> · <b>248</b> employees<br/>
     Time-to-First-Payroll: <b>2.1 business days</b> from data-complete
   </div>
-  <button class="app-header-logout" id="logoutBtn" onclick="logout()">Logout</button>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <a href="onboarding.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Setup →</a>
+    <a href="import.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Import →</a>
+    <a href="portal.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Portal →</a>
+    <button class="app-header-logout" id="logoutBtn" onclick="logout()">Logout</button>
+  </div>
 </header>
+
+<!-- F&F Warning Banner (shown when < 24h remaining) -->
+<div class="ff-warning-banner" id="ffWarningBanner">
+  <span class="ff-warn-icon">⚠️</span>
+  <span id="ffWarningText">F&amp;F DEADLINE AT RISK — Vivek Tiwari · ~18 hours remaining · Priya Sharma (HR)</span>
+  <button class="ff-warn-dismiss" onclick="bannerDismissed=true;document.getElementById('ffWarningBanner').classList.remove('show')" aria-label="Dismiss">×</button>
+</div>
 
 <main id="appContent">
   <div class="grid">
@@ -265,7 +318,7 @@
         <h2>The two numbers we live by</h2>
         <div class="body">
           <div class="metrics">
-            <div class="metric good"><div class="k">First-pass accuracy</div><div class="v">99.6%<small> / target ≥99.5%</small></div></div>
+            <div class="metric good"><div class="k">First-pass accuracy</div><div class="v" id="fpaValue">99.6%<small> / target ≥99.5%</small></div></div>
             <div class="metric good"><div class="k">Errors prevented this run</div><div class="v" id="preventedNum">0</div></div>
             <div class="metric"><div class="k">Lifecycle clock — next F&amp;F</div><div class="v clock" id="ffClock">--:--:--</div></div>
             <div class="metric"><div class="k">Time-to-First-Payroll</div><div class="v">2.1<small> biz days</small></div></div>
@@ -274,10 +327,10 @@
       </section>
     </div>
   </div>
-  <p class="footnote">Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.</p>
+  <p class="footnote">Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run. <button onclick="showPreFlightLoading()" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;margin-left:6px;">Demo: pre-flight loading</button><button id="failRunToggle" onclick="runShouldFail=!runShouldFail;this.textContent='Demo: '+(runShouldFail?'succeed run':'fail run')" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;margin-left:6px;">Demo: fail run</button></p>
 </main>
 
-<div class="toast" id="toast">✅ Payroll run completed — zero post-run corrections</div>
+<div class="toast" id="toast" onclick="this.classList.remove('show')"></div>
 
 <!-- Vitals Timeline Modal -->
 <div class="modal" id="vitalsModal">
@@ -294,30 +347,151 @@
 
 <!-- Change Handshake Modal -->
 <div class="modal" id="changeModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width:760px;">
     <div class="modal-head">
-      <h3>Change Handshake — CTC Structure Diff</h3>
+      <h3 id="changeModalTitle">Change Handshake — CTC Structure Diff</h3>
       <button class="modal-close" onclick="closeChangeModal()">×</button>
     </div>
     <div class="modal-body">
-      <p style="margin: 0 0 12px; color: var(--muted); font-size: 13px;">18 employee records changed since last payroll run. Finance pushed these edits. <strong>Payroll sign-off required to proceed.</strong></p>
-      <table class="diff-table">
-        <tr><td class="field">CTC ₹</td><td class="old">580,000 → <strong>615,000</strong></td><td>5 employees</td></tr>
-        <tr><td class="field">Basic %</td><td class="old">45% → <strong>50%</strong></td><td>Wage Code fix</td></tr>
-        <tr><td class="field">HRA Amt</td><td class="old">120,000 → <strong>125,000</strong></td><td>DA-linked rebase</td></tr>
-        <tr><td class="field">PF Amt</td><td class="new"><strong>Auto</strong> (recalc)</td><td>From new basic</td></tr>
-      </table>
-      <div class="diff-badge">⚠ AWAITING SIGN-OFF</div>
-      <button class="change-review-btn" onclick="signOffChanges()">✓ Review & Sign Off</button>
+      <p id="changeModalSummary" style="margin: 0 0 12px; color: var(--muted); font-size: 13px;"></p>
+      <div class="diff-scroll">
+        <table class="diff-table" id="changesDiffTable">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Old CTC</th>
+              <th>New CTC</th>
+              <th>Effective</th>
+              <th>Signatory</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="changesDiffBody"></tbody>
+        </table>
+      </div>
+      <div class="diff-badge" id="changesDiffBadge">⚠ AWAITING SIGN-OFF</div>
+      <button class="change-review-btn" id="saveSignoffBtn" onclick="saveSignoffDecisions()">✓ Save Decisions</button>
+      <button id="fr6DemoBtn" onclick="simulatePostSignoffChange(); closeChangeModal();" style="display:none;width:100%;padding:8px;margin-top:6px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;font-size:12px;cursor:pointer;">⚡ Demo FR-6: simulate new change post-sign-off</button>
+    </div>
+  </div>
+</div>
+
+<!-- F&F Settlement Modal -->
+<div class="modal" id="ffModal">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-head">
+      <h3>Settle Full &amp; Final — Vivek Tiwari</h3>
+      <button class="modal-close" onclick="closeFFModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- Employee Details -->
+      <div class="ff-modal-section">
+        <h4>Exit Details</h4>
+        <div class="ff-detail-row"><span class="lbl">Employee</span><span class="val">Vivek Tiwari (EMP047)</span></div>
+        <div class="ff-detail-row"><span class="lbl">Last Working Day</span><span class="val">10 Jun 2026</span></div>
+        <div class="ff-detail-row"><span class="lbl">Statutory Deadline</span><span class="val" style="color:var(--amber)">12 Jun 2026 (Thu) — 2 working days</span></div>
+        <div class="ff-detail-row"><span class="lbl">HR Signatory</span><span class="val">Priya Sharma</span></div>
+        <div class="ff-detail-row"><span class="lbl">Time Remaining</span><span class="val" id="ffModalCountdown" style="color:var(--amber)">~18 hrs</span></div>
+      </div>
+
+      <!-- F&F Amount Itemised -->
+      <div class="ff-modal-section">
+        <h4>F&amp;F Breakdown</h4>
+        <div class="ff-detail-row"><span class="lbl">Basic (last month pro-rated)</span><span class="val">₹62,500</span></div>
+        <div class="ff-detail-row"><span class="lbl">Leave encashment (8 days)</span><span class="val">₹42,500</span></div>
+        <div class="ff-detail-row"><span class="lbl">Gratuity</span><span class="val">₹20,000</span></div>
+        <div class="ff-amount-total"><span class="lbl" style="font-weight:800;">Total F&amp;F Amount</span><span class="val">₹1,25,000</span></div>
+      </div>
+
+      <!-- Settlement Method -->
+      <div class="ff-modal-section">
+        <h4>Settlement Method</h4>
+        <div class="ff-method-row">
+          <button class="ff-method-btn active" id="ffMethodBank" onclick="selectFFMethod('bank')">🏦 Bank Transfer</button>
+          <button class="ff-method-btn" id="ffMethodCash" onclick="selectFFMethod('cash')">💵 Cash</button>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="ff-modal-section">
+        <h4>Settlement Checklist</h4>
+        <ul class="ff-check-list">
+          <li><input type="checkbox" id="ffChkGratuity" checked /><label for="ffChkGratuity">Gratuity included</label></li>
+          <li><input type="checkbox" id="ffChkLeave" checked /><label for="ffChkLeave">Leave encashment included</label></li>
+          <li><input type="checkbox" id="ffChkNotice" checked /><label for="ffChkNotice">Notice period adjustment settled</label></li>
+        </ul>
+      </div>
+
+      <button class="ff-confirm-btn" id="ffConfirmBtn" onclick="confirmFFSettlement()">✓ Confirm Settlement</button>
+    </div>
+  </div>
+</div>
+
+<!-- Run Payroll Confirmation Modal -->
+<div class="modal" id="runConfirmModal" onclick="if(event.target.id==='runConfirmModal')closeRunConfirmModal()">
+  <div class="modal-content" style="max-width:400px;">
+    <div class="modal-head">
+      <h3>Ready to run payroll for June 2026?</h3>
+      <button class="modal-close" onclick="closeRunConfirmModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 20px;color:var(--muted);">June 2026 · 248 employees · All pre-flight checks passed.</p>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button onclick="closeRunConfirmModal()"
+          style="padding:10px 20px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--txt);cursor:pointer;font-size:14px;">
+          Cancel
+        </button>
+        <button onclick="confirmPayrollRun()"
+          style="padding:10px 24px;border:0;border-radius:8px;background:var(--green);color:#fff;font-weight:700;cursor:pointer;font-size:14px;">
+          Confirm &amp; Run
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  // --- Mock change records for Change Handshake (18 records, paise values) ---
+  const changeRecords = [
+    { id:'cr-001', employee_id:'EMP001', employee_name:'Arjun Mehta',     old_ctc:58000000, new_ctc:61500000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-002', employee_id:'EMP002', employee_name:'Priya Sharma',    old_ctc:72000000, new_ctc:76000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-003', employee_id:'EMP003', employee_name:'Ravi Kumar',      old_ctc:45000000, new_ctc:48000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-004', employee_id:'EMP004', employee_name:'Sunita Rao',      old_ctc:90000000, new_ctc:95000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-005', employee_id:'EMP005', employee_name:'Vikram Singh',    old_ctc:55000000, new_ctc:58000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-006', employee_id:'EMP006', employee_name:'Deepa Nair',      old_ctc:68000000, new_ctc:71000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-007', employee_id:'EMP007', employee_name:'Kiran Patel',     old_ctc:50000000, new_ctc:53000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-008', employee_id:'EMP008', employee_name:'Meera Joshi',     old_ctc:82000000, new_ctc:86000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-009', employee_id:'EMP009', employee_name:'Suresh Gupta',    old_ctc:63000000, new_ctc:66500000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-010', employee_id:'EMP010', employee_name:'Anita Desai',     old_ctc:77000000, new_ctc:80000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-011', employee_id:'EMP011', employee_name:'Rajesh Tiwari',   old_ctc:48000000, new_ctc:51000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-012', employee_id:'EMP012', employee_name:'Pooja Iyer',      old_ctc:69000000, new_ctc:73000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-013', employee_id:'EMP013', employee_name:'Amit Verma',      old_ctc:54000000, new_ctc:57500000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-014', employee_id:'EMP014', employee_name:'Kavya Reddy',     old_ctc:85000000, new_ctc:89000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-015', employee_id:'EMP015', employee_name:'Nikhil Bansal',   old_ctc:60000000, new_ctc:63500000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-016', employee_id:'EMP016', employee_name:'Shalini Mishra',  old_ctc:74000000, new_ctc:78000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+    { id:'cr-017', employee_id:'EMP017', employee_name:'Dinesh Choudhary',old_ctc:52000000, new_ctc:55000000, effective_date:'2026-07-01', signatory:'HR Head',          status:'pending' },
+    { id:'cr-018', employee_id:'EMP018', employee_name:'Geeta Pillai',    old_ctc:67000000, new_ctc:70000000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
+  ];
+
+  // --- Mock F&F exit data (Story 1-6) ---
+  // Vivek Tiwari, last WD: 2026-06-10, deadline: 2026-06-12 (2 working days; 2026-06-11 = holiday)
+  // Mock: 18h remaining → warning state (< 24h)
+  const ffExitData = {
+    employee: 'Vivek Tiwari',
+    employeeId: 'EMP047',
+    lastWorkingDay: '10 Jun 2026',
+    deadline: '12 Jun 2026',
+    deadlineShort: 'Thu 12 Jun',
+    hrSignatory: 'Priya Sharma',
+    hoursRemaining: 18,  // mock: triggers warning state
+    amountPaise: 12500000,  // ₹1,25,000 in paise
+    settled: false,
+  };
+
   // --- Mock state: the live inputs to the Readiness Score ---
   const blockers = [
-    { id:'exits',  sev:'red',   weight:18, icon:'⏳', title:'3 exits pending F&F',
-      desc:'F&F blocked on HR notice-waiver decision · legal deadline: 2 working days', tag:'Lifecycle Clock', action:'Settle' },
+    { id:'exits',  sev:'amber', weight:18, icon:'🕐', title:'1 exit pending F&F',
+      desc:'Vivek Tiwari · F&F deadline: Thu 12 Jun 2026 · HR signatory: Priya Sharma', tag:'Lifecycle Clock', action:'Settle →' },
     { id:'ctc',    sev:'amber', weight:16, icon:'✎', title:'18 unconfirmed CTC changes',
       desc:'Finance pushed structure edits since last run · sign-off required', tag:'Change Handshake', action:'Review & sign' },
     { id:'attend', sev:'red',   weight:12, icon:'📡', title:'Attendance stale — 5 days',
@@ -333,9 +507,38 @@
   // Mock sources data
   const sources = [
     { source_id: 'essl-biometric', name: 'eSSL Biometric', status: 'dead', last_synced_at: new Date(Date.now() - 5*86400*1000) },
-    { source_id: 'hrms-csv', name: 'HRMS CSV', status: 'stale', last_synced_at: new Date(Date.now() - 12*3600*1000) },
+    { source_id: 'hrms-csv', name: 'HRMS CSV', status: 'stale', last_synced_at: new Date(Date.now() - 26*3600*1000) },
     { source_id: 'tally-finance', name: 'Tally Finance', status: 'live', last_synced_at: new Date(Date.now() - 4*60*1000) }
   ];
+
+  // AC-6: pre-flight loading state flag
+  let preFlightLoading = false;
+  let preFlightLoadingTimer = null;
+  // Story 1-8: run execution flags
+  let runShouldFail = false;
+  let runInProgress = false;   // P1/P3: guards against double-click and mid-run interactions
+  let toastTimer = null;       // P6: allows cancellation before stacking timers
+  let bannerDismissed = false; // P7: prevents re-show after user dismisses warning banner
+
+  function showPreFlightLoading() {
+    if (runInProgress) return; // P8: don't stomp an active run
+    preFlightLoading = true;
+    listEl.innerHTML =
+      '<div style="padding:22px 18px;display:flex;align-items:center;gap:12px;color:var(--muted);">' +
+        '<div style="width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--blue);' +
+             'border-radius:50%;animation:spin .8s linear infinite;flex:0 0 auto;"></div>' +
+        '<span>Verifying pre-flight…</span>' +
+      '</div>';
+    runBtn.className = 'runbtn blocked';
+    runBtn.disabled = true;
+    runBtn.textContent = '🔒 Run Payroll — blocked by pre-flight';
+    preFlightLoadingTimer = setTimeout(() => {
+      preFlightLoadingTimer = null;
+      preFlightLoading = false;
+      renderList();
+      renderGauge(true);
+    }, 6000);
+  }
 
   const arc = document.getElementById('arc');
   const scoreNum = document.getElementById('scoreNum');
@@ -365,9 +568,11 @@
     const remaining = blockers.length - resolved.size;
     if (s >= 100){
       statusLine.innerHTML = '<b>All clear.</b> Confirm the green gauge — no fire drill.';
-      runBtn.className = 'runbtn ready';
-      runBtn.disabled = false;
-      runBtn.textContent = '▶ Run Payroll — 248 employees';
+      if (!runInProgress) { // P3: don't re-enable button while a run is active
+        runBtn.className = 'runbtn ready';
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ Run Payroll — 248 employees';
+      }
     } else {
       const parts = blockers.filter(b=>!resolved.has(b.id)).map(b=>b.title.toLowerCase());
       statusLine.innerHTML = '<b>'+remaining+' blocker'+(remaining>1?'s':'')+'</b> · ' + parts.join(' · ');
@@ -380,7 +585,21 @@
   }
 
   function renderList(){
+    if (preFlightLoading) return;
     listEl.innerHTML = '';
+
+    // AC-2: all-clear state when every blocker is resolved
+    if (resolved.size === blockers.length) {
+      listEl.innerHTML =
+        '<div style="padding:22px 18px;display:flex;align-items:center;gap:14px;">' +
+          '<div style="width:40px;height:40px;border-radius:50%;background:rgba(22,163,74,.12);' +
+               'color:var(--green);display:grid;place-items:center;font-size:20px;flex:0 0 auto;">✓</div>' +
+          '<div><div style="font-weight:700;color:var(--txt);">All clear. Payroll is ready to run.</div>' +
+          '<div style="font-size:13px;color:var(--muted);margin-top:3px;">Confirm the green gauge — no fire drill.</div></div>' +
+        '</div>';
+      return;
+    }
+
     blockers.forEach(b=>{
       const done = resolved.has(b.id);
       const row = document.createElement('div');
@@ -396,6 +615,11 @@
       btn.onclick = ()=> {
         if(btn.dataset.id === 'ctc') {
           openChangeModal();
+        } else if(btn.dataset.id === 'exits') {
+          openFFModal();
+        } else if(btn.dataset.id === 'attend') {
+          // AC-3: Re-sync → source detail modal for eSSL biometric
+          openSourceModal(sources.find(s => s.source_id === 'essl-biometric') || sources[0]);
         } else {
           resolve(btn.dataset.id);
         }
@@ -404,6 +628,8 @@
   }
 
   function resolve(id){
+    if (resolved.has(id)) return;
+    if (preFlightLoadingTimer) { clearTimeout(preFlightLoadingTimer); preFlightLoadingTimer = null; preFlightLoading = false; }
     resolved.add(id);
     prevented += 1;
     renderList();
@@ -416,17 +642,152 @@
     setTimeout(()=>prevEl.classList.remove('pulse-num'), 400);
   }
 
+  // Story 1-8: Run Payroll execution flow
+  function openRunConfirmModal() {
+    document.getElementById('runConfirmModal').classList.add('show');
+  }
+
+  function closeRunConfirmModal() {
+    document.getElementById('runConfirmModal').classList.remove('show');
+  }
+
+  function confirmPayrollRun() {
+    if (runInProgress) return; // P1: guard against double-click
+    runInProgress = true;
+    closeRunConfirmModal();
+    const runPreventedCount = prevented; // AC-4: capture at confirm time
+    runBtn.className = 'runbtn blocked';
+    runBtn.disabled = true;
+    runBtn.textContent = '⏳ Running payroll…';
+    setTimeout(() => {
+      if (runShouldFail) {
+        failPayrollRun();
+      } else {
+        completePayrollRun(runPreventedCount);
+      }
+    }, 1500);
+  }
+
+  function completePayrollRun(runPreventedCount) {
+    // AC-3: run complete state
+    runBtn.className = 'runbtn ready';
+    runBtn.disabled = true;
+    runBtn.textContent = '✓ Run complete';
+    // AC-3: update First-pass accuracy metric
+    document.getElementById('fpaValue').innerHTML = '99.6%<small> (this run: zero corrections)</small>'; // P9
+    // AC-4: lock in counter with pulse animation
+    const prevEl = document.getElementById('preventedNum');
+    prevEl.textContent = runPreventedCount;
+    prevEl.classList.remove('pulse-num');
+    void prevEl.offsetWidth;
+    prevEl.classList.add('pulse-num');
+    setTimeout(() => prevEl.classList.remove('pulse-num'), 400);
+    showToast('✅ Payroll run completed — zero post-run corrections');
+    // AC-5: reset for next cycle after 2s
+    setTimeout(resetCycle, 2000);
+  }
+
+  function failPayrollRun() {
+    runInProgress = false; // P1: release guard on failure path
+    // AC-6: restore ready state, red toast
+    runBtn.className = 'runbtn ready';
+    runBtn.disabled = false;
+    runBtn.textContent = '▶ Run Payroll — 248 employees';
+    showToast('❌ Payroll run failed — Compliance Engine error', 'error');
+  }
+
+  function resetCycle() {
+    runInProgress = false; // P1/P3: release guard before re-render
+    // AC-5: clear per-run state for next cycle
+    resolved.clear();
+    prevented = 0;
+    document.getElementById('preventedNum').textContent = '0';
+    document.getElementById('fpaValue').innerHTML = '99.6%<small> / target ≥99.5%</small>'; // P9
+    // P2: restore all per-cycle mock state so the second demo run is completable
+    ffSettled = false;
+    secs = ffExitData.hoursRemaining * 3600;
+    bannerDismissed = false;
+    changeRecords.forEach(r => { r.status = 'pending'; });
+    const ctcBlocker = blockers.find(b => b.id === 'ctc');
+    if (ctcBlocker) {
+      ctcBlocker.title = '18 unconfirmed CTC changes';
+      ctcBlocker.desc = 'Finance pushed structure edits since last run · sign-off required';
+      ctcBlocker.weight = 16;
+    }
+    sources[0].status = 'dead';
+    sources[0].last_synced_at = new Date(Date.now() - 5*86400*1000);
+    renderList();
+    renderGauge(false); // no sweep animation on reset
+  }
+
   // Lifecycle-to-Payroll Clock: live countdown to the legal 2-working-day F&F deadline
+  // AC-2/3/4: color thresholds & banner escalation
+  // AC-7: 2026-06-11 is a public holiday (Eid al-Adha) — deadline is 2026-06-12 not 06-12
+  // Mock: 18h remaining → warning state (< 24h) — triggers banner on load
   const ffClock = document.getElementById('ffClock');
-  let secs = 41*3600 + 12*60 + 5; // ~1.7 days remaining
-  setInterval(()=>{
-    secs = Math.max(0, secs-1);
-    const h = String(Math.floor(secs/3600)).padStart(2,'0');
-    const m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
-    const s = String(secs%60).padStart(2,'0');
-    ffClock.textContent = h+':'+m+':'+s;
-    ffClock.style.color = secs < 12*3600 ? 'var(--red)' : secs < 24*3600 ? 'var(--amber)' : 'var(--txt)';
+  let ffSettled = false;
+  let secs = ffExitData.hoursRemaining * 3600; // 18h → warning state
+
+  function updateFFClock() {
+    if (ffSettled) return;
+    secs = Math.max(0, secs - 1);
+    const h = String(Math.floor(secs / 3600)).padStart(2, '0');
+    const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    const timeStr = h + ':' + m + ':' + s;
+
+    // AC-2: color coding
+    if (secs < 12 * 3600) {
+      ffClock.style.color = '#e74c3c'; // critical
+    } else if (secs < 24 * 3600) {
+      ffClock.style.color = '#f5a623'; // warning
+    } else {
+      ffClock.style.color = 'var(--txt)';
+    }
+    ffClock.textContent = timeStr;
+
+    // AC-4: < 12h → critical banner
+    // AC-3: < 24h → warning banner (our mock starts at 18h so banner is visible)
+    const banner = document.getElementById('ffWarningBanner');
+    const warningText = document.getElementById('ffWarningText');
+    if (!bannerDismissed && secs > 0 && secs < 24 * 3600) { // P7: respect dismiss
+      banner.classList.add('show');
+      const hoursLeft = Math.ceil(secs / 3600);
+      if (secs < 12 * 3600) {
+        banner.classList.add('critical');
+        warningText.textContent = '⚠️ F&F DEADLINE AT RISK — ' + ffExitData.employee + ' · ~' + hoursLeft + ' hours remaining · ' + ffExitData.hrSignatory + ' (HR)';
+      } else {
+        banner.classList.remove('critical');
+        warningText.textContent = 'F&F deadline approaching — ' + ffExitData.employee + ' · ~' + hoursLeft + ' hours remaining · deadline: TODAY 3:00 PM · ' + ffExitData.hrSignatory + ' (HR)';
+      }
+    } else if (secs === 0) {
+      banner.classList.add('show', 'critical');
+      warningText.textContent = '🚨 F&F DEADLINE BREACHED — ' + ffExitData.employee + ' · Statutory deadline passed · ' + ffExitData.hrSignatory + ' must act NOW';
+    }
+
+    // Update modal countdown
+    const modalCountdown = document.getElementById('ffModalCountdown');
+    if (modalCountdown) {
+      const hoursLeft = Math.ceil(secs / 3600);
+      modalCountdown.textContent = secs < 3600 ? 'Less than 1 hour' : '~' + hoursLeft + ' hrs';
+      modalCountdown.style.color = secs < 12 * 3600 ? '#e74c3c' : '#f5a623';
+    }
+  }
+
+  // AC-8: prefers-reduced-motion — still tick but skip animation
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setInterval(() => {
+    if (!reducedMotion) {
+      updateFFClock();
+    } else {
+      // Still update values but skip color transitions
+      updateFFClock();
+    }
   }, 1000);
+
+  // Show banner immediately on load if logged in (18h < 24h → warning state)
+  // Banner is behind login overlay (z-index:1000) if not yet logged in — shown after initAuth
+  updateFFClock();
 
   // Vitals sync timeline data
   const vitalsData = {
@@ -498,10 +859,18 @@
       vital.className = 'vital';
       vital.style.cursor = 'pointer';
       vital.onclick = () => openSourceModal(source);
-      vital.innerHTML =
-        '<div class="src">' + source.name + '</div>' +
-        '<div class="when"><span class="pulse ' + pulseClass + '"></span>' + timeStr + '</div>';
 
+      const srcDiv = document.createElement('div');
+      srcDiv.className = 'src';
+      srcDiv.textContent = source.name;
+
+      const whenDiv = document.createElement('div');
+      whenDiv.className = 'when';
+      whenDiv.innerHTML = '<span class="pulse ' + pulseClass + '"></span>';
+      whenDiv.appendChild(document.createTextNode(timeStr));
+
+      vital.appendChild(srcDiv);
+      vital.appendChild(whenDiv);
       container.appendChild(vital);
     });
   }
@@ -515,22 +884,25 @@
     const now = new Date();
     const lastSync = new Date(lastSyncedAt);
     const secondsAgo = Math.floor((now - lastSync) / 1000);
+    if (secondsAgo < 0) return 'Live · just now';
     const minutesAgo = Math.floor(secondsAgo / 60);
     const hoursAgo = Math.floor(secondsAgo / 3600);
     const daysAgo = Math.floor(secondsAgo / 86400);
 
     if (status === 'live') {
+      if (minutesAgo < 1) return 'Live · just now';
       if (minutesAgo < 60) return 'Live · ' + minutesAgo + ' min';
       if (hoursAgo < 24) return 'Live · ' + hoursAgo + 'h';
       return 'Live · ' + daysAgo + ' days';
     } else if (status === 'stale') {
+      if (daysAgo >= 2) return 'Stale · ' + daysAgo + ' days';
       return 'Stale · ' + hoursAgo + 'h';
     } else {
       return 'Dead · ' + daysAgo + ' days';
     }
   }
 
-  // Open modal for source details
+  // Open modal for source details (AC-3: Re-sync resolution surface for Freshness Vitals blocker)
   function openSourceModal(source) {
     document.getElementById('vitalsTitle').textContent = source.name + ' — Status';
     const timeline = document.getElementById('vitalsTimeline');
@@ -542,29 +914,270 @@
       ? new Date(source.last_synced_at).toLocaleString()
       : 'Never synced';
 
-    item.innerHTML =
-      '<div class="timeline-dot"></div>' +
-      '<div class="timeline-content">' +
-      '<div class="timeline-source">' + source.name + '</div>' +
-      '<div class="timeline-time">Status: ' + source.status.charAt(0).toUpperCase() + source.status.slice(1) + '</div>' +
-      '<div class="timeline-time" style="margin-top:8px;">Last synced: ' + lastSyncStr + '</div>' +
-      '</div>';
+    const dot = document.createElement('div');
+    dot.className = 'timeline-dot';
+
+    const content = document.createElement('div');
+    content.className = 'timeline-content';
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'timeline-source';
+    nameEl.textContent = source.name;
+
+    const statusEl = document.createElement('div');
+    statusEl.className = 'timeline-time';
+    statusEl.textContent = 'Status: ' + source.status.charAt(0).toUpperCase() + source.status.slice(1);
+
+    const syncEl = document.createElement('div');
+    syncEl.className = 'timeline-time';
+    syncEl.style.marginTop = '8px';
+    syncEl.textContent = 'Last synced: ' + lastSyncStr;
+
+    content.appendChild(nameEl);
+    content.appendChild(statusEl);
+    content.appendChild(syncEl);
+    item.appendChild(dot);
+    item.appendChild(content);
 
     timeline.appendChild(item);
+
+    // AC-3: For stale/dead sources, show Re-sync now button linked to blocker resolution
+    if (source.status === 'stale' || source.status === 'dead') {
+      const resyncBtn = document.createElement('button');
+      resyncBtn.textContent = '↻ Re-sync now';
+      resyncBtn.style.cssText = 'width:100%;margin-top:16px;padding:11px;background:var(--blue);color:#fff;border:0;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;';
+      resyncBtn.onclick = () => {
+        // Mock: mark source as live and resolve the attend blocker
+        source.status = 'live';
+        source.last_synced_at = new Date();
+        closeVitalsModal();
+        resolve('attend');
+        showToast('✅ ' + source.name + ' re-synced — attendance data refreshed');
+      };
+      timeline.appendChild(resyncBtn);
+    }
+
     document.getElementById('vitalsModal').classList.add('show');
   }
 
-  function openChangeModal(){
+  function formatCtc(paise) {
+    return '₹' + (paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  }
+
+  function openChangeModal() {
+    renderChangeDiff();
     document.getElementById('changeModal').classList.add('show');
   }
 
-  function closeChangeModal(){
+  function closeChangeModal() {
     document.getElementById('changeModal').classList.remove('show');
   }
 
-  function signOffChanges(){
-    closeChangeModal();
-    resolve('ctc');
+  function renderChangeDiff() {
+    const pending = changeRecords.filter(r => r.status === 'pending' || r.status === 'held');
+    const total = changeRecords.length;
+    const pendingCount = pending.length;
+
+    const title = document.getElementById('changeModalTitle');
+    title.textContent = 'Change Handshake — CTC Diff (' + pendingCount + ' awaiting sign-off)';
+
+    const summary = document.getElementById('changeModalSummary');
+    summary.innerHTML = pendingCount + ' of ' + total + ' employee records need review. Finance pushed these changes. <strong>Payroll sign-off required to proceed.</strong>';
+
+    const badge = document.getElementById('changesDiffBadge');
+    badge.textContent = pendingCount > 0 ? ('⚠ ' + pendingCount + ' AWAITING SIGN-OFF') : '✓ ALL SIGNED OFF';
+    badge.style.background = pendingCount > 0 ? 'rgba(217,119,6,.1)' : 'rgba(46,204,113,.1)';
+    badge.style.color = pendingCount > 0 ? 'var(--amber)' : 'var(--green)';
+
+    const saveBtn = document.getElementById('saveSignoffBtn');
+    saveBtn.disabled = pendingCount === 0;
+    saveBtn.textContent = pendingCount > 0 ? '✓ Save Decisions' : '✓ All done';
+
+    const fr6Btn = document.getElementById('fr6DemoBtn');
+    const hasSignedOff = changeRecords.some(r => r.status === 'signed_off');
+    fr6Btn.style.display = (pendingCount === 0 && hasSignedOff) ? 'block' : 'none';
+
+    const tbody = document.getElementById('changesDiffBody');
+    tbody.innerHTML = '';
+
+    changeRecords.forEach(record => {
+      const tr = document.createElement('tr');
+      const isPending = record.status === 'pending' || record.status === 'held';
+
+      // Employee cell
+      const empTd = document.createElement('td');
+      empTd.style.minWidth = '130px';
+      const nameEl = document.createElement('div');
+      nameEl.style.fontWeight = '500';
+      nameEl.textContent = record.employee_name;
+      const idEl = document.createElement('div');
+      idEl.style.cssText = 'font-size:11px;color:var(--muted)';
+      idEl.textContent = record.employee_id;
+      empTd.appendChild(nameEl);
+      empTd.appendChild(idEl);
+
+      // Old CTC
+      const oldTd = document.createElement('td');
+      oldTd.className = 'ctc-old';
+      oldTd.textContent = formatCtc(record.old_ctc);
+
+      // New CTC
+      const newTd = document.createElement('td');
+      newTd.className = 'ctc-new';
+      newTd.textContent = formatCtc(record.new_ctc);
+
+      // Effective date
+      const effTd = document.createElement('td');
+      effTd.className = 'eff-date';
+      effTd.textContent = record.effective_date;
+
+      // Signatory
+      const sigTd = document.createElement('td');
+      sigTd.style.cssText = 'font-size:12px;color:var(--muted)';
+      sigTd.textContent = record.signatory;
+
+      // Action cell
+      const actTd = document.createElement('td');
+
+      if (isPending) {
+        const currentAction = record.status === 'held' ? 'hold' : 'sign';
+        actTd.innerHTML =
+          '<div class="diff-action">' +
+          '<label class="opt-sign"><input type="radio" name="action-' + record.id + '" value="sign"' + (currentAction === 'sign' ? ' checked' : '') + '><span>Sign-off</span></label>' +
+          '<label class="opt-hold"><input type="radio" name="action-' + record.id + '" value="hold"' + (currentAction === 'hold' ? ' checked' : '') + '><span>Hold</span></label>' +
+          '<label class="opt-reject"><input type="radio" name="action-' + record.id + '" value="reject"><span>Reject</span></label>' +
+          '</div>';
+      } else {
+        const statusLabel = { signed_off: '✓ Signed off', rejected: '✗ Rejected', held: '⏸ Held' }[record.status] || record.status;
+        const statusColor = { signed_off: 'var(--green)', rejected: 'var(--red)', held: 'var(--amber)' }[record.status] || 'var(--muted)';
+        const statusEl = document.createElement('span');
+        statusEl.style.cssText = 'font-size:11px;font-weight:600;color:' + statusColor;
+        statusEl.textContent = statusLabel;
+        actTd.appendChild(statusEl);
+      }
+
+      tr.appendChild(empTd);
+      tr.appendChild(oldTd);
+      tr.appendChild(newTd);
+      tr.appendChild(effTd);
+      tr.appendChild(sigTd);
+      tr.appendChild(actTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function saveSignoffDecisions() {
+    let anyChanged = false;
+
+    changeRecords.forEach(record => {
+      if (record.status !== 'pending' && record.status !== 'held') return;
+
+      const radios = document.querySelectorAll('input[name="action-' + record.id + '"]');
+      let chosen = null;
+      radios.forEach(r => { if (r.checked) chosen = r.value; });
+
+      if (chosen === 'sign') {
+        record.status = 'signed_off';
+        anyChanged = true;
+      } else if (chosen === 'hold') {
+        record.status = 'held';
+        anyChanged = true;
+      } else if (chosen === 'reject') {
+        record.status = 'rejected';
+        anyChanged = true;
+      }
+    });
+
+    const remainingPending = changeRecords.filter(r => r.status === 'pending' || r.status === 'held').length;
+
+    // Update the ctc blocker description and weight
+    const ctcBlocker = blockers.find(b => b.id === 'ctc');
+    if (ctcBlocker) {
+      if (remainingPending === 0) {
+        resolve('ctc'); // resolve already calls renderList + renderGauge
+        renderChangeDiff(); // update modal badge/button state only
+        return;
+      } else {
+        ctcBlocker.title = remainingPending + ' unconfirmed CTC changes';
+        ctcBlocker.desc = remainingPending + ' records held · sign-off required to proceed';
+        ctcBlocker.weight = Math.round(16 * remainingPending / changeRecords.length);
+      }
+    }
+
+    renderChangeDiff();
+    renderList();
+    renderGauge(true);
+  }
+
+  function simulatePostSignoffChange() {
+    // FR-6: simulate new CTC change arriving after partial sign-off
+    const signedOff = changeRecords.filter(r => r.status === 'signed_off');
+    if (signedOff.length === 0) return;
+
+    // Re-mark first signed-off record as pending (simulates finance re-pushing)
+    const target = signedOff[0];
+    target.status = 'pending';
+    target.old_ctc = target.new_ctc;
+    target.new_ctc = Math.round(target.new_ctc * 1.03); // 3% further change
+
+    const ctcBlocker = blockers.find(b => b.id === 'ctc');
+    if (ctcBlocker && resolved.has('ctc')) {
+      resolved.delete('ctc');
+    }
+    if (ctcBlocker) {
+      const pending = changeRecords.filter(r => r.status === 'pending' || r.status === 'held').length;
+      ctcBlocker.title = pending + ' new CTC change since sign-off';
+      ctcBlocker.desc = 'Finance re-pushed after sign-off · re-acknowledgement required';
+      ctcBlocker.weight = 6;
+    }
+    renderList();
+    renderGauge(true);
+    showToast('⚠ New CTC change arrived after sign-off — run re-blocked');
+  }
+
+  // --- F&F Settlement Modal ---
+  let ffSelectedMethod = 'bank';
+
+  function openFFModal() {
+    document.getElementById('ffModal').classList.add('show');
+  }
+
+  function closeFFModal() {
+    document.getElementById('ffModal').classList.remove('show');
+  }
+
+  function selectFFMethod(method) {
+    ffSelectedMethod = method;
+    document.getElementById('ffMethodBank').classList.toggle('active', method === 'bank');
+    document.getElementById('ffMethodCash').classList.toggle('active', method === 'cash');
+  }
+
+  function confirmFFSettlement() {
+    // AC-5: confirm settlement → clear blocker, banner, update clock, recompute gauge
+    ffSettled = true;
+    ffExitData.settled = true;
+
+    // Clear warning banner
+    document.getElementById('ffWarningBanner').classList.remove('show');
+
+    // Update ffClock metric to show "Settled"
+    ffClock.textContent = 'Settled';
+    ffClock.style.color = 'var(--green)';
+
+    // AC-6: update localStorage so portal.html can show "F&F Settled"
+    try {
+      localStorage.setItem('ff_settled_' + ffExitData.employeeId, JSON.stringify({
+        employee: ffExitData.employee,
+        settledAt: new Date().toISOString(),
+        amount: ffExitData.amountPaise,
+        method: ffSelectedMethod,
+      }));
+    } catch(e) { /* localStorage may be unavailable */ }
+
+    // Resolve the exits blocker (triggers gauge recompute)
+    closeFFModal();
+    resolve('exits');
+    showToast('✅ F&F Settled for Vivek Tiwari — ₹1,25,000 via ' + (ffSelectedMethod === 'bank' ? 'Bank Transfer' : 'Cash'));
   }
 
   // Close modals on background click
@@ -574,13 +1187,23 @@
   document.getElementById('changeModal').onclick = (e)=>{
     if(e.target.id === 'changeModal') closeChangeModal();
   };
+  document.getElementById('ffModal').onclick = (e)=>{
+    if(e.target.id === 'ffModal') closeFFModal();
+  };
 
-  // Run payroll -> toast
-  runBtn.onclick = ()=>{
-    if (runBtn.disabled) return;
+  function showToast(msg, type) {
     const t = document.getElementById('toast');
+    clearTimeout(toastTimer); // P6: cancel any pending auto-dismiss before showing new toast
+    t.textContent = msg;
+    t.style.background = type === 'error' ? 'var(--red)' : 'var(--green)';
     t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 3200);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // Run payroll -> confirmation modal (AC-1)
+  runBtn.onclick = () => {
+    if (runBtn.disabled) return;
+    openRunConfirmModal();
   };
 
   // --- Login System ---
