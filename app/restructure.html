@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Restructuring Assistant — Greenlit Payroll</title>
+<title>Greenlit — Restructuring Assistant</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A5F'/%3E%3Cg transform='translate(32 35) scale(0.7)'%3E%3Cpath d='M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cy='-20' r='5.5' fill='%2322C55E'/%3E%3C/g%3E%3C/svg%3E" />
 <style>
   :root {
+    --navy: #1E3A5F;
+    --brand-green: #22C55E;
     --bg: #FFFFFF;
     --panel: #F5F7FA;
     --line: #E5E7EB;
@@ -14,7 +17,7 @@
     --green: #16A34A;
     --amber: #D97706;
     --red: #DC2626;
-    --blue: #0D9488;
+    --blue: #1E3A5F;
     --radius: 14px;
     --shadow: 0 6px 24px rgba(0,0,0,.08);
   }
@@ -29,19 +32,20 @@
 
   header.app {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 28px; border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    padding: 14px 28px; border-bottom: 1px solid rgba(255,255,255,.08);
+    background: var(--navy);
     position: sticky; top: 0; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
-  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
-  .brand small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; color: #FFFFFF; }
+  .brand .logo-mark { display: block; flex: 0 0 auto; }
+  .brand .wordmark { font-size: 17px; font-weight: 600; letter-spacing: -.4px; }
+  .brand small { display: block; font-weight: 500; color: rgba(255,255,255,.6); font-size: 12px; }
   .back-link {
-    font-size: 12px; color: var(--blue); text-decoration: none;
-    border: 1px solid rgba(13,148,136,.3); padding: 5px 10px; border-radius: 8px;
-    font-weight: 600; background: rgba(13,148,136,.05); white-space: nowrap;
+    font-size: 12px; color: rgba(255,255,255,.75); text-decoration: none;
+    border: 1px solid rgba(255,255,255,.28); padding: 5px 10px; border-radius: 8px;
+    font-weight: 600; background: rgba(255,255,255,.08); white-space: nowrap;
   }
-  .back-link:hover { background: rgba(13,148,136,.12); }
+  .back-link:hover { background: rgba(255,255,255,.18); color: #FFFFFF; }
 
   main { max-width: 1200px; margin: 0 auto; padding: 28px; }
 
@@ -102,7 +106,7 @@
     font-variant-numeric: tabular-nums;
   }
   .proposed-input-wrap input[type="number"]:focus {
-    outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.15);
+    outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(30,58,95,.15);
   }
   .proposed-input-wrap input.invalid {
     border-color: var(--red); background: #FEF2F2;
@@ -130,8 +134,11 @@
 
 <header class="app">
   <div class="brand">
-    <span class="dot"></span>
-    <div>Greenlit Payroll <small>Restructuring Assistant · June 2026 · Acme Mfg Pvt Ltd</small></div>
+    <svg class="logo-mark" viewBox="-26 -26 52 52" width="28" height="28" aria-hidden="true">
+      <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+    </svg>
+    <div><span class="wordmark">greenlit</span> <small>Restructuring Assistant · June 2026 · Acme Mfg Pvt Ltd</small></div>
   </div>
   <a href="index.html" class="back-link">← Dashboard</a>
 </header>
@@ -188,7 +195,7 @@
 
     <button id="applyBtn" onclick="applyRestructuring(false)"
       style="width:100%; padding:14px; border:0; border-radius:10px;
-             background:#0D9488; color:#fff; font-weight:700; font-size:15px; cursor:pointer;">
+             background:#1E3A5F; color:#fff; font-weight:700; font-size:15px; cursor:pointer;">
       Apply Restructuring — N employees
     </button>
     <p style="margin-top:8px; font-size:12px; color:var(--muted); text-align:center;">

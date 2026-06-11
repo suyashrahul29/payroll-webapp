@@ -1,0 +1,88 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img [ref=e4]
+      - generic [ref=e7]:
+        - text: greenlit
+        - generic [ref=e8]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e9]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: — from data-complete"
+    - generic [ref=e10]:
+      - link "Setup →" [ref=e11] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e12] [cursor=pointer]:
+        - /url: import.html
+      - link "Restructure →" [ref=e13] [cursor=pointer]:
+        - /url: restructure.html
+      - link "Portal →" [ref=e14] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e15] [cursor=pointer]
+  - generic [ref=e16]:
+    - generic [ref=e17]: ⚠️
+    - generic [ref=e18]: "F&F deadline approaching — Raj Mehta · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e19] [cursor=pointer]: ×
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - img [ref=e26]
+            - generic [ref=e29]:
+              - generic [ref=e30]: "0"
+              - generic [ref=e31]: ready
+          - generic [ref=e32]: Reconciling upstream inputs…
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e33]
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e36]
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - generic [ref=e39]: 🕐
+              - generic [ref=e40]:
+                - generic [ref=e41]: 1 exit pending F&F
+                - generic [ref=e42]: "Raj Mehta · F&F deadline: Tue 24 Jun 2026 · HR signatory: Priya Sharma"
+                - generic [ref=e43]: Lifecycle Clock
+              - button "Settle →" [ref=e44] [cursor=pointer]
+            - generic [ref=e45]:
+              - generic [ref=e46]: ✎
+              - generic [ref=e47]:
+                - generic [ref=e48]: 18 unconfirmed CTC changes
+                - generic [ref=e49]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e50]: Change Handshake
+              - button "Review & sign" [ref=e51] [cursor=pointer]
+            - generic [ref=e52]:
+              - generic [ref=e53]: 📡
+              - generic [ref=e54]:
+                - generic [ref=e55]: Attendance stale — 5 days
+                - generic [ref=e56]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e57]: Freshness Vitals
+              - button "Re-sync" [ref=e58] [cursor=pointer]
+            - generic [ref=e59]:
+              - generic [ref=e60]: ₹
+              - generic [ref=e61]:
+                - generic [ref=e62]: PF challan not generated
+                - generic [ref=e63]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e64]: Compliance floor
+              - button "Generate" [ref=e65] [cursor=pointer]
+        - heading "Data Freshness Vitals" [level=2] [ref=e67]
+        - generic [ref=e69]:
+          - heading "The two numbers we live by" [level=2] [ref=e70]
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - generic [ref=e74]: First-pass accuracy
+              - generic [ref=e75]: 99.6% / target ≥99.5%
+            - generic [ref=e76]:
+              - generic [ref=e77]: Errors prevented this run
+              - generic [ref=e78]: "0"
+            - generic [ref=e79]:
+              - generic [ref=e80]: Lifecycle clock — next F&F
+              - generic [ref=e81]: 17:59:59
+            - generic [ref=e82]:
+              - generic [ref=e83]: Time-to-First-Payroll
+              - generic [ref=e84]: —
+    - paragraph [ref=e85]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e86] [cursor=pointer]'
+      - 'button "Demo: fail run" [ref=e87] [cursor=pointer]'

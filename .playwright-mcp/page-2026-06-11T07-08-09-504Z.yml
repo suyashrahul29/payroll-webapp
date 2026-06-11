@@ -1,0 +1,195 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - generic [ref=e8]:
+      - link "Setup →" [ref=e9] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e10] [cursor=pointer]:
+        - /url: import.html
+      - link "Restructure →" [ref=e11] [cursor=pointer]:
+        - /url: restructure.html
+      - link "Portal →" [ref=e12] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e13] [cursor=pointer]
+  - generic [ref=e14]:
+    - generic [ref=e15]: ⚠️
+    - generic [ref=e16]: "F&F deadline approaching — Raj Mehta · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e17] [cursor=pointer]: ×
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e21]
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e24]
+            - generic [ref=e27]:
+              - generic [ref=e28]: "34"
+              - generic [ref=e29]: ready
+          - generic [ref=e30]: 5 blockers · 5 salary structures changed — restructuring pending sign-off · 1 exit pending f&f · 18 unconfirmed ctc changes · attendance stale — 5 days · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e31]
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - generic [ref=e37]: ⟳
+              - generic [ref=e38]:
+                - generic [ref=e39]: 5 salary structures changed — restructuring pending sign-off
+                - generic [ref=e40]: Proposed restructuring from the 50%-Wage-Rule Assistant · sign-off required before changes are applied
+                - generic [ref=e41]: Change Handshake
+              - button "Review & sign" [active] [ref=e42] [cursor=pointer]
+            - generic [ref=e43]:
+              - generic [ref=e44]: 🕐
+              - generic [ref=e45]:
+                - generic [ref=e46]: 1 exit pending F&F
+                - generic [ref=e47]: "Raj Mehta · F&F deadline: Tue 24 Jun 2026 · HR signatory: Priya Sharma"
+                - generic [ref=e48]: Lifecycle Clock
+              - button "Settle →" [ref=e49] [cursor=pointer]
+            - generic [ref=e50]:
+              - generic [ref=e51]: ✎
+              - generic [ref=e52]:
+                - generic [ref=e53]: 18 unconfirmed CTC changes
+                - generic [ref=e54]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e55]: Change Handshake
+              - button "Review & sign" [ref=e56] [cursor=pointer]
+            - generic [ref=e57]:
+              - generic [ref=e58]: 📡
+              - generic [ref=e59]:
+                - generic [ref=e60]: Attendance stale — 5 days
+                - generic [ref=e61]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e62]: Freshness Vitals
+              - button "Re-sync" [ref=e63] [cursor=pointer]
+            - generic [ref=e64]:
+              - generic [ref=e65]: ₹
+              - generic [ref=e66]:
+                - generic [ref=e67]: PF challan not generated
+                - generic [ref=e68]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e69]: Compliance floor
+              - button "Generate" [ref=e70] [cursor=pointer]
+        - generic [ref=e71]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e72]
+          - generic [ref=e74]:
+            - generic [ref=e75] [cursor=pointer]:
+              - generic [ref=e76]: eSSL Biometric
+              - generic [ref=e77]: Dead · 5 days
+            - generic [ref=e79] [cursor=pointer]:
+              - generic [ref=e80]: HRMS CSV
+              - generic [ref=e81]: Stale · 26h
+            - generic [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: Tally Finance
+              - generic [ref=e85]: Live · 4 min
+        - generic [ref=e87]:
+          - heading "The two numbers we live by" [level=2] [ref=e88]
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - generic [ref=e92]: First-pass accuracy
+              - generic [ref=e93]: 99.6% / target ≥99.5%
+            - generic [ref=e94]:
+              - generic [ref=e95]: Errors prevented this run
+              - generic [ref=e96]: "0"
+            - generic [ref=e97]:
+              - generic [ref=e98]: Lifecycle clock — next F&F
+              - generic [ref=e99]: 17:59:19
+            - generic [ref=e100]:
+              - generic [ref=e101]: Time-to-First-Payroll
+              - generic [ref=e102]: 2.1 biz days
+    - paragraph [ref=e103]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e104] [cursor=pointer]'
+      - 'button "Demo: fail run" [ref=e105] [cursor=pointer]'
+  - generic [ref=e107]:
+    - generic [ref=e108]:
+      - heading "Restructuring Sign-off — 5 salary structures" [level=3] [ref=e109]
+      - button "×" [ref=e110] [cursor=pointer]
+    - generic [ref=e111]:
+      - paragraph [ref=e112]:
+        - text: Proposed by Restructuring Assistant · 11/6/2026, 12:37:28 pm ·
+        - strong [ref=e113]: Sign off to apply salary structure changes
+      - table [ref=e115]:
+        - rowgroup [ref=e116]:
+          - row "Employee Old Basic New Basic Take-home Δ PF Δ Signatory Action" [ref=e117]:
+            - columnheader "Employee" [ref=e118]
+            - columnheader "Old Basic" [ref=e119]
+            - columnheader "New Basic" [ref=e120]
+            - columnheader "Take-home Δ" [ref=e121]
+            - columnheader "PF Δ" [ref=e122]
+            - columnheader "Signatory" [ref=e123]
+            - columnheader "Action" [ref=e124]
+        - rowgroup [ref=e125]:
+          - row "Amit Sharma EMP001 ₹22,500 ₹25,000 — — HR Manager Sign-off Hold Reject" [ref=e126]:
+            - cell "Amit Sharma EMP001" [ref=e127]:
+              - generic [ref=e128]: Amit Sharma
+              - generic [ref=e129]: EMP001
+            - cell "₹22,500" [ref=e130]
+            - cell "₹25,000" [ref=e131]
+            - cell "—" [ref=e132]
+            - cell "—" [ref=e133]
+            - cell "HR Manager" [ref=e134]
+            - cell "Sign-off Hold Reject" [ref=e135]:
+              - generic [ref=e136]:
+                - generic [ref=e138] [cursor=pointer]: Sign-off
+                - generic [ref=e140] [cursor=pointer]: Hold
+                - generic [ref=e142] [cursor=pointer]: Reject
+          - row "Sunita Rao EMP002 ₹18,000 ₹22,500 — — HR Manager Sign-off Hold Reject" [ref=e143]:
+            - cell "Sunita Rao EMP002" [ref=e144]:
+              - generic [ref=e145]: Sunita Rao
+              - generic [ref=e146]: EMP002
+            - cell "₹18,000" [ref=e147]
+            - cell "₹22,500" [ref=e148]
+            - cell "—" [ref=e149]
+            - cell "—" [ref=e150]
+            - cell "HR Manager" [ref=e151]
+            - cell "Sign-off Hold Reject" [ref=e152]:
+              - generic [ref=e153]:
+                - generic [ref=e155] [cursor=pointer]: Sign-off
+                - generic [ref=e157] [cursor=pointer]: Hold
+                - generic [ref=e159] [cursor=pointer]: Reject
+          - row "Ravi Kumar EMP003 ₹12,000 ₹12,500 −₹60 −₹60 HR Manager Sign-off Hold Reject" [ref=e160]:
+            - cell "Ravi Kumar EMP003" [ref=e161]:
+              - generic [ref=e162]: Ravi Kumar
+              - generic [ref=e163]: EMP003
+            - cell "₹12,000" [ref=e164]
+            - cell "₹12,500" [ref=e165]
+            - cell "−₹60" [ref=e166]
+            - cell "−₹60" [ref=e167]
+            - cell "HR Manager" [ref=e168]
+            - cell "Sign-off Hold Reject" [ref=e169]:
+              - generic [ref=e170]:
+                - generic [ref=e172] [cursor=pointer]: Sign-off
+                - generic [ref=e174] [cursor=pointer]: Hold
+                - generic [ref=e176] [cursor=pointer]: Reject
+          - row "Preethi Nair EMP004 ₹30,000 ₹37,500 — — HR Manager Sign-off Hold Reject" [ref=e177]:
+            - cell "Preethi Nair EMP004" [ref=e178]:
+              - generic [ref=e179]: Preethi Nair
+              - generic [ref=e180]: EMP004
+            - cell "₹30,000" [ref=e181]
+            - cell "₹37,500" [ref=e182]
+            - cell "—" [ref=e183]
+            - cell "—" [ref=e184]
+            - cell "HR Manager" [ref=e185]
+            - cell "Sign-off Hold Reject" [ref=e186]:
+              - generic [ref=e187]:
+                - generic [ref=e189] [cursor=pointer]: Sign-off
+                - generic [ref=e191] [cursor=pointer]: Hold
+                - generic [ref=e193] [cursor=pointer]: Reject
+          - row "Vikram Singh EMP005 ₹20,000 ₹25,000 — — HR Manager Sign-off Hold Reject" [ref=e194]:
+            - cell "Vikram Singh EMP005" [ref=e195]:
+              - generic [ref=e196]: Vikram Singh
+              - generic [ref=e197]: EMP005
+            - cell "₹20,000" [ref=e198]
+            - cell "₹25,000" [ref=e199]
+            - cell "—" [ref=e200]
+            - cell "—" [ref=e201]
+            - cell "HR Manager" [ref=e202]
+            - cell "Sign-off Hold Reject" [ref=e203]:
+              - generic [ref=e204]:
+                - generic [ref=e206] [cursor=pointer]: Sign-off
+                - generic [ref=e208] [cursor=pointer]: Hold
+                - generic [ref=e210] [cursor=pointer]: Reject
+      - generic [ref=e211]: ⚠ 5 AWAITING SIGN-OFF
+      - button "✓ Save Decisions" [ref=e212] [cursor=pointer]

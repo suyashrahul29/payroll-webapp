@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e5]
+      - heading "greenlit" [level=1] [ref=e8]
+    - generic [ref=e9]: Sign in to your account
+    - generic [ref=e10]:
+      - button "HR Manager" [ref=e11] [cursor=pointer]
+      - button "Employee" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: Username
+        - textbox "e.g., priya@acme.com" [ref=e16]: priya
+        - generic [ref=e17]: "Demo: any username works"
+      - generic [ref=e18]:
+        - generic [ref=e19]: Password
+        - textbox "••••••••" [ref=e20]: demo
+        - generic [ref=e21]: "Demo: any password works"
+      - button "Sign In" [ref=e22] [cursor=pointer]
+  - banner [ref=e23]:
+    - generic [ref=e24]:
+      - img [ref=e25]
+      - generic [ref=e28]:
+        - text: greenlit
+        - generic [ref=e29]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e30]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: — from data-complete"
+    - generic [ref=e31]:
+      - link "Setup →" [ref=e32] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e33] [cursor=pointer]:
+        - /url: import.html
+      - link "Restructure →" [ref=e34] [cursor=pointer]:
+        - /url: restructure.html
+      - link "Portal →" [ref=e35] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e36] [cursor=pointer]
+  - generic [ref=e37]:
+    - generic [ref=e38]: ⚠️
+    - generic [ref=e39]: "F&F deadline approaching — Raj Mehta · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e40] [cursor=pointer]: ×

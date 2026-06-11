@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Import Employee Master — payroll-webapp</title>
+<title>Greenlit — Import Employee Master</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A5F'/%3E%3Cg transform='translate(32 35) scale(0.7)'%3E%3Cpath d='M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cy='-20' r='5.5' fill='%2322C55E'/%3E%3C/g%3E%3C/svg%3E" />
 <style>
   :root {
+    --navy: #1E3A5F;
+    --brand-green: #22C55E;
     --bg: #FFFFFF;
     --panel: #F5F7FA;
     --panel-2: #F5F7FA;
@@ -15,7 +18,7 @@
     --green: #16A34A;
     --amber: #D97706;
     --red: #DC2626;
-    --blue: #0D9488;
+    --blue: #1E3A5F;
     --radius: 14px;
     --shadow: 0 6px 24px rgba(0,0,0,.08);
   }
@@ -29,20 +32,21 @@
   }
   header.app {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 28px; border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    padding: 14px 28px; border-bottom: 1px solid rgba(255,255,255,.08);
+    background: var(--navy);
     position: sticky; top: 0; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
-  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
-  .brand small { display:block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; color: #FFFFFF; }
+  .brand .logo-mark { display: block; flex: 0 0 auto; }
+  .brand .wordmark { font-size: 17px; font-weight: 600; letter-spacing: -.4px; }
+  .brand small { display:block; font-weight: 500; color: rgba(255,255,255,.6); font-size: 12px; }
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
-    color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600;
-    padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px;
+    color: rgba(255,255,255,.75); text-decoration: none; font-size: 13px; font-weight: 600;
+    padding: 8px 14px; border: 1px solid rgba(255,255,255,.28); border-radius: 8px;
     transition: .15s; white-space: nowrap;
   }
-  .back-link:hover { color: var(--txt); border-color: var(--txt); background: var(--panel); }
+  .back-link:hover { color: #FFFFFF; border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.1); }
 
   main { max-width: 1180px; margin: 0 auto; padding: 28px; }
   @media (max-width: 560px) { main { padding: 16px; } }
@@ -79,8 +83,8 @@
   /* Column list */
   .col-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 16px; }
   .col-chip {
-    font-size: 11px; font-weight: 600; background: rgba(13,148,136,.08);
-    color: var(--blue); border: 1px solid rgba(13,148,136,.2);
+    font-size: 11px; font-weight: 600; background: rgba(30,58,95,.08);
+    color: var(--blue); border: 1px solid rgba(30,58,95,.2);
     border-radius: 6px; padding: 3px 9px; font-family: monospace;
   }
   .col-chip.required { background: rgba(220,38,38,.06); color: var(--red); border-color: rgba(220,38,38,.2); }
@@ -92,7 +96,7 @@
     transition: .2s; position: relative;
   }
   .drop-zone:hover, .drop-zone.dragover {
-    border-color: var(--blue); background: rgba(13,148,136,.04);
+    border-color: var(--blue); background: rgba(30,58,95,.04);
   }
   .drop-zone input[type=file] { display: none; }
   .drop-zone .dz-icon { font-size: 36px; margin-bottom: 12px; }
@@ -117,7 +121,7 @@
   }
   .summary-chip.valid { background: rgba(22,163,74,.1); color: var(--green); }
   .summary-chip.errors { background: rgba(220,38,38,.1); color: var(--red); }
-  .summary-chip.info { background: rgba(13,148,136,.1); color: var(--blue); }
+  .summary-chip.info { background: rgba(30,58,95,.1); color: var(--blue); }
 
   /* Errors table */
   .err-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -176,7 +180,7 @@
   }
   .audit-row:last-child { border-bottom: 0; }
   .audit-ts { color: var(--muted); font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .audit-source { font-family: monospace; font-size: 11px; background: rgba(13,148,136,.08); color: var(--blue); border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
+  .audit-source { font-family: monospace; font-size: 11px; background: rgba(30,58,95,.08); color: var(--blue); border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
   .audit-counts { flex: 1; min-width: 120px; }
   .audit-counts .imported { color: var(--green); font-weight: 700; }
   .audit-counts .rejected { color: var(--red); font-weight: 700; }
@@ -187,8 +191,11 @@
 
 <header class="app">
   <div class="brand">
-    <span class="dot"></span>
-    <div>payroll-webapp <small>Employee Master Import · Acme Mfg Pvt Ltd</small></div>
+    <svg class="logo-mark" viewBox="-26 -26 52 52" width="28" height="28" aria-hidden="true">
+      <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+    </svg>
+    <div><span class="wordmark">greenlit</span> <small>Employee Master Import · Acme Mfg Pvt Ltd</small></div>
   </div>
   <a href="index.html" class="back-link">← Dashboard</a>
 </header>

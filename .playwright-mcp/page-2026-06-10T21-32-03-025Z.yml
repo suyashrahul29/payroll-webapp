@@ -1,0 +1,116 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]: Greenlit Payroll
+    - generic [ref=e5]:
+      - link "← Back to Dashboard" [ref=e6] [cursor=pointer]:
+        - /url: ./index.html
+      - button "🖨️ Print / Save as PDF" [ref=e7] [cursor=pointer]
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]: "Multi-State Demo:"
+      - button "Maharashtra" [ref=e11] [cursor=pointer]
+      - button "Tamil Nadu" [ref=e12] [cursor=pointer]
+      - button "Karnataka" [ref=e13] [cursor=pointer]
+    - generic [ref=e15]: Jurisdiction audit log — changes will appear here.
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Acme Pvt Ltd
+          - generic [ref=e21]: Mumbai, Maharashtra
+          - generic [ref=e22]: "PAN: AABCA1234D"
+        - generic [ref=e23]:
+          - heading "PAYSLIP" [level=1] [ref=e24]
+          - paragraph [ref=e25]: June 2026
+          - paragraph [ref=e26]: "Payment Date: 10 June 2026"
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: Employee Name
+          - generic [ref=e30]: Aditya Sharma
+        - generic [ref=e31]:
+          - generic [ref=e32]: Employee ID
+          - generic [ref=e33]: EMP001
+        - generic [ref=e34]:
+          - generic [ref=e35]: Department
+          - generic [ref=e36]: Engineering
+        - generic [ref=e37]:
+          - generic [ref=e38]: Annual CTC
+          - generic [ref=e39]: ₹7,00,000.00
+        - generic [ref=e40]:
+          - generic [ref=e41]: Gross Salary (Monthly)
+          - generic [ref=e42]: ₹50,000.00
+        - generic [ref=e43]:
+          - generic [ref=e44]: PF / UAN
+          - generic [ref=e45]: MH/45678/01234
+        - generic [ref=e46]:
+          - generic [ref=e47]: PAN
+          - generic [ref=e48]: ABCDE1234F
+        - generic [ref=e49]:
+          - generic [ref=e50]: PF Account No.
+          - generic [ref=e51]: MH/MUM/0012345/000/0001234
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Earnings
+          - table [ref=e55]:
+            - rowgroup [ref=e56]:
+              - row "Basic Salary ₹25,000.00" [ref=e57]:
+                - cell "Basic Salary" [ref=e58]
+                - cell "₹25,000.00" [ref=e59]
+              - row "House Rent Allowance (HRA) ₹6,250.00" [ref=e60]:
+                - cell "House Rent Allowance (HRA)" [ref=e61]
+                - cell "₹6,250.00" [ref=e62]
+              - row "Special Allowance ₹18,750.00" [ref=e63]:
+                - cell "Special Allowance" [ref=e64]
+                - cell "₹18,750.00" [ref=e65]
+              - row "Gross Pay ₹50,000.00" [ref=e66]:
+                - cell "Gross Pay" [ref=e67]
+                - cell "₹50,000.00" [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]: Deductions
+          - table [ref=e71]:
+            - rowgroup [ref=e72]:
+              - row "Provident Fund (Employee) ₹1,800.00" [ref=e73]:
+                - cell "Provident Fund (Employee)" [ref=e74]
+                - cell "₹1,800.00" [ref=e75]
+              - row "Tax Deducted at Source (TDS) ₹0.00" [ref=e76]:
+                - cell "Tax Deducted at Source (TDS)" [ref=e77]
+                - cell "₹0.00" [ref=e78]
+              - row "Professional Tax (Maharashtra) ₹200.00" [ref=e79]:
+                - cell "Professional Tax (Maharashtra)" [ref=e80]
+                - cell "₹200.00" [ref=e81]
+              - row "Total Deductions ₹2,000.00" [ref=e82]:
+                - cell "Total Deductions" [ref=e83]
+                - cell "₹2,000.00" [ref=e84]
+      - generic [ref=e85]:
+        - generic [ref=e86]: Net Pay (Take-Home)
+        - generic [ref=e87]: ₹48,000.00
+      - generic [ref=e88]: Employer Contributions (Informational)
+      - table [ref=e89]:
+        - rowgroup [ref=e90]:
+          - row "Provident Fund (Employer) ₹1,800.00" [ref=e91]:
+            - cell "Provident Fund (Employer)" [ref=e92]
+            - cell "₹1,800.00" [ref=e93]
+      - generic [ref=e94]: Employer contributions are part of your CTC but are not deducted from your take-home pay.
+      - generic [ref=e95]: Statutory Disclosures
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: "PF Rule Applied:"
+          - generic [ref=e99]: pf-in-2025-04
+        - generic [ref=e100]:
+          - generic [ref=e101]: "ESI Rule Applied:"
+          - generic [ref=e102]: esi-in-2025-04
+        - generic [ref=e103]:
+          - generic [ref=e104]: "TDS Rule Applied:"
+          - generic [ref=e105]: tds-in-2025-04
+        - generic [ref=e106]:
+          - generic [ref=e107]: "PT Rule Applied:"
+          - generic [ref=e108]: pt-mh-2025-04
+        - generic [ref=e109]:
+          - generic [ref=e110]: "Pay Period:"
+          - generic [ref=e111]: June 2026
+        - generic [ref=e112]:
+          - generic [ref=e113]: "Payment Date:"
+          - generic [ref=e114]: 10 June 2026
+      - generic [ref=e115]:
+        - text: This payslip is computer-generated and is valid without signature.
+        - text: Computed under the applicable Labour Codes and statutory rules in force for the pay period.
+        - text: "Run ID: RUN-2026-06-099"

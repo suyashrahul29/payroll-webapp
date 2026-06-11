@@ -1,0 +1,36 @@
+- generic [ref=e1]:
+  - banner [ref=e25]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e26] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e28]:
+        - text: Employee Portal
+        - generic [ref=e29]: payroll-webapp · Read-only access
+    - generic [ref=e30]:
+      - generic [ref=e31]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e32]:
+        - generic [ref=e33]: Raj Mehta
+        - generic [ref=e34]: Finance
+      - button "Logout" [ref=e35] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - button "Payslips" [ref=e302] [cursor=pointer]
+      - button "F&F Status" [active] [ref=e303] [cursor=pointer]
+    - generic [ref=e375]:
+      - generic [ref=e376]:
+        - generic [ref=e377]: ✓
+        - generic [ref=e378]:
+          - generic [ref=e379]: F&F Settled
+          - generic [ref=e380]: Your full & final settlement has been processed and credited.
+      - generic [ref=e381]:
+        - generic [ref=e382]:
+          - generic [ref=e383]: Settlement Amount
+          - generic [ref=e384]: ₹1,25,000
+        - generic [ref=e385]:
+          - generic [ref=e386]: Payment Date
+          - generic [ref=e387]: 23 Jun 2026
+        - generic [ref=e388]:
+          - generic [ref=e389]: Payment Method
+          - generic [ref=e390]: Bank Transfer (NEFT)
+        - generic [ref=e391]:
+          - generic [ref=e392]: Last Working Day
+          - generic [ref=e393]: 20 Jun 2026

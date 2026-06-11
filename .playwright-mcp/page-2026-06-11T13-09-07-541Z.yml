@@ -1,0 +1,99 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e23]:
+    - generic [ref=e24]:
+      - img [ref=e25]
+      - generic [ref=e28]:
+        - text: greenlit
+        - generic [ref=e29]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e30]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: — from data-complete"
+    - generic [ref=e31]:
+      - link "Setup →" [ref=e32] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e33] [cursor=pointer]:
+        - /url: import.html
+      - link "Restructure →" [ref=e34] [cursor=pointer]:
+        - /url: restructure.html
+      - link "Portal →" [ref=e35] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e36] [cursor=pointer]
+  - generic [ref=e37]:
+    - generic [ref=e38]: ⚠️
+    - generic [ref=e39]: "F&F deadline approaching — Raj Mehta · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e40] [cursor=pointer]: ×
+  - main [ref=e41]:
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e44]
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - img [ref=e47]
+            - generic [ref=e50]:
+              - generic [ref=e51]: "48"
+              - generic [ref=e52]: ready
+          - generic [ref=e53]: 4 blockers · 1 exit pending f&f · 18 unconfirmed ctc changes · attendance stale — 5 days · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e54]
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e57]
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]: 🕐
+              - generic [ref=e61]:
+                - generic [ref=e62]: 1 exit pending F&F
+                - generic [ref=e63]: "Raj Mehta · F&F deadline: Tue 24 Jun 2026 · HR signatory: Priya Sharma"
+                - generic [ref=e64]: Lifecycle Clock
+              - button "Settle →" [ref=e65] [cursor=pointer]
+            - generic [ref=e66]:
+              - generic [ref=e67]: ✎
+              - generic [ref=e68]:
+                - generic [ref=e69]: 18 unconfirmed CTC changes
+                - generic [ref=e70]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e71]: Change Handshake
+              - button "Review & sign" [ref=e72] [cursor=pointer]
+            - generic [ref=e73]:
+              - generic [ref=e74]: 📡
+              - generic [ref=e75]:
+                - generic [ref=e76]: Attendance stale — 5 days
+                - generic [ref=e77]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e78]: Freshness Vitals
+              - button "Re-sync" [ref=e79] [cursor=pointer]
+            - generic [ref=e80]:
+              - generic [ref=e81]: ₹
+              - generic [ref=e82]:
+                - generic [ref=e83]: PF challan not generated
+                - generic [ref=e84]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e85]: Compliance floor
+              - button "Generate" [ref=e86] [cursor=pointer]
+        - generic [ref=e87]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e88]
+          - generic [ref=e90]:
+            - generic [ref=e91] [cursor=pointer]:
+              - generic [ref=e92]: eSSL Biometric
+              - generic [ref=e93]: Dead · 5 days
+            - generic [ref=e95] [cursor=pointer]:
+              - generic [ref=e96]: HRMS CSV
+              - generic [ref=e97]: Stale · 26h
+            - generic [ref=e99] [cursor=pointer]:
+              - generic [ref=e100]: Tally Finance
+              - generic [ref=e101]: Live · 4 min
+        - generic [ref=e103]:
+          - heading "The two numbers we live by" [level=2] [ref=e104]
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: First-pass accuracy
+              - generic [ref=e109]: 99.6% / target ≥99.5%
+            - generic [ref=e110]:
+              - generic [ref=e111]: Errors prevented this run
+              - generic [ref=e112]: "0"
+            - generic [ref=e113]:
+              - generic [ref=e114]: Lifecycle clock — next F&F
+              - generic [ref=e115]: 17:59:23
+            - generic [ref=e116]:
+              - generic [ref=e117]: Time-to-First-Payroll
+              - generic [ref=e118]: —
+    - paragraph [ref=e119]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e120] [cursor=pointer]'
+      - 'button "Demo: fail run" [ref=e121] [cursor=pointer]'

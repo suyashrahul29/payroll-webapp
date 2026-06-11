@@ -1,0 +1,32 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img [ref=e5]
+    - text: greenlit
+  - heading "Employee Portal" [level=1] [ref=e8]
+  - paragraph [ref=e9]: Read-only access · Your payslips and F&F status
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]: Work Email
+      - textbox "e.g. priya.sharma@acme.in" [ref=e13]
+    - generic [ref=e14]:
+      - generic [ref=e15]: Employee ID
+      - textbox "e.g. EMP001" [ref=e16]
+    - button "Login →" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - text: "Demo credentials:"
+    - code [ref=e19]: priya.sharma@acme.in
+    - text: /
+    - code [ref=e20]: EMP001
+    - text: (Engineering)
+    - code [ref=e21]: raj.mehta@acme.in
+    - text: /
+    - code [ref=e22]: EMP002
+    - text: (Finance · exiting)
+    - code [ref=e23]: anita.nair@beta.in
+    - text: /
+    - code [ref=e24]: EMP003
+    - text: (HR · tenant-beta)
+    - code [ref=e25]: meera.kapoor@acme.in
+    - text: /
+    - code [ref=e26]: EMP004
+    - text: (Marketing · settled F&F)

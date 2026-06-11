@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Employee Portal — payroll-webapp</title>
+<title>Greenlit — Employee Portal</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A5F'/%3E%3Cg transform='translate(32 35) scale(0.7)'%3E%3Cpath d='M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cy='-20' r='5.5' fill='%2322C55E'/%3E%3C/g%3E%3C/svg%3E" />
 <style>
   :root {
+    --navy: #1E3A5F;
+    --brand-green: #22C55E;
     --bg: #FFFFFF;
     --panel: #F5F7FA;
     --panel-2: #F5F7FA;
@@ -18,7 +21,7 @@
     --green: #16A34A;
     --amber: #D97706;
     --red: #DC2626;
-    --blue: #0D9488;
+    --blue: #1E3A5F;
     --radius: 14px;
     --shadow: 0 6px 24px rgba(0,0,0,.08);
   }
@@ -34,24 +37,24 @@
   /* ── Header ── */
   header.app {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 28px; border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    padding: 14px 28px; border-bottom: 1px solid rgba(255,255,255,.08);
+    background: var(--navy);
     position: sticky; top: 0; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; text-decoration: none; color: var(--txt); }
-  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 12px var(--blue); }
-  .brand small { display:block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; text-decoration: none; color: #FFFFFF; }
+  .brand .logo-mark { display: block; flex: 0 0 auto; }
+  .brand .wordmark { font-size: 17px; font-weight: 600; letter-spacing: -.4px; }
+  .brand small { display:block; font-weight: 500; color: rgba(255,255,255,.6); font-size: 12px; }
   .header-right { display: flex; align-items: center; gap: 12px; }
-  .name-chip { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--txt); }
-  .tenant-badge { background: rgba(22,163,74,.08); border: 1px solid rgba(22,163,74,.3); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--green); font-weight: 600; }
-  .logout-btn { padding: 8px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: none; transition: .15s; }
-  .logout-btn:hover { background: var(--line); color: var(--txt); }
+  .name-chip { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: #FFFFFF; }
+  .tenant-badge { background: rgba(34,197,94,.14); border: 1px solid rgba(34,197,94,.4); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--brand-green); font-weight: 600; }
+  .logout-btn { padding: 8px 16px; background: transparent; border: 1px solid rgba(255,255,255,.28); border-radius: 8px; color: rgba(255,255,255,.75); cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: none; transition: .15s; }
+  .logout-btn:hover { background: rgba(255,255,255,.12); color: #FFFFFF; }
 
   /* ── Login ── */
   .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); padding: 24px; }
   .login-card { width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 36px 32px; }
-  .login-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
-  .login-brand .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 10px var(--blue); }
+  .login-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 22px; letter-spacing: -.4px; color: var(--navy); margin-bottom: 6px; }
   .login-heading { font-size: 22px; font-weight: 800; margin: 0 0 4px; color: var(--txt); }
   .login-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
   .form-group { margin-bottom: 16px; }
@@ -62,7 +65,7 @@
     color: var(--txt); font-size: 14px; font-family: inherit;
     transition: .15s;
   }
-  .form-group input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(13,148,136,.12); }
+  .form-group input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(30,58,95,.12); }
   .login-btn {
     width: 100%; padding: 13px; margin-top: 8px;
     background: var(--blue); color: var(--bg);
@@ -846,14 +849,17 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- App Header (hidden until logged in) -->
 <header class="app" id="appHeader" style="display:none;">
   <a class="brand" href="index.html">
-    <span class="dot"></span>
-    <div>Employee Portal <small>payroll-webapp · Read-only access</small></div>
+    <svg class="logo-mark" viewBox="-26 -26 52 52" width="28" height="28" aria-hidden="true">
+      <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+    </svg>
+    <div><span class="wordmark">greenlit</span> <small>Employee Portal · Read-only access</small></div>
   </a>
   <div class="header-right">
     <span class="tenant-badge">🔒 Tenant-isolated · Viewing your records only</span>
     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
       <span class="name-chip" id="nameChip"></span>
-      <span style="font-size:11px; color:var(--muted);" id="deptChip"></span>
+      <span style="font-size:11px; color:rgba(255,255,255,.6);" id="deptChip"></span>
     </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
@@ -863,8 +869,11 @@ window.addEventListener('DOMContentLoaded', () => {
 <div id="loginWrap" class="login-wrap" style="display:none;">
   <div class="login-card">
     <div class="login-brand">
-      <span class="dot"></span>
-      payroll-webapp
+      <svg viewBox="-26 -26 52 52" width="28" height="28" aria-hidden="true">
+        <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="var(--navy)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+      </svg>
+      greenlit
     </div>
     <h1 class="login-heading">Employee Portal</h1>
     <p class="login-sub">Read-only access · Your payslips and F&amp;F status</p>

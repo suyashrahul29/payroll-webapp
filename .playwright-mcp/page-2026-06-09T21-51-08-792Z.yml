@@ -1,0 +1,57 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: New Company Setup · Guided Onboarding
+    - link "← Back to Dashboard" [ref=e7] [cursor=pointer]:
+      - /url: index.html
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - heading "Welcome to payroll-webapp 👋" [level=1] [ref=e10]
+      - paragraph [ref=e11]: Let's get your company set up for payroll. This takes about 10 minutes.
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: "1"
+          - text: Import Employees
+      - listitem [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: "2"
+          - text: Statutory IDs
+      - listitem [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: "3"
+          - text: Connect Biometric
+      - listitem [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: "4"
+          - text: Go Live
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]: 📋
+        - generic [ref=e32]:
+          - heading "Upload your employee master CSV" [level=2] [ref=e33]
+          - paragraph [ref=e34]: Import all employees at once. Download the template to get started.
+      - generic [ref=e35]:
+        - link "⬇ Download CSV Template" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e37]:
+          - generic [ref=e38]: Required Columns
+          - generic [ref=e39]:
+            - generic [ref=e40]: employee_id
+            - generic [ref=e41]: name
+            - generic [ref=e42]: email
+            - generic [ref=e43]: department
+            - generic [ref=e44]: ctc_annual
+            - generic [ref=e45]: doj
+            - generic [ref=e46]: state
+            - generic [ref=e47]: phone
+            - generic [ref=e48]: designation
+            - generic [ref=e49]: bank_account
+            - generic [ref=e50]: ifsc
+        - generic [ref=e51] [cursor=pointer]:
+          - generic [ref=e52]: 📂
+          - generic [ref=e53]: Drag & drop your CSV here
+          - generic [ref=e54]: or click to browse · .csv files only
+          - button "Choose File" [ref=e55]
+        - button "Import & Continue →" [disabled] [ref=e57]

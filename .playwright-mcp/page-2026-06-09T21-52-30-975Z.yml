@@ -1,0 +1,67 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e23]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e24] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e26]:
+        - text: Employee Portal
+        - generic [ref=e27]: payroll-webapp · Read-only access
+    - generic [ref=e28]:
+      - generic [ref=e29]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e30]: Raj Mehta Finance
+      - button "Logout" [ref=e31] [cursor=pointer]
+  - main [ref=e33]:
+    - generic [ref=e34]:
+      - button "Payslips" [ref=e35] [cursor=pointer]
+      - button "F&F Status" [ref=e36] [cursor=pointer]
+    - generic [ref=e38]:
+      - heading "Your Payslips" [level=2] [ref=e40]
+      - generic [ref=e41]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: May 2026
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]: Gross
+              - generic [ref=e48]: ₹1,20,000
+            - generic [ref=e49]:
+              - generic [ref=e50]: Net Pay
+              - generic [ref=e51]: ₹1,00,500
+          - button "View" [ref=e52] [cursor=pointer]
+        - generic [ref=e54]:
+          - generic [ref=e55]: April 2026
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - generic [ref=e58]: Gross
+              - generic [ref=e59]: ₹1,20,000
+            - generic [ref=e60]:
+              - generic [ref=e61]: Net Pay
+              - generic [ref=e62]: ₹1,00,500
+          - button "View" [ref=e63] [cursor=pointer]
+        - generic [ref=e65]:
+          - generic [ref=e66]: March 2026
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Gross
+              - generic [ref=e70]: ₹1,20,000
+            - generic [ref=e71]:
+              - generic [ref=e72]: Net Pay
+              - generic [ref=e73]: ₹1,00,500
+          - button "View" [ref=e74] [cursor=pointer]
+    - generic [ref=e78]:
+      - generic [ref=e79]: Full & Final Settlement
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - generic [ref=e82]: Last Working Day
+          - generic [ref=e83]: 20 Jun 2026
+        - generic [ref=e84]:
+          - generic [ref=e85]: Statutory Deadline
+          - generic [ref=e86]: 24 Jun 2026
+        - generic [ref=e87]:
+          - generic [ref=e88]: Status
+          - generic [ref=e90]: Pending
+        - generic [ref=e91]:
+          - generic [ref=e92]: Settlement Amount
+          - generic [ref=e93]: ₹1,25,000
+        - generic [ref=e94]:
+          - generic [ref=e95]: Payment Method
+          - generic [ref=e96]: Bank Transfer (NEFT)
+      - generic [ref=e97]: ⏳ Settlement is being processed. You will be notified once the amount is credited.

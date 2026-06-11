@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: 🔐
+    - heading "Session Security Violation" [level=2] [ref=e5]
+    - paragraph [ref=e6]:
+      - text: Session security violation — please log in again.
+      - text: Your session was invalid and has been terminated.
+    - button "Log In Again" [ref=e7] [cursor=pointer]
+  - generic [ref=e9]:
+    - generic [ref=e10]: payroll-webapp
+    - heading "Employee Portal" [level=1] [ref=e12]
+    - paragraph [ref=e13]: Read-only access · Your payslips and F&F status
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]: Work Email
+        - textbox "e.g. priya.sharma@acme.in" [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]: Employee ID
+        - textbox "e.g. EMP001" [ref=e20]
+      - button "Login →" [ref=e21] [cursor=pointer]
+    - generic [ref=e22]:
+      - text: "Demo credentials:"
+      - code [ref=e23]: priya.sharma@acme.in
+      - text: /
+      - code [ref=e24]: EMP001
+      - text: (Engineering)
+      - code [ref=e25]: raj.mehta@acme.in
+      - text: /
+      - code [ref=e26]: EMP002
+      - text: (Finance · exiting)
+      - code [ref=e27]: anita.nair@beta.in
+      - text: /
+      - code [ref=e28]: EMP003
+      - text: (HR · tenant-beta)

@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e19]:
+    - generic [ref=e22]:
+      - text: payroll-webapp
+      - generic [ref=e23]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e24]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - generic [ref=e25]:
+      - link "Setup →" [ref=e26] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e27] [cursor=pointer]:
+        - /url: import.html
+      - link "Portal →" [ref=e28] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e29] [cursor=pointer]
+  - main [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e37]
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e43]:
+              - generic [ref=e44]: "78"
+              - generic [ref=e45]: ready
+          - generic [ref=e46]: 2 blockers · 18 unconfirmed ctc changes · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e50]
+          - generic [ref=e51]:
+            - generic [ref=e222]:
+              - generic [ref=e223]: ✓
+              - generic [ref=e224]:
+                - generic [ref=e225]: 1 exit pending F&F
+                - generic [ref=e226]: "Vivek Tiwari · F&F deadline: Thu 12 Jun 2026 · HR signatory: Priya Sharma"
+                - generic [ref=e227]: Lifecycle Clock
+            - generic [ref=e228]:
+              - generic [ref=e229]: ✎
+              - generic [ref=e230]:
+                - generic [ref=e231]: 18 unconfirmed CTC changes
+                - generic [ref=e232]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e233]: Change Handshake
+              - button "Review & sign" [ref=e234] [cursor=pointer]
+            - generic [ref=e235]:
+              - generic [ref=e236]: ✓
+              - generic [ref=e237]:
+                - generic [ref=e238]: Attendance stale — 5 days
+                - generic [ref=e239]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e240]: Freshness Vitals
+            - generic [ref=e241]:
+              - generic [ref=e242]: ₹
+              - generic [ref=e243]:
+                - generic [ref=e244]: PF challan not generated
+                - generic [ref=e245]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e246]: Compliance floor
+              - button "Generate" [ref=e247] [cursor=pointer]
+        - generic [ref=e80]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e81]
+          - generic [ref=e83]:
+            - generic [ref=e248] [cursor=pointer]:
+              - generic [ref=e249]: eSSL Biometric
+              - generic [ref=e250]: Live · just now
+            - generic [ref=e252] [cursor=pointer]:
+              - generic [ref=e253]: HRMS CSV
+              - generic [ref=e254]: Stale · 26h
+            - generic [ref=e256] [cursor=pointer]:
+              - generic [ref=e257]: Tally Finance
+              - generic [ref=e258]: Live · 5 min
+        - generic [ref=e96]:
+          - heading "The two numbers we live by" [level=2] [ref=e97]
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - generic [ref=e101]: First-pass accuracy
+              - generic [ref=e102]: 99.6% / target ≥99.5%
+            - generic [ref=e103]:
+              - generic [ref=e104]: Errors prevented this run
+              - generic [ref=e105]: "2"
+            - generic [ref=e106]:
+              - generic [ref=e107]: Lifecycle clock — next F&F
+              - generic [ref=e108]: Settled
+            - generic [ref=e109]:
+              - generic [ref=e110]: Time-to-First-Payroll
+              - generic [ref=e111]: 2.1 biz days
+    - paragraph [ref=e112]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e113] [cursor=pointer]'
+  - generic: ✅ F&F Settled for Vivek Tiwari — ₹1,25,000 via Bank Transfer

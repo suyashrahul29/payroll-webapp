@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e6]: payroll-webapp
+    - link "←" [ref=e7] [cursor=pointer]:
+      - /url: index.html
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - heading "Welcome to payroll-webapp 👋" [level=1] [ref=e10]
+      - paragraph [ref=e11]: Let's get your company set up for payroll. This takes about 10 minutes.
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: "1"
+          - generic [ref=e16]: Import Employees
+      - listitem [ref=e18]:
+        - generic [ref=e20]: "2"
+      - listitem [ref=e22]:
+        - generic [ref=e24]: "3"
+      - listitem [ref=e26]:
+        - generic [ref=e28]: "4"
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: 📋
+        - generic [ref=e33]:
+          - heading "Upload your employee master CSV" [level=2] [ref=e34]
+          - paragraph [ref=e35]: Import all employees at once. Download the template to get started.
+      - generic [ref=e36]:
+        - link "⬇ Download CSV Template" [ref=e37] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e38]:
+          - generic [ref=e39]: Required Columns
+          - generic [ref=e40]:
+            - generic [ref=e41]: employee_id
+            - generic [ref=e42]: name
+            - generic [ref=e43]: email
+            - generic [ref=e44]: department
+            - generic [ref=e45]: ctc_annual
+            - generic [ref=e46]: doj
+            - generic [ref=e47]: state
+            - generic [ref=e48]: phone
+            - generic [ref=e49]: designation
+            - generic [ref=e50]: bank_account
+            - generic [ref=e51]: ifsc
+        - generic [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]: 📂
+          - generic [ref=e54]: Drag & drop your CSV here
+          - generic [ref=e55]: or click to browse · .csv files only
+          - button "Choose File" [ref=e56]
+        - button "Import & Continue →" [disabled] [ref=e58]

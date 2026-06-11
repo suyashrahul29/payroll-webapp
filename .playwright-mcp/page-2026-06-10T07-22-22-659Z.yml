@@ -1,0 +1,148 @@
+- generic [ref=e1]:
+  - banner [ref=e19]:
+    - generic [ref=e22]:
+      - text: payroll-webapp
+      - generic [ref=e23]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e24]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - generic [ref=e25]:
+      - link "Setup →" [ref=e26] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e27] [cursor=pointer]:
+        - /url: import.html
+      - link "Portal →" [ref=e28] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e29] [cursor=pointer]
+  - generic [ref=e30]:
+    - generic [ref=e31]: ⚠️
+    - generic [ref=e32]: "F&F deadline approaching — Vivek Tiwari · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e33] [cursor=pointer]: ×
+  - main [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e37]
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e43]:
+              - generic [ref=e44]: "60"
+              - generic [ref=e45]: ready
+          - generic [ref=e46]: 3 blockers · 1 exit pending f&f · 18 unconfirmed ctc changes · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e50]
+          - generic [ref=e51]:
+            - generic [ref=e128]:
+              - generic [ref=e129]: 🕐
+              - generic [ref=e130]:
+                - generic [ref=e131]: 1 exit pending F&F
+                - generic [ref=e132]: "Vivek Tiwari · F&F deadline: Thu 12 Jun 2026 · HR signatory: Priya Sharma"
+                - generic [ref=e133]: Lifecycle Clock
+              - button "Settle →" [active] [ref=e134] [cursor=pointer]
+            - generic [ref=e135]:
+              - generic [ref=e136]: ✎
+              - generic [ref=e137]:
+                - generic [ref=e138]: 18 unconfirmed CTC changes
+                - generic [ref=e139]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e140]: Change Handshake
+              - button "Review & sign" [ref=e141] [cursor=pointer]
+            - generic [ref=e142]:
+              - generic [ref=e143]: ✓
+              - generic [ref=e144]:
+                - generic [ref=e145]: Attendance stale — 5 days
+                - generic [ref=e146]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e147]: Freshness Vitals
+            - generic [ref=e148]:
+              - generic [ref=e149]: ₹
+              - generic [ref=e150]:
+                - generic [ref=e151]: PF challan not generated
+                - generic [ref=e152]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e153]: Compliance floor
+              - button "Generate" [ref=e154] [cursor=pointer]
+        - generic [ref=e80]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e81]
+          - generic [ref=e83]:
+            - generic [ref=e155] [cursor=pointer]:
+              - generic [ref=e156]: eSSL Biometric
+              - generic [ref=e157]: Live · just now
+            - generic [ref=e159] [cursor=pointer]:
+              - generic [ref=e160]: HRMS CSV
+              - generic [ref=e161]: Stale · 26h
+            - generic [ref=e163] [cursor=pointer]:
+              - generic [ref=e164]: Tally Finance
+              - generic [ref=e165]: Live · 4 min
+        - generic [ref=e96]:
+          - heading "The two numbers we live by" [level=2] [ref=e97]
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - generic [ref=e101]: First-pass accuracy
+              - generic [ref=e102]: 99.6% / target ≥99.5%
+            - generic [ref=e103]:
+              - generic [ref=e104]: Errors prevented this run
+              - generic [ref=e105]: "1"
+            - generic [ref=e106]:
+              - generic [ref=e107]: Lifecycle clock — next F&F
+              - generic [ref=e108]: 17:58:55
+            - generic [ref=e109]:
+              - generic [ref=e110]: Time-to-First-Payroll
+              - generic [ref=e111]: 2.1 biz days
+    - paragraph [ref=e112]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e113] [cursor=pointer]'
+  - generic: ✅ eSSL Biometric re-synced — attendance data refreshed
+  - generic [ref=e168]:
+    - generic [ref=e169]:
+      - heading "Settle Full & Final — Vivek Tiwari" [level=3] [ref=e170]
+      - button "×" [ref=e171] [cursor=pointer]
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - heading "Exit Details" [level=4] [ref=e174]
+        - generic [ref=e175]:
+          - generic [ref=e176]: Employee
+          - generic [ref=e177]: Vivek Tiwari (EMP047)
+        - generic [ref=e178]:
+          - generic [ref=e179]: Last Working Day
+          - generic [ref=e180]: 10 Jun 2026
+        - generic [ref=e181]:
+          - generic [ref=e182]: Statutory Deadline
+          - generic [ref=e183]: 12 Jun 2026 (Thu) — 2 working days
+        - generic [ref=e184]:
+          - generic [ref=e185]: HR Signatory
+          - generic [ref=e186]: Priya Sharma
+        - generic [ref=e187]:
+          - generic [ref=e188]: Time Remaining
+          - generic [ref=e189]: ~18 hrs
+      - generic [ref=e190]:
+        - heading "F&F Breakdown" [level=4] [ref=e191]
+        - generic [ref=e192]:
+          - generic [ref=e193]: Basic (last month pro-rated)
+          - generic [ref=e194]: ₹62,500
+        - generic [ref=e195]:
+          - generic [ref=e196]: Leave encashment (8 days)
+          - generic [ref=e197]: ₹42,500
+        - generic [ref=e198]:
+          - generic [ref=e199]: Gratuity
+          - generic [ref=e200]: ₹20,000
+        - generic [ref=e201]:
+          - generic [ref=e202]: Total F&F Amount
+          - generic [ref=e203]: ₹1,25,000
+      - generic [ref=e204]:
+        - heading "Settlement Method" [level=4] [ref=e205]
+        - generic [ref=e206]:
+          - button "🏦 Bank Transfer" [ref=e207] [cursor=pointer]
+          - button "💵 Cash" [ref=e208] [cursor=pointer]
+      - generic [ref=e209]:
+        - heading "Settlement Checklist" [level=4] [ref=e210]
+        - list [ref=e211]:
+          - listitem [ref=e212]:
+            - checkbox "Gratuity included" [checked] [ref=e213] [cursor=pointer]
+            - generic [ref=e214]: Gratuity included
+          - listitem [ref=e215]:
+            - checkbox "Leave encashment included" [checked] [ref=e216] [cursor=pointer]
+            - generic [ref=e217]: Leave encashment included
+          - listitem [ref=e218]:
+            - checkbox "Notice period adjustment settled" [checked] [ref=e219] [cursor=pointer]
+            - generic [ref=e220]: Notice period adjustment settled
+      - button "✓ Confirm Settlement" [ref=e221] [cursor=pointer]

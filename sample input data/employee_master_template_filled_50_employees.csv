@@ -1,0 +1,51 @@
+employee_id,name,email,department,ctc_annual,doj,state,phone,designation,bank_account,ifsc
+EMP001,Krishna Patel,krishna.patel1@company.com,Operations,1200193,2025-10-21,Uttar Pradesh,7566426453,Sales Executive,35634616144,HDFC0001234
+EMP002,Nisha Kumar,nisha.kumar2@company.com,Sales,1170005,2020-06-11,Karnataka,9781359736,Product Manager,24827518359,HDFC0001234
+EMP003,Pooja Agarwal,pooja.agarwal3@company.com,Engineering,1766868,2025-04-19,Gujarat,9434382873,Senior Engineer,10148978924,HDFC0001234
+EMP004,Priya Singh,priya.singh4@company.com,HR,952854,2023-12-02,Rajasthan,8355566015,HR Executive,71112917234,HDFC0001234
+EMP005,Neha Gupta,neha.gupta5@company.com,Engineering,1563539,2022-05-25,Delhi,7822742219,Sales Executive,87591533973,HDFC0001234
+EMP006,Aarav Verma,aarav.verma6@company.com,Product,1132511,2025-11-21,Uttar Pradesh,7885701720,Marketing Associate,56469948003,HDFC0001234
+EMP007,Meera Yadav,meera.yadav7@company.com,Engineering,1559715,2025-05-10,Tamil Nadu,9759611172,Marketing Associate,34662394488,HDFC0001234
+EMP008,Kavya Sharma,kavya.sharma8@company.com,Sales,823260,2025-03-05,Rajasthan,7632691634,Support Specialist,32594089613,HDFC0001234
+EMP009,Rohan Yadav,rohan.yadav9@company.com,Sales,994103,2023-10-23,Uttar Pradesh,7405743994,Sales Executive,56193903793,HDFC0001234
+EMP010,Sneha Sharma,sneha.sharma10@company.com,Support,1122779,2020-09-04,Tamil Nadu,9684062576,Finance Analyst,50956253460,HDFC0001234
+EMP011,Aditya Mishra,aditya.mishra11@company.com,Finance,1625943,2023-01-04,Maharashtra,8182689029,Marketing Associate,39022787137,HDFC0001234
+EMP012,Ananya Kumar,ananya.kumar12@company.com,Marketing,1121993,2025-04-24,Uttar Pradesh,9213592542,Marketing Associate,61343552477,HDFC0001234
+EMP013,Siddharth Kumar,siddharth.kumar13@company.com,Sales,1608081,2026-03-13,Uttar Pradesh,7518400803,Sales Executive,76098335339,HDFC0001234
+EMP014,Isha Gupta,isha.gupta14@company.com,Operations,474175,2022-05-09,Karnataka,9673381085,Senior Engineer,12057993953,HDFC0001234
+EMP015,Aditi Yadav,aditi.yadav15@company.com,Product,1086145,2025-10-10,Rajasthan,7606820084,Support Specialist,81071554576,HDFC0001234
+EMP016,Isha Singh,isha.singh16@company.com,Engineering,631203,2022-01-03,Karnataka,8063677342,Finance Analyst,43688754330,HDFC0001234
+EMP017,Neha Kumar,neha.kumar17@company.com,Marketing,1019700,2021-12-25,Maharashtra,9199907351,Product Manager,46733714866,HDFC0001234
+EMP018,Krishna Mishra,krishna.mishra18@company.com,Product,545896,2023-02-06,Karnataka,7246221739,Support Specialist,99472277767,HDFC0001234
+EMP019,Isha Mishra,isha.mishra19@company.com,Operations,1323520,2025-03-23,Gujarat,9625340746,Product Manager,88005322726,HDFC0001234
+EMP020,Priya Agarwal,priya.agarwal20@company.com,Support,1116952,2021-09-18,Delhi,9982606076,Sales Executive,85789926314,HDFC0001234
+EMP021,Ritika Singh,ritika.singh21@company.com,Product,1789462,2024-11-03,Maharashtra,9347812291,Marketing Associate,11242025892,HDFC0001234
+EMP022,Aditya Singh,aditya.singh22@company.com,Product,897446,2020-12-29,Gujarat,7049319753,HR Executive,34510045954,HDFC0001234
+EMP023,Aditya Verma,aditya.verma23@company.com,Product,572500,2023-02-04,Tamil Nadu,9441388507,Finance Analyst,34266803234,HDFC0001234
+EMP024,Ananya Patel,ananya.patel24@company.com,Marketing,1742011,2024-07-13,Maharashtra,9145146958,Support Specialist,41900352905,HDFC0001234
+EMP025,Vivaan Singh,vivaan.singh25@company.com,Finance,1548821,2024-04-19,Maharashtra,9931422356,Software Engineer,53734956918,HDFC0001234
+EMP026,Vivaan Jain,vivaan.jain26@company.com,HR,1202831,2022-10-23,Maharashtra,7007198522,Finance Analyst,83027904856,HDFC0001234
+EMP027,Kavya Verma,kavya.verma27@company.com,Finance,1039482,2020-04-04,Karnataka,7615472480,Sales Executive,62660371702,HDFC0001234
+EMP028,Aarav Jain,aarav.jain28@company.com,Finance,1717424,2023-05-16,Karnataka,8105705262,Sales Executive,58211043394,HDFC0001234
+EMP029,Sneha Singh,sneha.singh29@company.com,Finance,1160107,2021-03-30,Delhi,9229540773,Sales Executive,39008911361,HDFC0001234
+EMP030,Rohan Kumar,rohan.kumar30@company.com,Support,654887,2023-12-15,Delhi,7534223154,Support Specialist,62102534747,HDFC0001234
+EMP031,Isha Singh,isha.singh31@company.com,Engineering,366586,2021-09-02,Maharashtra,9798247884,Senior Engineer,71459415997,HDFC0001234
+EMP032,Neha Gupta,neha.gupta32@company.com,Marketing,1639792,2025-01-19,Gujarat,7747737298,Senior Engineer,24296688847,HDFC0001234
+EMP033,Aditya Sharma,aditya.sharma33@company.com,Operations,527030,2022-06-06,Gujarat,7263330119,Support Specialist,97638831027,HDFC0001234
+EMP034,Kavya Mishra,kavya.mishra34@company.com,Marketing,1398447,2023-11-04,Maharashtra,8777220055,Marketing Associate,23456638889,HDFC0001234
+EMP035,Karan Mishra,karan.mishra35@company.com,Product,1297581,2020-05-16,Tamil Nadu,7332089095,Support Specialist,42558019976,HDFC0001234
+EMP036,Siddharth Gupta,siddharth.gupta36@company.com,Finance,780355,2020-07-05,Uttar Pradesh,7048783847,Sales Executive,21234184971,HDFC0001234
+EMP037,Ananya Yadav,ananya.yadav37@company.com,Sales,1212368,2022-01-12,Uttar Pradesh,9940492781,Senior Engineer,61457053926,HDFC0001234
+EMP038,Karan Yadav,karan.yadav38@company.com,Product,1372921,2024-04-11,West Bengal,9598813661,Software Engineer,99158361641,HDFC0001234
+EMP039,Kavya Agarwal,kavya.agarwal39@company.com,Operations,1780874,2021-09-08,Maharashtra,7033205135,HR Executive,46968533431,HDFC0001234
+EMP040,Nisha Mishra,nisha.mishra40@company.com,Finance,1108338,2023-10-14,Gujarat,9677277532,Support Specialist,59026302015,HDFC0001234
+EMP041,Vivaan Agarwal,vivaan.agarwal41@company.com,Finance,1229681,2022-07-09,Uttar Pradesh,7187978195,Finance Analyst,80253856610,HDFC0001234
+EMP042,Karan Patel,karan.patel42@company.com,HR,400254,2024-10-30,Rajasthan,7394063885,Software Engineer,11144509638,HDFC0001234
+EMP043,Aditi Singh,aditi.singh43@company.com,Engineering,527931,2021-04-14,Uttar Pradesh,8654380437,HR Executive,13114052983,HDFC0001234
+EMP044,Neha Jain,neha.jain44@company.com,Engineering,473875,2022-03-29,Delhi,8928477498,Support Specialist,78333588718,HDFC0001234
+EMP045,Vivaan Singh,vivaan.singh45@company.com,HR,815883,2024-08-18,Karnataka,9168299419,HR Executive,21473090079,HDFC0001234
+EMP046,Isha Verma,isha.verma46@company.com,Sales,370605,2022-07-12,West Bengal,8066191068,Sales Executive,49188160294,HDFC0001234
+EMP047,Priya Sharma,priya.sharma47@company.com,Product,1168588,2024-06-29,Uttar Pradesh,7639916678,HR Executive,27642681645,HDFC0001234
+EMP048,Aditya Sharma,aditya.sharma48@company.com,Finance,1339399,2020-03-31,West Bengal,9466263756,Support Specialist,80724402079,HDFC0001234
+EMP049,Vivaan Gupta,vivaan.gupta49@company.com,Marketing,388397,2025-03-26,Maharashtra,9195650406,Marketing Associate,77066794153,HDFC0001234
+EMP050,Neha Yadav,neha.yadav50@company.com,Finance,453163,2022-10-28,West Bengal,9098076944,Finance Analyst,88287697993,HDFC0001234

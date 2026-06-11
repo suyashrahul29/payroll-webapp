@@ -1,0 +1,5 @@
+[      52ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ http://localhost:7432/:0
+[      52ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ http://localhost:7432/:0
+[   80929ms] ReferenceError: updateUI is not defined
+    at saveSignoffDecisions (http://localhost:7432/:772:5)
+    at HTMLButtonElement.onclick (http://localhost:7432/:330:94)

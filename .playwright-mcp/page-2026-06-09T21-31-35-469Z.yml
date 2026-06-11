@@ -1,0 +1,82 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - button "Logout" [ref=e8] [cursor=pointer]
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e12]
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]:
+              - generic [ref=e19]: "48"
+              - generic [ref=e20]: ready
+          - generic [ref=e21]: 4 blockers · 3 exits pending f&f · 1 new ctc change since sign-off · attendance stale — 5 days · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e22]
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e602]:
+              - generic [ref=e603]: ⏳
+              - generic [ref=e604]:
+                - generic [ref=e605]: 3 exits pending F&F
+                - generic [ref=e606]: "F&F blocked on HR notice-waiver decision · legal deadline: 2 working days"
+                - generic [ref=e607]: Lifecycle Clock
+              - button "Settle" [ref=e608] [cursor=pointer]
+            - generic [ref=e609]:
+              - generic [ref=e610]: ✎
+              - generic [ref=e611]:
+                - generic [ref=e612]: 1 new CTC change since sign-off
+                - generic [ref=e613]: Finance re-pushed after sign-off · re-acknowledgement required
+                - generic [ref=e614]: Change Handshake
+              - button "Review & sign" [ref=e615] [cursor=pointer]
+            - generic [ref=e616]:
+              - generic [ref=e617]: 📡
+              - generic [ref=e618]:
+                - generic [ref=e619]: Attendance stale — 5 days
+                - generic [ref=e620]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e621]: Freshness Vitals
+              - button "Re-sync" [ref=e622] [cursor=pointer]
+            - generic [ref=e623]:
+              - generic [ref=e624]: ₹
+              - generic [ref=e625]:
+                - generic [ref=e626]: PF challan not generated
+                - generic [ref=e627]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e628]: Compliance floor
+              - button "Generate" [ref=e629] [cursor=pointer]
+        - generic [ref=e55]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e56]
+          - generic [ref=e75]:
+            - generic [ref=e630] [cursor=pointer]:
+              - generic [ref=e631]: eSSL Biometric
+              - generic [ref=e632]: Dead · 5 days
+            - generic [ref=e634] [cursor=pointer]:
+              - generic [ref=e635]: HRMS CSV
+              - generic [ref=e636]: Stale · 26h
+            - generic [ref=e638] [cursor=pointer]:
+              - generic [ref=e639]: Tally Finance
+              - generic [ref=e640]: Live · 4 min
+        - generic [ref=e58]:
+          - heading "The two numbers we live by" [level=2] [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: First-pass accuracy
+              - generic [ref=e64]: 99.6% / target ≥99.5%
+            - generic [ref=e65]:
+              - generic [ref=e66]: Errors prevented this run
+              - generic [ref=e67]: "1"
+            - generic [ref=e68]:
+              - generic [ref=e69]: Lifecycle clock — next F&F
+              - generic [ref=e70]: 41:11:31
+            - generic [ref=e71]:
+              - generic [ref=e72]: Time-to-First-Payroll
+              - generic [ref=e73]: 2.1 biz days
+    - paragraph [ref=e74]: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+  - generic: ⚠ New CTC change arrived after sign-off — run re-blocked

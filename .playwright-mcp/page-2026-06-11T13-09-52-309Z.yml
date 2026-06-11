@@ -1,0 +1,59 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img [ref=e4]
+      - generic [ref=e7]:
+        - generic [ref=e8]: greenlit
+        - generic [ref=e9]: New Company Setup · Guided Onboarding
+    - link "← Back to Dashboard" [ref=e10] [cursor=pointer]:
+      - /url: index.html
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Welcome to Greenlit 👋" [level=1] [ref=e13]
+      - paragraph [ref=e14]: Let's get your company set up for payroll. This takes about 10 minutes.
+    - list [ref=e15]:
+      - listitem [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: "1"
+          - generic [ref=e19]: Import Employees
+      - listitem [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: "2"
+          - generic [ref=e24]: Statutory IDs
+      - listitem [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]: "3"
+          - generic [ref=e29]: Connect Biometric
+      - listitem [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]: "4"
+          - generic [ref=e34]: Go Live
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]: 📋
+        - generic [ref=e39]:
+          - heading "Upload your employee master CSV" [level=2] [ref=e40]
+          - paragraph [ref=e41]: Import all employees at once. Download the template to get started.
+      - generic [ref=e42]:
+        - link "⬇ Download CSV Template" [ref=e43] [cursor=pointer]:
+          - /url: "#"
+        - generic [ref=e44]:
+          - generic [ref=e45]: Required Columns
+          - generic [ref=e46]:
+            - generic [ref=e47]: employee_id
+            - generic [ref=e48]: name
+            - generic [ref=e49]: email
+            - generic [ref=e50]: department
+            - generic [ref=e51]: ctc_annual
+            - generic [ref=e52]: doj
+            - generic [ref=e53]: state
+            - generic [ref=e54]: phone
+            - generic [ref=e55]: designation
+            - generic [ref=e56]: bank_account
+            - generic [ref=e57]: ifsc
+        - generic [ref=e58] [cursor=pointer]:
+          - generic [ref=e59]: 📂
+          - generic [ref=e60]: Drag & drop your CSV here
+          - generic [ref=e61]: or click to browse · .csv files only
+          - button "Choose File" [ref=e62]
+        - button "Import & Continue →" [disabled] [ref=e64]

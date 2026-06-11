@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "payroll-webapp" [level=1] [ref=e4]
+    - generic [ref=e5]: Sign in to your account
+    - generic [ref=e6]:
+      - button "HR Manager" [ref=e7] [cursor=pointer]
+      - button "Employee" [ref=e8] [cursor=pointer]
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Username
+        - textbox "e.g., priya@acme.com" [ref=e12]: priya
+        - generic [ref=e13]: "Demo: any username works"
+      - generic [ref=e14]:
+        - generic [ref=e15]: Password
+        - textbox "••••••••" [ref=e16]: demo
+        - generic [ref=e17]: "Demo: any password works"
+      - button "Sign In" [ref=e18] [cursor=pointer]
+  - banner [ref=e19]:
+    - generic [ref=e22]:
+      - text: payroll-webapp
+      - generic [ref=e23]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e24]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - generic [ref=e25]:
+      - link "Setup / Onboarding →" [ref=e26] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import CSV →" [ref=e27] [cursor=pointer]:
+        - /url: import.html
+      - link "Employee Portal →" [ref=e28] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e29] [cursor=pointer]
+  - generic [ref=e30]:
+    - generic [ref=e31]: ⚠️
+    - generic [ref=e32]: "F&F deadline approaching — Vivek Tiwari · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e33] [cursor=pointer]: ×
+  - generic: ✅ Payroll run completed — zero post-run corrections

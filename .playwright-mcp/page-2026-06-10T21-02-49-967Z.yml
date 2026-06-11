@@ -1,0 +1,36 @@
+- generic [ref=e1]:
+  - banner [ref=e25]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e26] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e28]:
+        - text: Employee Portal
+        - generic [ref=e29]: payroll-webapp · Read-only access
+    - generic [ref=e30]:
+      - generic [ref=e31]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e32]:
+        - generic [ref=e33]: Raj Mehta
+        - generic [ref=e34]: Finance
+      - button "Logout" [ref=e35] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - button "Payslips" [ref=e39] [cursor=pointer]
+      - button "F&F Status" [active] [ref=e40] [cursor=pointer]
+    - generic [ref=e120]:
+      - generic [ref=e121]: Full & Final Settlement
+      - generic [ref=e122]:
+        - generic [ref=e123]: F&F Pending
+        - text: "Settlement deadline: 24 Jun 2026"
+      - generic [ref=e124]:
+        - generic [ref=e125]:
+          - generic [ref=e126]: Last Working Day
+          - generic [ref=e127]: 20 Jun 2026
+        - generic [ref=e128]:
+          - generic [ref=e129]: Statutory Deadline
+          - generic [ref=e130]: 24 Jun 2026
+        - generic [ref=e131]:
+          - generic [ref=e132]: Estimated Amount
+          - generic [ref=e133]: ₹1,25,000
+        - generic [ref=e134]:
+          - generic [ref=e135]: Payment Method
+          - generic [ref=e136]: Bank Transfer (NEFT)
+      - generic [ref=e137]: ⏳ Settlement is being processed. You will be notified once the amount is credited.

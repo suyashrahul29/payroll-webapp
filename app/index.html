@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>payroll-webapp — Payroll Readiness</title>
+<title>Greenlit — Payroll Readiness</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A5F'/%3E%3Cg transform='translate(32 35) scale(0.7)'%3E%3Cpath d='M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38' fill='none' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cy='-20' r='5.5' fill='%2322C55E'/%3E%3C/g%3E%3C/svg%3E" />
 <style>
   :root {
+    --navy: #1E3A5F;
+    --brand-green: #22C55E;
     --bg: #FFFFFF;
     --panel: #F5F7FA;
     --panel-2: #F5F7FA;
@@ -15,7 +18,7 @@
     --green: #16A34A;
     --amber: #D97706;
     --red: #DC2626;
-    --blue: #0D9488;
+    --blue: #1E3A5F;
     --radius: 14px;
     --shadow: 0 6px 24px rgba(0,0,0,.08);
   }
@@ -29,15 +32,23 @@
   }
   header.app {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 28px; border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    padding: 14px 28px; border-bottom: 1px solid rgba(255,255,255,.08);
+    background: var(--navy);
     position: sticky; top: 0; z-index: 10;
   }
-  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
-  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
-  .brand small { display:block; font-weight: 500; color: var(--muted); font-size: 12px; }
-  .runinfo { text-align: right; font-size: 13px; color: var(--muted); }
-  .runinfo b { color: var(--txt); }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; color: #FFFFFF; }
+  .brand .logo-mark { display: block; flex: 0 0 auto; }
+  .brand .wordmark { font-size: 18px; font-weight: 600; letter-spacing: -.4px; }
+  .brand small { display:block; font-weight: 500; color: rgba(255,255,255,.6); font-size: 12px; }
+  .runinfo { text-align: right; font-size: 13px; color: rgba(255,255,255,.6); }
+  .runinfo b { color: #FFFFFF; }
+  .nav-pill { font-size: 12px; color: #FFFFFF; text-decoration: none; border: 1px solid rgba(255,255,255,.28); padding: 5px 10px; border-radius: 8px; font-weight: 600; background: rgba(255,255,255,.08); white-space: nowrap; transition: .15s; }
+  .nav-pill:hover { background: rgba(255,255,255,.18); }
+  @media (max-width: 880px) {
+    header.app { flex-wrap: wrap; gap: 10px; }
+    .runinfo { display: none; }
+    .brand small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+  }
 
   main { max-width: 1180px; margin: 0 auto; padding: 28px; }
   .grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; }
@@ -172,23 +183,24 @@
   .login-form .form-group { margin-bottom: 16px; }
   .login-form label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
   .login-form input { width: 100%; padding: 10px 12px; background: #F9FAFB; border: 1px solid var(--line); border-radius: 8px; color: var(--txt); font-size: 14px; }
-  .login-form input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.1); }
+  .login-form input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(30,58,95,.1); }
   .login-form .error { color: var(--red); font-size: 12px; margin-top: 4px; }
   .login-form .hint { color: var(--muted); font-size: 11px; margin-top: 4px; }
   .login-form button { width: 100%; padding: 12px; margin-top: 16px; background: var(--blue); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; transition: .2s; }
   .login-form button:hover { filter: brightness(1.08); }
   .login-form button:active { filter: brightness(0.95); }
-  .app-header-logout { position: absolute; top: 18px; right: 28px; padding: 8px 16px; background: #F3F4F6; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); cursor: pointer; font-size: 13px; }
-  .app-header-logout:hover { background: #E5E7EB; color: var(--txt); }
+  .app-header-logout { padding: 6px 14px; background: transparent; border: 1px solid rgba(255,255,255,.28); border-radius: 8px; color: rgba(255,255,255,.75); cursor: pointer; font-size: 13px; }
+  .app-header-logout:hover { background: rgba(255,255,255,.12); color: #FFFFFF; }
 
   /* F&F Warning Banner */
-  .ff-warning-banner { display: none; background: rgba(217,119,6,.1); border-bottom: 2px solid var(--amber); padding: 12px 28px; font-size: 14px; font-weight: 600; color: #92400E; position: sticky; top: 61px; z-index: 9; }
+  .ff-warning-banner { display: none; background: rgba(217,119,6,.1); border-bottom: 2px solid var(--amber); padding: 12px 28px; font-size: 14px; font-weight: 600; color: #92400E; position: sticky; top: 69px; z-index: 9; }
   .ff-warning-banner.show { display: flex; align-items: center; gap: 10px; }
   .ff-warning-banner.critical { background: rgba(220,38,38,.08); border-color: var(--red); color: #7F1D1D; }
   .ff-warning-banner .ff-warn-icon { font-size: 16px; flex: 0 0 auto; }
   .ff-warning-banner .ff-warn-dismiss { margin-left: auto; background: none; border: none; cursor: pointer; color: inherit; font-size: 16px; opacity: .6; }
   .ff-warning-banner .ff-warn-dismiss:hover { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .ff-warning-banner { transition: none; } }
+  @media (max-width: 880px) { .ff-warning-banner { position: static; } }
 
   /* F&F Settlement Modal */
   .ff-modal-section { margin: 16px 0; }
@@ -201,7 +213,7 @@
   .ff-amount-total .val { color: var(--green); }
   .ff-method-row { display: flex; gap: 10px; margin: 10px 0; }
   .ff-method-btn { flex: 1; padding: 10px; border: 2px solid var(--line); border-radius: 8px; background: none; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); transition: .15s; }
-  .ff-method-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(13,148,136,.06); }
+  .ff-method-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(30,58,95,.06); }
   .ff-check-list { list-style: none; margin: 0; padding: 0; }
   .ff-check-list li { display: flex; align-items: center; gap: 8px; padding: 7px 0; font-size: 14px; border-bottom: 1px solid var(--line); }
   .ff-check-list li:last-child { border-bottom: none; }
@@ -216,7 +228,13 @@
 <!-- Login Screen -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <h1>payroll-webapp</h1>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <svg viewBox="-26 -26 52 52" width="32" height="32" aria-hidden="true">
+        <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="var(--navy)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+      </svg>
+      <h1 style="font-size:28px;font-weight:600;letter-spacing:-.5px;color:var(--navy);margin:0;">greenlit</h1>
+    </div>
     <div class="subtitle">Sign in to your account</div>
 
     <div class="role-tabs">
@@ -258,18 +276,21 @@
 
 <header class="app">
   <div class="brand">
-    <span class="dot" id="brandDot"></span>
-    <div>payroll-webapp <small>Readiness · June 2026 cycle · Acme Mfg Pvt Ltd</small></div>
+    <svg class="logo-mark" viewBox="-26 -26 52 52" width="30" height="30" aria-hidden="true">
+      <path d="M 11.47 -16.38 A 20 20 0 1 1 -11.47 -16.38" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+      <circle id="brandDot" cx="0" cy="-20" r="5.5" fill="var(--brand-green)"/>
+    </svg>
+    <div><span class="wordmark">greenlit</span> <small>Readiness · June 2026 cycle · Acme Mfg Pvt Ltd</small></div>
   </div>
   <div class="runinfo">
     Pay run due <b>30 Jun</b> · <b>248</b> employees<br/>
     Time-to-First-Payroll: <b id="ttfpHeaderValue">—</b> from data-complete
   </div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <a href="onboarding.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Setup →</a>
-    <a href="import.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Import →</a>
-    <a href="restructure.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Restructure →</a>
-    <a href="portal.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Portal →</a>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="onboarding.html" class="nav-pill">Setup →</a>
+    <a href="import.html" class="nav-pill">Import →</a>
+    <a href="restructure.html" class="nav-pill">Restructure →</a>
+    <a href="portal.html" class="nav-pill">Portal →</a>
     <button class="app-header-logout" id="logoutBtn" onclick="logout()">Logout</button>
   </div>
 </header>
@@ -695,8 +716,9 @@
     arc.style.stroke = color(s);
     scoreNum.textContent = s;
     scoreNum.style.color = color(s);
-    brandDot.style.background = color(s);
-    brandDot.style.boxShadow = '0 0 12px ' + color(s);
+    // brandDot is the green signal on the logo's readiness ring — it tracks the score
+    brandDot.style.fill = s >= 100 ? 'var(--brand-green)' : color(s);
+    brandDot.style.filter = 'drop-shadow(0 0 3px ' + (s >= 100 ? 'var(--brand-green)' : color(s)) + ')';
     const remaining = blockers.length - resolved.size;
     if (s >= 100){
       statusLine.innerHTML = '<b>All clear.</b> Confirm the green gauge — no fire drill.';

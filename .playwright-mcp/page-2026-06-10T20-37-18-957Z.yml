@@ -1,0 +1,26 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: payroll-webapp
+  - heading "Employee Portal" [level=1] [ref=e6]
+  - paragraph [ref=e7]: Read-only access · Your payslips and F&F status
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]: Work Email
+      - textbox "e.g. priya.sharma@acme.in" [ref=e11]: priya.sharma@acme.in
+    - generic [ref=e12]:
+      - generic [ref=e13]: Employee ID
+      - textbox "e.g. EMP001" [ref=e14]: EMP001
+    - button "Login →" [ref=e15] [cursor=pointer]
+  - generic [ref=e16]:
+    - text: "Demo credentials:"
+    - code [ref=e17]: priya.sharma@acme.in
+    - text: /
+    - code [ref=e18]: EMP001
+    - text: (Engineering)
+    - code [ref=e19]: raj.mehta@acme.in
+    - text: /
+    - code [ref=e20]: EMP002
+    - text: (Finance · exiting)
+    - code [ref=e21]: anita.nair@beta.in
+    - text: /
+    - code [ref=e22]: EMP003
+    - text: (HR · tenant-beta)

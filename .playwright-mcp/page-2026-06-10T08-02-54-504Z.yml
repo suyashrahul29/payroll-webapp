@@ -1,0 +1,72 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - generic [ref=e8]:
+      - link "Setup →" [ref=e9] [cursor=pointer]:
+        - /url: onboarding.html
+      - link "Import →" [ref=e10] [cursor=pointer]:
+        - /url: import.html
+      - link "Portal →" [ref=e11] [cursor=pointer]:
+        - /url: portal.html
+      - button "Logout" [ref=e12] [cursor=pointer]
+  - generic [ref=e13]:
+    - generic [ref=e14]: ⚠️
+    - generic [ref=e15]: "F&F deadline approaching — Vivek Tiwari · ~18 hours remaining · deadline: TODAY 3:00 PM · Priya Sharma (HR)"
+    - button "Dismiss" [ref=e16] [cursor=pointer]: ×
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - img [ref=e23]
+            - generic [ref=e26]:
+              - generic [ref=e27]: "100"
+              - generic [ref=e28]: ready
+          - generic [ref=e29]: All clear. Confirm the green gauge — no fire drill.
+        - button "⏳ Running payroll…" [disabled] [ref=e186]
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e33]
+          - generic [ref=e169]:
+            - generic [ref=e170]: ✓
+            - generic [ref=e171]:
+              - generic [ref=e172]: All clear. Payroll is ready to run.
+              - generic [ref=e173]: Confirm the green gauge — no fire drill.
+        - generic [ref=e63]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e64]
+          - generic [ref=e85]:
+            - generic [ref=e174] [cursor=pointer]:
+              - generic [ref=e175]: eSSL Biometric
+              - generic [ref=e176]: Dead · 5 days
+            - generic [ref=e178] [cursor=pointer]:
+              - generic [ref=e179]: HRMS CSV
+              - generic [ref=e180]: Stale · 26h
+            - generic [ref=e182] [cursor=pointer]:
+              - generic [ref=e183]: Tally Finance
+              - generic [ref=e184]: Live · 5 min
+        - generic [ref=e66]:
+          - heading "The two numbers we live by" [level=2] [ref=e67]
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: First-pass accuracy
+              - generic [ref=e72]: 99.6% / target ≥99.5%
+            - generic [ref=e73]:
+              - generic [ref=e74]: Errors prevented this run
+              - generic [ref=e75]: "4"
+            - generic [ref=e76]:
+              - generic [ref=e77]: Lifecycle clock — next F&F
+              - generic [ref=e78]: 17:58:29
+            - generic [ref=e79]:
+              - generic [ref=e80]: Time-to-First-Payroll
+              - generic [ref=e81]: 2.1 biz days
+    - paragraph [ref=e82]:
+      - text: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+      - 'button "Demo: pre-flight loading" [ref=e83] [cursor=pointer]'
+      - 'button "Demo: fail run" [ref=e84] [cursor=pointer]'
+  - generic: ✅ Payroll run completed — zero post-run corrections

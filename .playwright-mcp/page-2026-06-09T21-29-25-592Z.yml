@@ -1,0 +1,336 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: payroll-webapp
+      - generic [ref=e6]: Readiness · June 2026 cycle · Acme Mfg Pvt Ltd
+    - generic [ref=e7]:
+      - text: Pay run due 30 Jun · 248 employees
+      - text: "Time-to-First-Payroll: 2.1 business days from data-complete"
+    - button "Logout" [ref=e8] [cursor=pointer]
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Payroll Readiness Score" [level=2] [ref=e12]
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - img [ref=e15]
+            - generic [ref=e18]:
+              - generic [ref=e19]: "48"
+              - generic [ref=e20]: ready
+          - generic [ref=e21]: 4 blockers · 3 exits pending f&f · 18 unconfirmed ctc changes · attendance stale — 5 days · pf challan not generated
+        - button "🔒 Run Payroll — blocked by pre-flight" [disabled] [ref=e22]
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "What's blocking 100% — Pre-Flight Checklist" [level=2] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - generic [ref=e28]: ⏳
+              - generic [ref=e29]:
+                - generic [ref=e30]: 3 exits pending F&F
+                - generic [ref=e31]: "F&F blocked on HR notice-waiver decision · legal deadline: 2 working days"
+                - generic [ref=e32]: Lifecycle Clock
+              - button "Settle" [ref=e33] [cursor=pointer]
+            - generic [ref=e34]:
+              - generic [ref=e35]: ✎
+              - generic [ref=e36]:
+                - generic [ref=e37]: 18 unconfirmed CTC changes
+                - generic [ref=e38]: Finance pushed structure edits since last run · sign-off required
+                - generic [ref=e39]: Change Handshake
+              - button "Review & sign" [ref=e40] [cursor=pointer]
+            - generic [ref=e41]:
+              - generic [ref=e42]: 📡
+              - generic [ref=e43]:
+                - generic [ref=e44]: Attendance stale — 5 days
+                - generic [ref=e45]: Biometric (eSSL) sync dead · LOP-sensitive payslips at risk
+                - generic [ref=e46]: Freshness Vitals
+              - button "Re-sync" [ref=e47] [cursor=pointer]
+            - generic [ref=e48]:
+              - generic [ref=e49]: ₹
+              - generic [ref=e50]:
+                - generic [ref=e51]: PF challan not generated
+                - generic [ref=e52]: Due by 15th · 248 employees · auto-fileable once inputs green
+                - generic [ref=e53]: Compliance floor
+              - button "Generate" [ref=e54] [cursor=pointer]
+        - generic [ref=e55]:
+          - heading "Data Freshness Vitals" [level=2] [ref=e56]
+          - generic [ref=e75]:
+            - generic [ref=e76] [cursor=pointer]:
+              - generic [ref=e77]: eSSL Biometric
+              - generic [ref=e78]: Dead · 5 days
+            - generic [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: HRMS CSV
+              - generic [ref=e82]: Stale · 26h
+            - generic [ref=e84] [cursor=pointer]:
+              - generic [ref=e85]: Tally Finance
+              - generic [ref=e86]: Live · 4 min
+        - generic [ref=e58]:
+          - heading "The two numbers we live by" [level=2] [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: First-pass accuracy
+              - generic [ref=e64]: 99.6% / target ≥99.5%
+            - generic [ref=e65]:
+              - generic [ref=e66]: Errors prevented this run
+              - generic [ref=e67]: "0"
+            - generic [ref=e68]:
+              - generic [ref=e69]: Lifecycle clock — next F&F
+              - generic [ref=e70]: 41:11:54
+            - generic [ref=e71]:
+              - generic [ref=e72]: Time-to-First-Payroll
+              - generic [ref=e73]: 2.1 biz days
+    - paragraph [ref=e74]: Prototype · mock data · the green gauge is the product. Resolve every blocker to unlock the run.
+  - generic: ✅ Payroll run completed — zero post-run corrections
+  - generic [ref=e89]:
+    - generic [ref=e90]:
+      - heading "Change Handshake — CTC Diff (18 awaiting sign-off)" [level=3] [ref=e91]
+      - button "×" [ref=e92] [cursor=pointer]
+    - generic [ref=e93]:
+      - paragraph [ref=e94]:
+        - text: 18 of 18 employee records need review. Finance pushed these changes.
+        - strong [ref=e95]: Payroll sign-off required to proceed.
+      - table [ref=e97]:
+        - rowgroup [ref=e98]:
+          - row "Employee Old CTC New CTC Effective Signatory Action" [ref=e99]:
+            - columnheader "Employee" [ref=e100]
+            - columnheader "Old CTC" [ref=e101]
+            - columnheader "New CTC" [ref=e102]
+            - columnheader "Effective" [ref=e103]
+            - columnheader "Signatory" [ref=e104]
+            - columnheader "Action" [ref=e105]
+        - rowgroup [ref=e106]:
+          - row "Arjun Mehta EMP001 ₹5,80,000 ₹6,15,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e107]:
+            - cell "Arjun Mehta EMP001" [ref=e108]:
+              - generic [ref=e109]: Arjun Mehta
+              - generic [ref=e110]: EMP001
+            - cell "₹5,80,000" [ref=e111]
+            - cell "₹6,15,000" [ref=e112]
+            - cell "2026-07-01" [ref=e113]
+            - cell "Finance Manager" [ref=e114]
+            - cell "Sign-off Hold Reject" [ref=e115]:
+              - generic [ref=e116]:
+                - generic [ref=e118] [cursor=pointer]: Sign-off
+                - generic [ref=e120] [cursor=pointer]: Hold
+                - generic [ref=e122] [cursor=pointer]: Reject
+          - row "Priya Sharma EMP002 ₹7,20,000 ₹7,60,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e123]:
+            - cell "Priya Sharma EMP002" [ref=e124]:
+              - generic [ref=e125]: Priya Sharma
+              - generic [ref=e126]: EMP002
+            - cell "₹7,20,000" [ref=e127]
+            - cell "₹7,60,000" [ref=e128]
+            - cell "2026-07-01" [ref=e129]
+            - cell "Finance Manager" [ref=e130]
+            - cell "Sign-off Hold Reject" [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e134] [cursor=pointer]: Sign-off
+                - generic [ref=e136] [cursor=pointer]: Hold
+                - generic [ref=e138] [cursor=pointer]: Reject
+          - row "Ravi Kumar EMP003 ₹4,50,000 ₹4,80,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e139]:
+            - cell "Ravi Kumar EMP003" [ref=e140]:
+              - generic [ref=e141]: Ravi Kumar
+              - generic [ref=e142]: EMP003
+            - cell "₹4,50,000" [ref=e143]
+            - cell "₹4,80,000" [ref=e144]
+            - cell "2026-07-01" [ref=e145]
+            - cell "HR Head" [ref=e146]
+            - cell "Sign-off Hold Reject" [ref=e147]:
+              - generic [ref=e148]:
+                - generic [ref=e150] [cursor=pointer]: Sign-off
+                - generic [ref=e152] [cursor=pointer]: Hold
+                - generic [ref=e154] [cursor=pointer]: Reject
+          - row "Sunita Rao EMP004 ₹9,00,000 ₹9,50,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e155]:
+            - cell "Sunita Rao EMP004" [ref=e156]:
+              - generic [ref=e157]: Sunita Rao
+              - generic [ref=e158]: EMP004
+            - cell "₹9,00,000" [ref=e159]
+            - cell "₹9,50,000" [ref=e160]
+            - cell "2026-07-01" [ref=e161]
+            - cell "Finance Manager" [ref=e162]
+            - cell "Sign-off Hold Reject" [ref=e163]:
+              - generic [ref=e164]:
+                - generic [ref=e166] [cursor=pointer]: Sign-off
+                - generic [ref=e168] [cursor=pointer]: Hold
+                - generic [ref=e170] [cursor=pointer]: Reject
+          - row "Vikram Singh EMP005 ₹5,50,000 ₹5,80,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e171]:
+            - cell "Vikram Singh EMP005" [ref=e172]:
+              - generic [ref=e173]: Vikram Singh
+              - generic [ref=e174]: EMP005
+            - cell "₹5,50,000" [ref=e175]
+            - cell "₹5,80,000" [ref=e176]
+            - cell "2026-07-01" [ref=e177]
+            - cell "HR Head" [ref=e178]
+            - cell "Sign-off Hold Reject" [ref=e179]:
+              - generic [ref=e180]:
+                - generic [ref=e182] [cursor=pointer]: Sign-off
+                - generic [ref=e184] [cursor=pointer]: Hold
+                - generic [ref=e186] [cursor=pointer]: Reject
+          - row "Deepa Nair EMP006 ₹6,80,000 ₹7,10,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e187]:
+            - cell "Deepa Nair EMP006" [ref=e188]:
+              - generic [ref=e189]: Deepa Nair
+              - generic [ref=e190]: EMP006
+            - cell "₹6,80,000" [ref=e191]
+            - cell "₹7,10,000" [ref=e192]
+            - cell "2026-07-01" [ref=e193]
+            - cell "Finance Manager" [ref=e194]
+            - cell "Sign-off Hold Reject" [ref=e195]:
+              - generic [ref=e196]:
+                - generic [ref=e198] [cursor=pointer]: Sign-off
+                - generic [ref=e200] [cursor=pointer]: Hold
+                - generic [ref=e202] [cursor=pointer]: Reject
+          - row "Kiran Patel EMP007 ₹5,00,000 ₹5,30,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e203]:
+            - cell "Kiran Patel EMP007" [ref=e204]:
+              - generic [ref=e205]: Kiran Patel
+              - generic [ref=e206]: EMP007
+            - cell "₹5,00,000" [ref=e207]
+            - cell "₹5,30,000" [ref=e208]
+            - cell "2026-07-01" [ref=e209]
+            - cell "Finance Manager" [ref=e210]
+            - cell "Sign-off Hold Reject" [ref=e211]:
+              - generic [ref=e212]:
+                - generic [ref=e214] [cursor=pointer]: Sign-off
+                - generic [ref=e216] [cursor=pointer]: Hold
+                - generic [ref=e218] [cursor=pointer]: Reject
+          - row "Meera Joshi EMP008 ₹8,20,000 ₹8,60,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e219]:
+            - cell "Meera Joshi EMP008" [ref=e220]:
+              - generic [ref=e221]: Meera Joshi
+              - generic [ref=e222]: EMP008
+            - cell "₹8,20,000" [ref=e223]
+            - cell "₹8,60,000" [ref=e224]
+            - cell "2026-07-01" [ref=e225]
+            - cell "HR Head" [ref=e226]
+            - cell "Sign-off Hold Reject" [ref=e227]:
+              - generic [ref=e228]:
+                - generic [ref=e230] [cursor=pointer]: Sign-off
+                - generic [ref=e232] [cursor=pointer]: Hold
+                - generic [ref=e234] [cursor=pointer]: Reject
+          - row "Suresh Gupta EMP009 ₹6,30,000 ₹6,65,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e235]:
+            - cell "Suresh Gupta EMP009" [ref=e236]:
+              - generic [ref=e237]: Suresh Gupta
+              - generic [ref=e238]: EMP009
+            - cell "₹6,30,000" [ref=e239]
+            - cell "₹6,65,000" [ref=e240]
+            - cell "2026-07-01" [ref=e241]
+            - cell "Finance Manager" [ref=e242]
+            - cell "Sign-off Hold Reject" [ref=e243]:
+              - generic [ref=e244]:
+                - generic [ref=e246] [cursor=pointer]: Sign-off
+                - generic [ref=e248] [cursor=pointer]: Hold
+                - generic [ref=e250] [cursor=pointer]: Reject
+          - row "Anita Desai EMP010 ₹7,70,000 ₹8,00,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e251]:
+            - cell "Anita Desai EMP010" [ref=e252]:
+              - generic [ref=e253]: Anita Desai
+              - generic [ref=e254]: EMP010
+            - cell "₹7,70,000" [ref=e255]
+            - cell "₹8,00,000" [ref=e256]
+            - cell "2026-07-01" [ref=e257]
+            - cell "Finance Manager" [ref=e258]
+            - cell "Sign-off Hold Reject" [ref=e259]:
+              - generic [ref=e260]:
+                - generic [ref=e262] [cursor=pointer]: Sign-off
+                - generic [ref=e264] [cursor=pointer]: Hold
+                - generic [ref=e266] [cursor=pointer]: Reject
+          - row "Rajesh Tiwari EMP011 ₹4,80,000 ₹5,10,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e267]:
+            - cell "Rajesh Tiwari EMP011" [ref=e268]:
+              - generic [ref=e269]: Rajesh Tiwari
+              - generic [ref=e270]: EMP011
+            - cell "₹4,80,000" [ref=e271]
+            - cell "₹5,10,000" [ref=e272]
+            - cell "2026-07-01" [ref=e273]
+            - cell "HR Head" [ref=e274]
+            - cell "Sign-off Hold Reject" [ref=e275]:
+              - generic [ref=e276]:
+                - generic [ref=e278] [cursor=pointer]: Sign-off
+                - generic [ref=e280] [cursor=pointer]: Hold
+                - generic [ref=e282] [cursor=pointer]: Reject
+          - row "Pooja Iyer EMP012 ₹6,90,000 ₹7,30,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e283]:
+            - cell "Pooja Iyer EMP012" [ref=e284]:
+              - generic [ref=e285]: Pooja Iyer
+              - generic [ref=e286]: EMP012
+            - cell "₹6,90,000" [ref=e287]
+            - cell "₹7,30,000" [ref=e288]
+            - cell "2026-07-01" [ref=e289]
+            - cell "Finance Manager" [ref=e290]
+            - cell "Sign-off Hold Reject" [ref=e291]:
+              - generic [ref=e292]:
+                - generic [ref=e294] [cursor=pointer]: Sign-off
+                - generic [ref=e296] [cursor=pointer]: Hold
+                - generic [ref=e298] [cursor=pointer]: Reject
+          - row "Amit Verma EMP013 ₹5,40,000 ₹5,75,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e299]:
+            - cell "Amit Verma EMP013" [ref=e300]:
+              - generic [ref=e301]: Amit Verma
+              - generic [ref=e302]: EMP013
+            - cell "₹5,40,000" [ref=e303]
+            - cell "₹5,75,000" [ref=e304]
+            - cell "2026-07-01" [ref=e305]
+            - cell "Finance Manager" [ref=e306]
+            - cell "Sign-off Hold Reject" [ref=e307]:
+              - generic [ref=e308]:
+                - generic [ref=e310] [cursor=pointer]: Sign-off
+                - generic [ref=e312] [cursor=pointer]: Hold
+                - generic [ref=e314] [cursor=pointer]: Reject
+          - row "Kavya Reddy EMP014 ₹8,50,000 ₹8,90,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e315]:
+            - cell "Kavya Reddy EMP014" [ref=e316]:
+              - generic [ref=e317]: Kavya Reddy
+              - generic [ref=e318]: EMP014
+            - cell "₹8,50,000" [ref=e319]
+            - cell "₹8,90,000" [ref=e320]
+            - cell "2026-07-01" [ref=e321]
+            - cell "HR Head" [ref=e322]
+            - cell "Sign-off Hold Reject" [ref=e323]:
+              - generic [ref=e324]:
+                - generic [ref=e326] [cursor=pointer]: Sign-off
+                - generic [ref=e328] [cursor=pointer]: Hold
+                - generic [ref=e330] [cursor=pointer]: Reject
+          - row "Nikhil Bansal EMP015 ₹6,00,000 ₹6,35,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e331]:
+            - cell "Nikhil Bansal EMP015" [ref=e332]:
+              - generic [ref=e333]: Nikhil Bansal
+              - generic [ref=e334]: EMP015
+            - cell "₹6,00,000" [ref=e335]
+            - cell "₹6,35,000" [ref=e336]
+            - cell "2026-07-01" [ref=e337]
+            - cell "Finance Manager" [ref=e338]
+            - cell "Sign-off Hold Reject" [ref=e339]:
+              - generic [ref=e340]:
+                - generic [ref=e342] [cursor=pointer]: Sign-off
+                - generic [ref=e344] [cursor=pointer]: Hold
+                - generic [ref=e346] [cursor=pointer]: Reject
+          - row "Shalini Mishra EMP016 ₹7,40,000 ₹7,80,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e347]:
+            - cell "Shalini Mishra EMP016" [ref=e348]:
+              - generic [ref=e349]: Shalini Mishra
+              - generic [ref=e350]: EMP016
+            - cell "₹7,40,000" [ref=e351]
+            - cell "₹7,80,000" [ref=e352]
+            - cell "2026-07-01" [ref=e353]
+            - cell "Finance Manager" [ref=e354]
+            - cell "Sign-off Hold Reject" [ref=e355]:
+              - generic [ref=e356]:
+                - generic [ref=e358] [cursor=pointer]: Sign-off
+                - generic [ref=e360] [cursor=pointer]: Hold
+                - generic [ref=e362] [cursor=pointer]: Reject
+          - row "Dinesh Choudhary EMP017 ₹5,20,000 ₹5,50,000 2026-07-01 HR Head Sign-off Hold Reject" [ref=e363]:
+            - cell "Dinesh Choudhary EMP017" [ref=e364]:
+              - generic [ref=e365]: Dinesh Choudhary
+              - generic [ref=e366]: EMP017
+            - cell "₹5,20,000" [ref=e367]
+            - cell "₹5,50,000" [ref=e368]
+            - cell "2026-07-01" [ref=e369]
+            - cell "HR Head" [ref=e370]
+            - cell "Sign-off Hold Reject" [ref=e371]:
+              - generic [ref=e372]:
+                - generic [ref=e374] [cursor=pointer]: Sign-off
+                - generic [ref=e376] [cursor=pointer]: Hold
+                - generic [ref=e378] [cursor=pointer]: Reject
+          - row "Geeta Pillai EMP018 ₹6,70,000 ₹7,00,000 2026-07-01 Finance Manager Sign-off Hold Reject" [ref=e379]:
+            - cell "Geeta Pillai EMP018" [ref=e380]:
+              - generic [ref=e381]: Geeta Pillai
+              - generic [ref=e382]: EMP018
+            - cell "₹6,70,000" [ref=e383]
+            - cell "₹7,00,000" [ref=e384]
+            - cell "2026-07-01" [ref=e385]
+            - cell "Finance Manager" [ref=e386]
+            - cell "Sign-off Hold Reject" [ref=e387]:
+              - generic [ref=e388]:
+                - generic [ref=e390] [cursor=pointer]: Sign-off
+                - generic [ref=e392] [cursor=pointer]: Hold
+                - generic [ref=e394] [cursor=pointer]: Reject
+      - generic [ref=e395]: ⚠ 18 AWAITING SIGN-OFF
+      - button "✓ Save Decisions" [ref=e396] [cursor=pointer]

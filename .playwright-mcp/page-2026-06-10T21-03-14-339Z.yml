@@ -1,0 +1,85 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e25]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e26] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e28]:
+        - text: Employee Portal
+        - generic [ref=e29]: payroll-webapp · Read-only access
+    - generic [ref=e30]:
+      - generic [ref=e31]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e32]:
+        - generic [ref=e33]: Meera Kapoor
+        - generic [ref=e34]: Marketing
+      - button "Logout" [ref=e35] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - button "Payslips" [ref=e138] [cursor=pointer]
+      - button "F&F Status" [ref=e139] [cursor=pointer]
+    - generic [ref=e42]:
+      - heading "Your Payslips" [level=2] [ref=e44]
+      - generic [ref=e45]:
+        - generic [ref=e141]:
+          - generic [ref=e142]: May 2026
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - generic [ref=e145]: Gross
+              - generic [ref=e146]: ₹90,000
+            - generic [ref=e147]:
+              - generic [ref=e148]: Net Pay
+              - generic [ref=e149]: ₹74,800
+          - button "View" [ref=e150] [cursor=pointer]
+        - generic [ref=e152]:
+          - generic [ref=e153]: April 2026
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - generic [ref=e156]: Gross
+              - generic [ref=e157]: ₹90,000
+            - generic [ref=e158]:
+              - generic [ref=e159]: Net Pay
+              - generic [ref=e160]: ₹74,800
+          - button "View" [ref=e161] [cursor=pointer]
+        - generic [ref=e163]:
+          - generic [ref=e164]: March 2026
+          - generic [ref=e165]:
+            - generic [ref=e166]:
+              - generic [ref=e167]: Gross
+              - generic [ref=e168]: ₹90,000
+            - generic [ref=e169]:
+              - generic [ref=e170]: Net Pay
+              - generic [ref=e171]: ₹74,800
+          - button "View" [ref=e172] [cursor=pointer]
+        - generic [ref=e174]:
+          - generic [ref=e175]: February 2026
+          - generic [ref=e176]:
+            - generic [ref=e177]:
+              - generic [ref=e178]: Gross
+              - generic [ref=e179]: ₹90,000
+            - generic [ref=e180]:
+              - generic [ref=e181]: Net Pay
+              - generic [ref=e182]: ₹74,700
+          - button "View" [ref=e183] [cursor=pointer]
+        - generic [ref=e185]:
+          - generic [ref=e186]: January 2026
+          - generic [ref=e187]:
+            - generic [ref=e188]:
+              - generic [ref=e189]: Gross
+              - generic [ref=e190]: ₹90,000
+            - generic [ref=e191]:
+              - generic [ref=e192]: Net Pay
+              - generic [ref=e193]: ₹74,800
+          - button "View" [ref=e194] [cursor=pointer]
+        - generic [ref=e196]:
+          - generic [ref=e197]: December 2025
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]: Gross
+              - generic [ref=e201]: ₹90,000
+            - generic [ref=e202]:
+              - generic [ref=e203]: Net Pay
+              - generic [ref=e204]: ₹74,800
+          - button "View" [ref=e205] [cursor=pointer]
+        - generic [ref=e206]:
+          - generic [ref=e207]: Showing 1–6 of 12
+          - generic [ref=e208]:
+            - button "← Prev" [disabled] [ref=e209]
+            - button "Next →" [ref=e210] [cursor=pointer]

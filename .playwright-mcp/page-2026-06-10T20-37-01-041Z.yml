@@ -1,0 +1,83 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e23]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e24] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e26]:
+        - text: Employee Portal
+        - generic [ref=e27]: payroll-webapp · Read-only access
+    - generic [ref=e28]:
+      - generic [ref=e29]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e30]:
+        - generic [ref=e31]: Priya Sharma
+        - generic [ref=e32]: Engineering
+      - button "Logout" [ref=e33] [cursor=pointer]
+  - main [ref=e35]:
+    - button "Payslips" [ref=e37] [cursor=pointer]
+    - generic [ref=e39]:
+      - heading "Your Payslips" [level=2] [ref=e41]
+      - generic [ref=e42]:
+        - generic [ref=e172]:
+          - generic [ref=e173]: November 2025
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - generic [ref=e176]: Gross
+              - generic [ref=e177]: ₹85,000
+            - generic [ref=e178]:
+              - generic [ref=e179]: Net Pay
+              - generic [ref=e180]: ₹71,900
+          - button "View" [ref=e181] [cursor=pointer]
+        - generic [ref=e183]:
+          - generic [ref=e184]: October 2025
+          - generic [ref=e185]:
+            - generic [ref=e186]:
+              - generic [ref=e187]: Gross
+              - generic [ref=e188]: ₹85,000
+            - generic [ref=e189]:
+              - generic [ref=e190]: Net Pay
+              - generic [ref=e191]: ₹71,900
+          - button "View" [ref=e192] [cursor=pointer]
+        - generic [ref=e194]:
+          - generic [ref=e195]: September 2025
+          - generic [ref=e196]:
+            - generic [ref=e197]:
+              - generic [ref=e198]: Gross
+              - generic [ref=e199]: ₹85,000
+            - generic [ref=e200]:
+              - generic [ref=e201]: Net Pay
+              - generic [ref=e202]: ₹71,900
+          - button "View" [ref=e203] [cursor=pointer]
+        - generic [ref=e205]:
+          - generic [ref=e206]: August 2025
+          - generic [ref=e207]:
+            - generic [ref=e208]:
+              - generic [ref=e209]: Gross
+              - generic [ref=e210]: ₹85,000
+            - generic [ref=e211]:
+              - generic [ref=e212]: Net Pay
+              - generic [ref=e213]: ₹71,900
+          - button "View" [ref=e214] [cursor=pointer]
+        - generic [ref=e216]:
+          - generic [ref=e217]: July 2025
+          - generic [ref=e218]:
+            - generic [ref=e219]:
+              - generic [ref=e220]: Gross
+              - generic [ref=e221]: ₹85,000
+            - generic [ref=e222]:
+              - generic [ref=e223]: Net Pay
+              - generic [ref=e224]: ₹71,900
+          - button "View" [ref=e225] [cursor=pointer]
+        - generic [ref=e227]:
+          - generic [ref=e228]: June 2025
+          - generic [ref=e229]:
+            - generic [ref=e230]:
+              - generic [ref=e231]: Gross
+              - generic [ref=e232]: ₹85,000
+            - generic [ref=e233]:
+              - generic [ref=e234]: Net Pay
+              - generic [ref=e235]: ₹71,900
+          - button "View" [ref=e236] [cursor=pointer]
+        - generic [ref=e237]:
+          - generic [ref=e238]: Showing 7–12 of 12
+          - generic [ref=e239]:
+            - button "← Prev" [ref=e240] [cursor=pointer]
+            - button "Next →" [disabled] [ref=e241]

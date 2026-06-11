@@ -1,0 +1,77 @@
+- generic [ref=e1]:
+  - banner [ref=e23]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e24] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e26]:
+        - text: Employee Portal
+        - generic [ref=e27]: payroll-webapp · Read-only access
+    - generic [ref=e28]:
+      - generic [ref=e29]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e30]: Priya Sharma Engineering
+      - button "Logout" [ref=e31] [cursor=pointer]
+  - main [ref=e33]:
+    - button "Payslips" [ref=e35] [cursor=pointer]
+    - generic [ref=e37]:
+      - heading "Your Payslips" [level=2] [ref=e39]
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: May 2026
+            - generic [ref=e44]:
+              - generic [ref=e45]:
+                - generic [ref=e46]: Gross
+                - generic [ref=e47]: ₹85,000
+              - generic [ref=e48]:
+                - generic [ref=e49]: Net Pay
+                - generic [ref=e50]: ₹72,100
+            - button "Close" [active] [ref=e74] [cursor=pointer]
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]:
+                - generic [ref=e78]: Employee
+                - generic [ref=e79]: Priya Sharma
+              - generic [ref=e80]:
+                - generic [ref=e81]: Department
+                - generic [ref=e82]: Engineering
+              - generic [ref=e83]:
+                - generic [ref=e84]: Month
+                - generic [ref=e85]: May 2026
+              - generic [ref=e86]:
+                - generic [ref=e87]: Payment Date
+                - generic [ref=e88]: 31 May 2026
+              - generic [ref=e89]:
+                - generic [ref=e90]: Gross Pay
+                - generic [ref=e91]: ₹85,000
+              - generic [ref=e92]:
+                - generic [ref=e93]: PF Deduction
+                - generic [ref=e94]: − ₹6,120
+              - generic [ref=e95]:
+                - generic [ref=e96]: ESI Deduction
+                - generic [ref=e97]: − ₹638
+              - generic [ref=e98]:
+                - generic [ref=e99]: TDS Deduction
+                - generic [ref=e100]: − ₹6,143
+              - generic [ref=e101]:
+                - generic [ref=e102]: Net Pay
+                - generic [ref=e103]: ₹72,100
+            - button "⬇ Download PDF" [ref=e105] [cursor=pointer]
+        - generic [ref=e53]:
+          - generic [ref=e54]: April 2026
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: Gross
+              - generic [ref=e58]: ₹85,000
+            - generic [ref=e59]:
+              - generic [ref=e60]: Net Pay
+              - generic [ref=e61]: ₹72,100
+          - button "View" [ref=e62] [cursor=pointer]
+        - generic [ref=e64]:
+          - generic [ref=e65]: March 2026
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: Gross
+              - generic [ref=e69]: ₹85,000
+            - generic [ref=e70]:
+              - generic [ref=e71]: Net Pay
+              - generic [ref=e72]: ₹72,100
+          - button "View" [ref=e73] [cursor=pointer]

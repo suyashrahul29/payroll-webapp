@@ -1,0 +1,50 @@
+- generic [ref=e1]:
+  - banner [ref=e23]:
+    - link "Employee Portal payroll-webapp · Read-only access" [ref=e24] [cursor=pointer]:
+      - /url: index.html
+      - generic [ref=e26]:
+        - text: Employee Portal
+        - generic [ref=e27]: payroll-webapp · Read-only access
+    - generic [ref=e28]:
+      - generic [ref=e29]: 🔒 Tenant-isolated · Viewing your records only
+      - generic [ref=e30]:
+        - generic [ref=e31]: Raj Mehta
+        - generic [ref=e32]: Finance
+      - button "Logout" [ref=e33] [cursor=pointer]
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - button "Payslips" [active] [ref=e37] [cursor=pointer]
+      - button "F&F Status" [ref=e38] [cursor=pointer]
+    - generic [ref=e40]:
+      - heading "Your Payslips" [level=2] [ref=e42]
+      - generic [ref=e43]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: May 2026
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]: Gross
+              - generic [ref=e50]: ₹1,20,000
+            - generic [ref=e51]:
+              - generic [ref=e52]: Net Pay
+              - generic [ref=e53]: ₹1,00,500
+          - button "View" [ref=e54] [cursor=pointer]
+        - generic [ref=e56]:
+          - generic [ref=e57]: April 2026
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]: Gross
+              - generic [ref=e61]: ₹1,20,000
+            - generic [ref=e62]:
+              - generic [ref=e63]: Net Pay
+              - generic [ref=e64]: ₹1,00,500
+          - button "View" [ref=e65] [cursor=pointer]
+        - generic [ref=e67]:
+          - generic [ref=e68]: March 2026
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: Gross
+              - generic [ref=e72]: ₹1,20,000
+            - generic [ref=e73]:
+              - generic [ref=e74]: Net Pay
+              - generic [ref=e75]: ₹1,00,500
+          - button "View" [ref=e76] [cursor=pointer]

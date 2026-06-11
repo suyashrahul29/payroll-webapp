@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img [ref=e4]
+      - generic [ref=e7]:
+        - text: greenlit
+        - generic [ref=e8]: Employee Master Import · Acme Mfg Pvt Ltd
+    - link "← Dashboard" [ref=e9] [cursor=pointer]:
+      - /url: index.html
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - heading "Import Employee Master" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Upload a CSV file to add employees to payroll. All rows must pass validation before import.
+    - generic [ref=e14]:
+      - heading "CSV Template" [level=2] [ref=e16]
+      - generic [ref=e17]:
+        - generic [ref=e18]: 📄
+        - generic [ref=e19]:
+          - generic [ref=e20]: employee_master_template.csv
+          - generic [ref=e21]: Headers + 3 sample Indian employees (EMP001–EMP003). Fill this template and upload below.
+        - button "⬇ Download Template" [ref=e22] [cursor=pointer]
+      - generic [ref=e23]:
+        - generic [ref=e24]: employee_id *
+        - generic [ref=e25]: name *
+        - generic [ref=e26]: email *
+        - generic [ref=e27]: department *
+        - generic [ref=e28]: ctc_annual *
+        - generic [ref=e29]: doj *
+        - generic [ref=e30]: state *
+        - generic [ref=e31]: "* All fields required"
+    - generic [ref=e32]:
+      - heading "Upload CSV" [level=2] [ref=e34]
+      - generic [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: 📂
+        - generic [ref=e38]: Drop CSV here or click to browse
+        - generic [ref=e39]: Accepts .csv files only
+        - generic [ref=e40]: "Encoding: UTF-8 · Max 10,000 rows"
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - heading "Import History" [level=2] [ref=e43]
+        - button "Clear" [ref=e44] [cursor=pointer]
+      - generic [ref=e46]: No imports yet.
