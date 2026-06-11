@@ -38,7 +38,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-06-09
-last_updated: 2026-06-11T16:00:00Z
+last_updated: 2026-06-11T11:40:00Z
 project: payroll-webapp
 project_key: NOKEY
 tracking_system: file-system
@@ -48,7 +48,7 @@ development_status:
   # ==================================================
   # EPIC 1: Payroll Readiness Dashboard
   # ==================================================
-  epic-1: in-progress
+  epic-1: done
 
   1-1-readiness-service-foundation-event-model: done
   1-2-home-screen-ui-shell-gauge-component: done
@@ -64,23 +64,23 @@ development_status:
   # ==================================================
   # EPIC 2: Compliance Engine (Rules-Versioned, State-Aware)
   # ==================================================
-  epic-2: in-progress
+  epic-2: done
 
   2-1-compliance-rules-database-rule-versioning: done
   2-2-pure-calculation-core-statutory-computation-pf-esi-tds-pt: done
   2-3-payslip-rendering-statutory-outputs-to-pdf-display: done
-  2-4-multi-state-payslip-compliance-jurisdiction-specific-outputs: backlog
+  2-4-multi-state-payslip-compliance-jurisdiction-specific-outputs: done
 
   epic-2-retrospective: optional
 
   # ==================================================
   # EPIC 3: 50%-Wage-Rule Restructuring Assistant
   # ==================================================
-  epic-3: backlog
+  epic-3: done
 
-  3-1-bulk-salary-structure-validation-flagging: backlog
-  3-2-impact-preview-restructuring-simulator: backlog
-  3-3-restructuring-execution-via-change-handshake: backlog
+  3-1-bulk-salary-structure-validation-flagging: done
+  3-2-impact-preview-restructuring-simulator: done
+  3-3-restructuring-execution-via-change-handshake: done
 
   epic-3-retrospective: optional
 

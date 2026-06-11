@@ -268,6 +268,7 @@
   <div style="display:flex;align-items:center;gap:8px;">
     <a href="onboarding.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Setup →</a>
     <a href="import.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Import →</a>
+    <a href="restructure.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Restructure →</a>
     <a href="portal.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Portal →</a>
     <button class="app-header-logout" id="logoutBtn" onclick="logout()">Logout</button>
   </div>
@@ -458,7 +459,53 @@
   </div>
 </div>
 
+<!-- Restructuring Sign-off Modal (Story 3.3) -->
+<div class="modal" id="restructuringModal">
+  <div class="modal-content" style="max-width:820px;">
+    <div class="modal-head">
+      <h3 id="restructModalTitle">Restructuring Sign-off</h3>
+      <button class="modal-close" onclick="closeRestructuringModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p id="restructModalSummary" style="margin: 0 0 12px; color: var(--muted); font-size: 13px;"></p>
+      <div class="diff-scroll">
+        <table class="diff-table" id="restructDiffTable">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Old Basic</th>
+              <th>New Basic</th>
+              <th>Take-home Δ</th>
+              <th>PF Δ</th>
+              <th>Signatory</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="restructDiffBody"></tbody>
+        </table>
+      </div>
+      <div class="diff-badge" id="restructDiffBadge">⚠ AWAITING SIGN-OFF</div>
+      <button class="change-review-btn" id="saveRestructSignoffBtn" onclick="saveRestructuringDecisions()">
+        ✓ Save Decisions
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Story 3.3: detect pending restructuring from Restructuring Assistant
+  let restructuringPending = null;
+  try {
+    const raw = localStorage.getItem('restructuring_pending');
+    if (raw) restructuringPending = JSON.parse(raw);
+  } catch(e) { /* malformed — ignore */ }
+
   // --- Mock change records for Change Handshake (18 records, paise values) ---
   const changeRecords = [
     { id:'cr-001', employee_id:'EMP001', employee_name:'Arjun Mehta',     old_ctc:58000000, new_ctc:61500000, effective_date:'2026-07-01', signatory:'Finance Manager', status:'pending' },
@@ -497,7 +544,17 @@
   };
 
   // --- Mock state: the live inputs to the Readiness Score ---
-  const blockers = [
+  const blockers = [];
+  if (restructuringPending && restructuringPending.records && restructuringPending.records.length > 0) {
+    const n = restructuringPending.records.length;
+    blockers.push({
+      id: 'restructuring', sev: 'amber', weight: 14, icon: '⟳',
+      title: n + ' salary structure' + (n !== 1 ? 's' : '') + ' changed — restructuring pending sign-off',
+      desc: 'Proposed restructuring from the 50%-Wage-Rule Assistant · sign-off required before changes are applied',
+      tag: 'Change Handshake', action: 'Review & sign',
+    });
+  }
+  blockers.push(
     { id:'exits',  sev:'amber', weight:18, icon:'🕐', title:'1 exit pending F&F',
       desc:'Raj Mehta · F&F deadline: Tue 24 Jun 2026 · HR signatory: Priya Sharma', tag:'Lifecycle Clock', action:'Settle →' },
     { id:'ctc',    sev:'amber', weight:16, icon:'✎', title:'18 unconfirmed CTC changes',
@@ -506,9 +563,7 @@
       desc:'Biometric (eSSL) sync dead · LOP-sensitive payslips at risk', tag:'Freshness Vitals', action:'Re-sync' },
     { id:'pf',     sev:'amber', weight:6,  icon:'₹',  title:'PF challan not generated',
       desc:'Due by 15th · 248 employees · auto-fileable once inputs green', tag:'Compliance floor', action:'Generate' },
-  ];
-  const baseScore = 100 - blockers.reduce((s,b)=>s+b.weight,0); // starting score
-  const totalWeight = blockers.reduce((s,b)=>s+b.weight,0);
+  );
   let resolved = new Set();
   let prevented = 0;
 
@@ -558,8 +613,7 @@
   const CIRC = 628; // 2*pi*100
 
   function score(){
-    const regained = blockers.filter(b=>resolved.has(b.id)).reduce((s,b)=>s+b.weight,0);
-    return baseScore + regained;
+    return 100 - blockers.filter(b=>!resolved.has(b.id)).reduce((s,b)=>s+b.weight,0);
   }
   function color(s){ return s>=100 ? 'var(--green)' : s>=80 ? 'var(--amber)' : 'var(--red)'; }
 
@@ -628,6 +682,8 @@
         } else if(btn.dataset.id === 'attend') {
           // AC-3: Re-sync → source detail modal for eSSL biometric
           openSourceModal(sources.find(s => s.source_id === 'essl-biometric') || sources[0]);
+        } else if(btn.dataset.id === 'restructuring') {
+          openRestructuringModal();
         } else {
           resolve(btn.dataset.id);
         }
@@ -794,6 +850,10 @@
     secs = ffExitData.hoursRemaining * 3600;
     bannerDismissed = false;
     changeRecords.forEach(r => { r.status = 'pending'; });
+    // Story 3.3: reset restructuring blocker if present
+    const rIdx = blockers.findIndex(b => b.id === 'restructuring');
+    if (rIdx !== -1) blockers.splice(rIdx, 1);
+    restructuringPending = null;
     const ctcBlocker = blockers.find(b => b.id === 'ctc');
     if (ctcBlocker) {
       ctcBlocker.title = '18 unconfirmed CTC changes';
@@ -1267,6 +1327,166 @@
     showToast('✅ F&F Settled for Raj Mehta — ₹1,25,000 via ' + (ffSelectedMethod === 'bank' ? 'Bank Transfer' : 'Cash'));
   }
 
+  // --- Restructuring Sign-off Modal (Story 3.3) ---
+
+  function openRestructuringModal() {
+    renderRestructuringDiff();
+    document.getElementById('restructuringModal').classList.add('show');
+  }
+
+  function closeRestructuringModal() {
+    document.getElementById('restructuringModal').classList.remove('show');
+  }
+
+  function formatBasic(paise) {
+    return '₹' + (paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+  }
+
+  function fmtRestructDelta(paise) {
+    if (paise === 0) return '<span style="color:var(--muted)">—</span>';
+    const abs = Math.abs(paise);
+    const sign = paise > 0 ? '+' : '−';
+    const cls  = paise < 0 ? 'ctc-old' : 'ctc-new';
+    return '<span class="' + cls + '">' + sign + formatBasic(abs) + '</span>';
+  }
+
+  function renderRestructuringDiff() {
+    if (!restructuringPending) return;
+    const records = restructuringPending.records;
+    const pending = records.filter(r => r.status === 'pending' || r.status === 'held');
+    const n = records.length;
+
+    document.getElementById('restructModalTitle').textContent =
+      'Restructuring Sign-off — ' + n + ' salary structure' + (n !== 1 ? 's' : '');
+
+    const ts = records[0] ? new Date(records[0].createdAt).toLocaleString('en-IN') : '';
+    document.getElementById('restructModalSummary').innerHTML =
+      'Proposed by Restructuring Assistant · ' + ts +
+      ' · <strong>Sign off to apply salary structure changes</strong>';
+
+    const badge = document.getElementById('restructDiffBadge');
+    badge.textContent = pending.length > 0
+      ? ('⚠ ' + pending.length + ' AWAITING SIGN-OFF')
+      : '✓ ALL SIGNED OFF';
+    badge.style.background = pending.length > 0 ? 'rgba(217,119,6,.1)' : 'rgba(46,204,113,.1)';
+    badge.style.color       = pending.length > 0 ? 'var(--amber)' : 'var(--green)';
+
+    const btn = document.getElementById('saveRestructSignoffBtn');
+    btn.disabled    = pending.length === 0;
+    btn.textContent = pending.length > 0 ? '✓ Save Decisions' : '✓ All done';
+
+    const tbody = document.getElementById('restructDiffBody');
+    tbody.innerHTML = '';
+
+    records.forEach(rec => {
+      const tr = document.createElement('tr');
+      const isPending = rec.status === 'pending' || rec.status === 'held';
+
+      const empTd = document.createElement('td');
+      empTd.innerHTML = '<div style="font-weight:500">' + escHtml(rec.employeeName) +
+        '</div><div style="font-size:11px;color:var(--muted)">' + escHtml(rec.employeeId) + '</div>';
+
+      const oldTd = document.createElement('td');
+      oldTd.className = 'ctc-old';
+      oldTd.textContent = formatBasic(rec.oldBasicPaise);
+
+      const newTd = document.createElement('td');
+      newTd.className = 'ctc-new';
+      newTd.textContent = formatBasic(rec.newBasicPaise);
+
+      const netTd = document.createElement('td');
+      netTd.innerHTML = fmtRestructDelta(rec.deltaNetPayPaise);
+
+      const pfTd = document.createElement('td');
+      pfTd.innerHTML = fmtRestructDelta(-rec.deltaPfEmployeePaise);
+
+      const sigTd = document.createElement('td');
+      sigTd.style.cssText = 'font-size:12px;color:var(--muted)';
+      sigTd.textContent = rec.signatory;
+
+      const actTd = document.createElement('td');
+      if (isPending) {
+        const cur = rec.status === 'held' ? 'hold' : 'sign';
+        actTd.innerHTML =
+          '<div class="diff-action">' +
+          '<label class="opt-sign"><input type="radio" name="rstruct-' + rec.employeeId + '" value="sign"' +
+            (cur === 'sign' ? ' checked' : '') + '><span>Sign-off</span></label>' +
+          '<label class="opt-hold"><input type="radio" name="rstruct-' + rec.employeeId + '" value="hold"' +
+            (cur === 'hold' ? ' checked' : '') + '><span>Hold</span></label>' +
+          '<label class="opt-reject"><input type="radio" name="rstruct-' + rec.employeeId + '" value="reject">' +
+            '<span>Reject</span></label>' +
+          '</div>';
+      } else {
+        const labels = { signed_off:'✓ Signed off', rejected:'✗ Rejected', held:'⏸ Held' };
+        const colors = { signed_off:'var(--green)', rejected:'var(--red)', held:'var(--amber)' };
+        const el = document.createElement('span');
+        el.style.cssText = 'font-size:11px;font-weight:600;color:' + (colors[rec.status] || 'var(--muted)');
+        el.textContent = labels[rec.status] || rec.status;
+        actTd.appendChild(el);
+      }
+
+      tr.appendChild(empTd); tr.appendChild(oldTd); tr.appendChild(newTd);
+      tr.appendChild(netTd); tr.appendChild(pfTd);  tr.appendChild(sigTd);
+      tr.appendChild(actTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function saveRestructuringDecisions() {
+    if (!restructuringPending) return;
+
+    restructuringPending.records.forEach(rec => {
+      if (rec.status !== 'pending' && rec.status !== 'held') return;
+      const radios = document.querySelectorAll('input[name="rstruct-' + rec.employeeId + '"]');
+      radios.forEach(r => {
+        if (r.checked) {
+          if (r.value === 'sign')   rec.status = 'signed_off';
+          if (r.value === 'hold')   rec.status = 'held';
+          if (r.value === 'reject') rec.status = 'rejected';
+        }
+      });
+    });
+
+    const remainingPending = restructuringPending.records.filter(
+      r => r.status === 'pending' || r.status === 'held'
+    ).length;
+
+    const restructBlocker = blockers.find(b => b.id === 'restructuring');
+
+    if (remainingPending === 0) {
+      const signedOff = restructuringPending.records.filter(r => r.status === 'signed_off').length;
+      const auditRecord = {
+        appliedBy:  'Priya Sharma (HR Manager)',
+        appliedAt:  new Date().toISOString(),
+        records:    restructuringPending.records.map(r => ({
+          employeeId: r.employeeId, employeeName: r.employeeName,
+          oldBasicPaise: r.oldBasicPaise, newBasicPaise: r.newBasicPaise,
+          status: r.status,
+        })),
+      };
+      try {
+        localStorage.setItem('restructuring_audit', JSON.stringify(auditRecord));
+        localStorage.removeItem('restructuring_pending');
+      } catch(e) { /* quota */ }
+
+      closeRestructuringModal();
+      resolve('restructuring');
+      showToast('✅ ' + signedOff + ' salary structure' + (signedOff !== 1 ? 's' : '') +
+        ' signed off — audit record saved');
+      return;
+    }
+
+    if (restructBlocker) {
+      restructBlocker.title = remainingPending + ' salary structure' +
+        (remainingPending !== 1 ? 's' : '') + ' — restructuring pending sign-off';
+      restructBlocker.weight = Math.round(14 * remainingPending / restructuringPending.records.length);
+    }
+
+    renderRestructuringDiff();
+    renderList();
+    renderGauge(true);
+  }
+
   // Close modals on background click
   document.getElementById('vitalsModal').onclick = (e)=>{
     if(e.target.id === 'vitalsModal') closeVitalsModal();
@@ -1276,6 +1496,9 @@
   };
   document.getElementById('ffModal').onclick = (e)=>{
     if(e.target.id === 'ffModal') closeFFModal();
+  };
+  document.getElementById('restructuringModal').onclick = (e)=>{
+    if(e.target.id === 'restructuringModal') closeRestructuringModal();
   };
 
   function showToast(msg, type) {
