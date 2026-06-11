@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>payroll-webapp — New Company Setup</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --panel-2: #F5F7FA;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --blue: #0D9488;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    background: #FFFFFF;
+    color: var(--txt);
+    min-height: 100vh;
+  }
+  header.app {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10; gap: 12px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; min-width: 0; }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 12px var(--blue); animation: blink 1.6s infinite; flex: 0 0 auto; }
+  .brand .brand-text { min-width: 0; }
+  .brand .brand-text span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .brand small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .back-link { flex: 0 0 auto; font-size: 13px; color: var(--muted); text-decoration: none; border: 1px solid var(--line); padding: 7px 14px; border-radius: 8px; white-space: nowrap; }
+  .back-link:hover { border-color: var(--blue); color: var(--blue); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  main { max-width: 860px; margin: 0 auto; padding: 36px 24px 60px; }
+
+  /* Progress Steps */
+  .progress-bar {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 40px; padding: 0;
+    list-style: none; overflow-x: auto;
+    /* hide scrollbar but allow scroll */
+    scrollbar-width: none;
+  }
+  .progress-bar::-webkit-scrollbar { display: none; }
+  .progress-bar li {
+    display: flex; align-items: center; flex: 1;
+    position: relative; min-width: 0;
+  }
+  .progress-bar li:last-child { flex: none; }
+  .step-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px; border-radius: 30px;
+    font-size: 13px; font-weight: 600;
+    border: 2px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    white-space: nowrap;
+    transition: all .25s;
+    cursor: default;
+    position: relative; z-index: 1;
+  }
+  .step-pill .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 800;
+    background: var(--line); color: var(--muted);
+    flex: 0 0 auto;
+    transition: all .25s;
+  }
+  .step-pill .step-label { white-space: nowrap; }
+  .step-pill.active {
+    border-color: var(--blue); background: rgba(13,148,136,.08); color: var(--blue);
+  }
+  .step-pill.active .step-num { background: var(--blue); color: #FFFFFF; }
+  .step-pill.done {
+    border-color: var(--green); background: rgba(22,163,74,.08); color: var(--green);
+  }
+  .step-pill.done .step-num { background: var(--green); color: #FFFFFF; }
+  .step-connector {
+    flex: 1; height: 2px; background: var(--line); min-width: 12px; transition: background .25s;
+  }
+  .step-connector.done { background: var(--green); }
+
+  /* Mobile: hide step labels for inactive steps to save space */
+  @media (max-width: 600px) {
+    main { padding: 24px 16px 48px; }
+    .progress-bar { margin-bottom: 28px; }
+    .step-pill { padding: 8px 12px; font-size: 12px; gap: 6px; }
+    .step-pill:not(.active) .step-label { display: none; }
+    .step-pill.active { padding: 8px 14px; }
+    .step-connector { min-width: 8px; }
+    .brand small { display: none; }
+    .back-link span { display: none; }
+    .back-link::before { content: '←'; }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .card-head {
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: grid; place-items: center;
+    font-size: 22px; flex: 0 0 auto;
+    background: rgba(13,148,136,.1);
+  }
+  .card-title { flex: 1; min-width: 0; }
+  .card-title h2 { margin: 0 0 4px; font-size: 18px; }
+  .card-title p { margin: 0; font-size: 13px; color: var(--muted); }
+  .card-body { padding: 24px; }
+  @media (max-width: 600px) {
+    .card-head { padding: 16px 18px 14px; gap: 12px; }
+    .card-body { padding: 16px 18px; }
+    .card-title h2 { font-size: 16px; }
+  }
+
+  /* Step panel visibility */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  /* Drop zone */
+  .drop-zone {
+    border: 2px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: #FAFAFA;
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--blue);
+    background: rgba(13,148,136,.04);
+  }
+  .drop-zone .dz-icon { font-size: 40px; margin-bottom: 12px; }
+  .drop-zone .dz-label { font-size: 15px; font-weight: 600; color: var(--txt); margin-bottom: 6px; }
+  .drop-zone .dz-sub { font-size: 13px; color: var(--muted); }
+  .drop-zone input[type=file] {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
+  }
+  .drop-zone.uploaded {
+    border-color: var(--green); border-style: solid;
+    background: rgba(22,163,74,.04);
+  }
+
+  .template-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--blue); text-decoration: none;
+    margin-top: 14px; font-weight: 600;
+    padding: 7px 14px; border: 1px solid rgba(13,148,136,.3);
+    border-radius: 8px; background: rgba(13,148,136,.04);
+    transition: all .2s;
+  }
+  .template-link:hover { background: rgba(13,148,136,.1); }
+
+  .col-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .col-chip {
+    font-size: 11px; font-family: monospace; padding: 4px 10px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 6px; color: var(--muted);
+    font-weight: 600;
+  }
+  .col-chip.required { color: var(--blue); border-color: rgba(13,148,136,.3); background: rgba(13,148,136,.05); }
+
+  .import-summary {
+    display: none; margin-top: 20px;
+    background: rgba(22,163,74,.06); border: 1px solid rgba(22,163,74,.25);
+    border-radius: var(--radius); padding: 16px 20px;
+  }
+  .import-summary.show { display: flex; align-items: flex-start; gap: 14px; }
+  .import-summary .sum-icon { font-size: 28px; flex: 0 0 auto; }
+  .import-summary .sum-text { flex: 1; }
+  .import-summary .sum-text strong { font-size: 16px; color: var(--green); display: block; }
+  .import-summary .sum-text span { font-size: 13px; color: var(--muted); }
+
+  .error-list {
+    margin-top: 12px;
+    background: rgba(220,38,38,.05); border: 1px solid rgba(220,38,38,.2);
+    border-radius: 10px; padding: 14px 16px;
+    display: none;
+  }
+  .error-list.show { display: block; }
+  .error-list .err-title { font-weight: 700; color: var(--red); font-size: 13px; margin-bottom: 8px; }
+  .error-list .err-item { font-size: 13px; color: var(--muted); padding: 4px 0; border-bottom: 1px solid var(--line); }
+  .error-list .err-item:last-child { border-bottom: none; }
+
+  /* Statutory IDs Table */
+  .stat-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
+  }
+  .stat-controls .entry-toggle {
+    display: flex; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+  }
+  .entry-toggle button {
+    padding: 7px 14px; background: none; border: none;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    color: var(--muted); transition: .2s;
+  }
+  .entry-toggle button.active { background: var(--blue); color: #FFFFFF; }
+
+  .stat-progress-bar {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--muted); flex-wrap: wrap;
+  }
+  .stat-progress-track {
+    width: 120px; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden;
+  }
+  .stat-progress-fill {
+    height: 100%; background: var(--green); border-radius: 3px;
+    transition: width .4s;
+  }
+
+  .emp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .emp-table th {
+    padding: 10px 12px; text-align: left;
+    color: var(--muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .5px; font-weight: 600;
+    border-bottom: 2px solid var(--line);
+  }
+  .emp-table td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .emp-table tr:last-child td { border-bottom: none; }
+  .emp-table tr:hover td { background: rgba(0,0,0,.02); }
+  .emp-table input {
+    width: 100%; padding: 7px 10px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 6px; font-size: 13px; color: var(--txt);
+    font-family: monospace; transition: border-color .2s;
+  }
+  .emp-table input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.1); }
+  .emp-table input.valid { border-color: var(--green); background: rgba(22,163,74,.03); }
+  .emp-table input.invalid { border-color: var(--red); background: rgba(220,38,38,.03); }
+
+  .paste-mode-hint {
+    background: rgba(13,148,136,.06); border: 1px solid rgba(13,148,136,.2);
+    border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--muted);
+    margin-bottom: 16px; display: none;
+  }
+  .paste-mode-hint.show { display: block; }
+  .paste-mode-hint strong { color: var(--blue); }
+  .paste-zone {
+    width: 100%; height: 100px; padding: 12px;
+    background: var(--bg); border: 1px dashed var(--line);
+    border-radius: 10px; font-size: 13px; font-family: monospace;
+    color: var(--txt); resize: vertical; transition: border-color .2s;
+  }
+  .paste-zone:focus { outline: none; border-color: var(--blue); border-style: solid; }
+
+  /* Biometric Step */
+  .device-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .device-grid { grid-template-columns: repeat(2, 1fr); } }
+  .device-card {
+    border: 2px solid var(--line); border-radius: 10px;
+    padding: 14px 10px; text-align: center; cursor: pointer;
+    transition: all .2s; background: var(--panel);
+  }
+  .device-card:hover { border-color: var(--blue); }
+  .device-card.selected { border-color: var(--blue); background: rgba(13,148,136,.07); }
+  .device-card .dev-icon { font-size: 28px; margin-bottom: 6px; }
+  .device-card .dev-name { font-size: 12px; font-weight: 700; color: var(--txt); }
+  .device-card .dev-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .device-card input[type=radio] { display: none; }
+
+  .conn-fields {
+    display: grid; grid-template-columns: 1fr 120px; gap: 12px;
+    align-items: end; margin-bottom: 16px;
+  }
+  @media (max-width: 480px) { .conn-fields { grid-template-columns: 1fr; } }
+  .form-group { margin-bottom: 0; }
+  .form-group label {
+    display: block; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .5px; color: var(--muted); margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .form-group input {
+    width: 100%; padding: 10px 12px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--txt); font-size: 14px;
+    transition: border-color .2s;
+  }
+  .form-group input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.1); }
+
+  .conn-status {
+    display: none; padding: 12px 16px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; margin-bottom: 14px;
+    align-items: center; gap: 10px;
+  }
+  .conn-status.show { display: flex; }
+  .conn-status.checking { background: rgba(13,148,136,.07); color: var(--blue); border: 1px solid rgba(13,148,136,.2); }
+  .conn-status.success { background: rgba(22,163,74,.07); color: var(--green); border: 1px solid rgba(22,163,74,.2); }
+  .conn-status.error { background: rgba(220,38,38,.07); color: var(--red); border: 1px solid rgba(220,38,38,.2); }
+  .conn-status .spin {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid currentColor; border-top-color: transparent;
+    animation: spin .7s linear infinite; flex: 0 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sync-result {
+    display: none; margin-top: 10px; padding: 12px 16px;
+    background: rgba(22,163,74,.07); border: 1px solid rgba(22,163,74,.2);
+    border-radius: 10px; font-size: 13px; color: var(--green); font-weight: 600;
+  }
+  .sync-result.show { display: block; }
+
+  /* Go Live / Preflight */
+  .preflight-list { list-style: none; padding: 0; margin: 0; }
+  .preflight-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+  }
+  .preflight-item:last-child { border-bottom: none; }
+  .pf-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    display: grid; place-items: center; font-size: 18px; flex: 0 0 auto;
+    background: rgba(22,163,74,.1); color: var(--green);
+  }
+  .pf-text { flex: 1; }
+  .pf-text strong { font-weight: 600; display: block; margin-bottom: 3px; }
+  .pf-text span { font-size: 13px; color: var(--muted); }
+
+  .ttfp-banner {
+    margin-top: 20px; padding: 18px 20px;
+    background: rgba(13,148,136,.07); border: 1px solid rgba(13,148,136,.2);
+    border-radius: var(--radius); text-align: center;
+  }
+  .ttfp-banner .ttfp-label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; }
+  .ttfp-banner .ttfp-clock { font-size: 28px; font-weight: 800; color: var(--blue); margin: 6px 0; font-variant-numeric: tabular-nums; }
+  .ttfp-banner .ttfp-sub { font-size: 13px; color: var(--muted); }
+  .ttfp-biz-days { margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--fg); }
+
+  /* External dependency blockers */
+  .ext-deps { margin-top: 20px; }
+  .ext-deps-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 10px; }
+  .ext-dep-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--card);
+    margin-bottom: 8px; transition: border-color .15s, background .15s;
+  }
+  .ext-dep-item.is-waiting {
+    border-color: rgba(245,158,11,.4); background: rgba(245,158,11,.05);
+  }
+  .ext-dep-icon { font-size: 18px; line-height: 1; margin-top: 1px; flex-shrink: 0; }
+  .ext-dep-body { flex: 1; }
+  .ext-dep-name { font-size: 14px; font-weight: 600; color: var(--fg); }
+  .ext-dep-delay { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .ext-dep-note { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: italic; }
+  .ext-dep-toggle { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+  .ext-dep-toggle label { font-size: 13px; color: var(--fg); cursor: pointer; user-select: none; }
+  .ext-dep-toggle input[type=checkbox] { cursor: pointer; accent-color: var(--amber, #f59e0b); width: 15px; height: 15px; }
+  .ext-dep-pause-note { margin-top: 10px; padding: 8px 12px; font-size: 12px; color: #92400e; background: rgba(245,158,11,.1); border-radius: 8px; border: 1px solid rgba(245,158,11,.3); display: none; }
+  .ext-dep-pause-note.visible { display: block; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border: 0; border-radius: 10px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all .15s; text-decoration: none;
+  }
+  .btn-primary { background: var(--blue); color: #FFFFFF; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-primary:disabled { background: #E5E7EB; color: var(--muted); cursor: not-allowed; filter: none; }
+  .btn-success { background: var(--green); color: #FFFFFF; }
+  .btn-success:hover { filter: brightness(0.93); }
+  .btn-outline {
+    background: none; border: 1px solid var(--line);
+    color: var(--muted); font-size: 14px; padding: 10px 18px;
+  }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-sm { padding: 8px 16px; font-size: 13px; }
+
+  .action-row {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 12px; margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid var(--line); flex-wrap: wrap;
+  }
+  @media (max-width: 480px) {
+    .action-row { justify-content: stretch; }
+    .action-row .btn { width: 100%; justify-content: center; }
+    .action-row #statHint { width: 100%; }
+  }
+
+  .remaining-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--amber);
+    background: rgba(217,119,6,.08); border: 1px solid rgba(217,119,6,.2);
+    border-radius: 20px; padding: 5px 12px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .remaining-badge.all-done { color: var(--green); background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.2); }
+
+  .table-scroll { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; bottom: 28px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--green); color: #FFFFFF; font-weight: 700;
+    padding: 13px 22px; border-radius: 10px;
+    box-shadow: var(--shadow); opacity: 0; pointer-events: none;
+    transition: .25s; z-index: 100; white-space: nowrap;
+    max-width: calc(100vw - 40px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="brand">
+    <span class="dot"></span>
+    <div class="brand-text">
+      <span>payroll-webapp</span>
+      <small>New Company Setup · Guided Onboarding</small>
+    </div>
+  </div>
+  <a href="index.html" class="back-link"><span>← Back to Dashboard</span></a>
+</header>
+
+<main>
+  <!-- Welcome -->
+  <div style="margin-bottom:32px;">
+    <h1 style="margin:0 0 8px;font-size:28px;">Welcome to payroll-webapp 👋</h1>
+    <p style="margin:0;color:var(--muted);font-size:15px;">Let's get your company set up for payroll. This takes about 10 minutes.</p>
+  </div>
+
+  <!-- Progress Steps -->
+  <ul class="progress-bar" id="progressBar">
+    <li>
+      <div class="step-pill active" id="pill-1">
+        <span class="step-num">1</span>
+        <span class="step-label">Import Employees</span>
+      </div>
+    </li>
+    <div class="step-connector" id="conn-1-2"></div>
+    <li>
+      <div class="step-pill" id="pill-2">
+        <span class="step-num">2</span>
+        <span class="step-label">Statutory IDs</span>
+      </div>
+    </li>
+    <div class="step-connector" id="conn-2-3"></div>
+    <li>
+      <div class="step-pill" id="pill-3">
+        <span class="step-num">3</span>
+        <span class="step-label">Connect Biometric</span>
+      </div>
+    </li>
+    <div class="step-connector" id="conn-3-4"></div>
+    <li>
+      <div class="step-pill" id="pill-4">
+        <span class="step-num">4</span>
+        <span class="step-label">Go Live</span>
+      </div>
+    </li>
+  </ul>
+
+  <!-- ===== STEP 1: Import Employees ===== -->
+  <div class="step-panel active" id="step-1">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">📋</div>
+        <div class="card-title">
+          <h2>Upload your employee master CSV</h2>
+          <p>Import all employees at once. Download the template to get started.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- Template link -->
+        <a href="#" class="template-link" onclick="downloadTemplate(); return false;">
+          ⬇ Download CSV Template
+        </a>
+
+        <!-- Required columns -->
+        <div style="margin: 16px 0 20px;">
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:10px;">Required Columns</div>
+          <div class="col-chips">
+            <span class="col-chip required">employee_id</span>
+            <span class="col-chip required">name</span>
+            <span class="col-chip required">email</span>
+            <span class="col-chip required">department</span>
+            <span class="col-chip required">ctc_annual</span>
+            <span class="col-chip required">doj</span>
+            <span class="col-chip required">state</span>
+            <span class="col-chip">phone</span>
+            <span class="col-chip">designation</span>
+            <span class="col-chip">bank_account</span>
+            <span class="col-chip">ifsc</span>
+          </div>
+        </div>
+
+        <!-- Drop zone -->
+        <div class="drop-zone" id="dropZone"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)">
+          <div class="dz-icon">📂</div>
+          <div class="dz-label" id="dzLabel">Drag & drop your CSV here</div>
+          <div class="dz-sub" id="dzSub">or click to browse · .csv files only</div>
+          <input type="file" accept=".csv" onchange="handleFileSelect(event)" id="csvInput" />
+        </div>
+
+        <!-- Import summary -->
+        <div class="import-summary" id="importSummary">
+          <div class="sum-icon">✅</div>
+          <div class="sum-text">
+            <strong id="summaryText">47 employees ready to import</strong>
+            <span id="summaryDetail">All required columns present · No validation errors</span>
+          </div>
+        </div>
+
+        <!-- Error list -->
+        <div class="error-list" id="errorList">
+          <div class="err-title">⚠ Validation Issues Found</div>
+          <div id="errorItems"></div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-primary" id="importBtn" onclick="doImport()" disabled>
+            Import &amp; Continue →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2: Statutory IDs ===== -->
+  <div class="step-panel" id="step-2">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🪪</div>
+        <div class="card-title">
+          <h2>Enter statutory IDs</h2>
+          <p>PAN, UAN (EPF), and ESI numbers are required for compliance. You can enter row-by-row or paste from Excel.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="stat-controls">
+          <div>
+            <div class="remaining-badge" id="remainingBadge">⏳ 47 employees still need IDs</div>
+          </div>
+          <div class="entry-toggle">
+            <button class="active" id="toggleRow" onclick="setEntryMode('row')">Row Entry</button>
+            <button id="togglePaste" onclick="setEntryMode('paste')">Paste from Excel</button>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="stat-progress-bar" style="margin-bottom:16px;">
+          <span id="statProgressLabel" style="min-width:90px;">0 / 47 done</span>
+          <div class="stat-progress-track">
+            <div class="stat-progress-fill" id="statProgressFill" style="width:0%"></div>
+          </div>
+          <span style="font-size:12px;color:var(--muted);">≥80% required to continue</span>
+        </div>
+
+        <!-- Paste mode hint -->
+        <div class="paste-mode-hint" id="pasteHint">
+          <strong>Paste from Excel:</strong> Copy cells from Excel with columns in order: <code>Name | PAN | UAN | ESI</code><br/>
+          <span>Paste the cells below and click "Parse &amp; Fill"</span>
+          <div style="margin-top:10px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+            <textarea class="paste-zone" id="pasteZone" placeholder="Paste tab-separated data here..." style="flex:1;min-width:200px;"></textarea>
+            <button class="btn btn-outline btn-sm" onclick="parsePaste()" style="margin-top:4px;">Parse &amp; Fill</button>
+          </div>
+        </div>
+
+        <!-- Employee table -->
+        <div class="table-scroll" id="rowModeTable">
+          <table class="emp-table" id="statTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>PAN</th>
+                <th>UAN (EPF Member ID)</th>
+                <th>ESI Number</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="statTbody">
+              <!-- rows inserted by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="action-row">
+          <span id="statHint" style="font-size:13px;color:var(--muted);flex:1;"></span>
+          <button class="btn btn-primary" id="statContinueBtn" onclick="goToStep(3)" disabled>
+            Continue →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 3: Connect Biometric ===== -->
+  <div class="step-panel" id="step-3">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🖐</div>
+        <div class="card-title">
+          <h2>Connect your biometric device</h2>
+          <p>Biometric attendance data feeds directly into payroll — this eliminates manual attendance entry errors.</p>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <!-- Device selection -->
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:12px;">Select Device Type</div>
+        <div class="device-grid">
+          <label class="device-card selected" id="dev-essl">
+            <input type="radio" name="device" value="essl" checked onchange="selectDevice(this)" />
+            <div class="dev-icon">🔐</div>
+            <div class="dev-name">eSSL</div>
+            <div class="dev-sub">Most common</div>
+          </label>
+          <label class="device-card" id="dev-zkteco">
+            <input type="radio" name="device" value="zkteco" onchange="selectDevice(this)" />
+            <div class="dev-icon">🔑</div>
+            <div class="dev-name">ZKTeco</div>
+            <div class="dev-sub">ZK series</div>
+          </label>
+          <label class="device-card" id="dev-biomax">
+            <input type="radio" name="device" value="biomax" onchange="selectDevice(this)" />
+            <div class="dev-icon">🔒</div>
+            <div class="dev-name">Biomax</div>
+            <div class="dev-sub">Virdi / Biomax</div>
+          </label>
+          <label class="device-card" id="dev-matrix">
+            <input type="radio" name="device" value="matrix" onchange="selectDevice(this)" />
+            <div class="dev-icon">🏢</div>
+            <div class="dev-name">Matrix COSEC</div>
+            <div class="dev-sub">Enterprise</div>
+          </label>
+        </div>
+
+        <!-- Connection fields -->
+        <div class="conn-fields">
+          <div class="form-group">
+            <label>Device IP Address</label>
+            <input type="text" id="deviceIp" placeholder="e.g., 192.168.1.100" value="192.168.1.100" />
+          </div>
+          <div class="form-group">
+            <label>Port</label>
+            <input type="number" id="devicePort" placeholder="4370" value="4370" />
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <button class="btn btn-outline" onclick="testConnection()" id="testConnBtn">
+            🔌 Test Connection
+          </button>
+        </div>
+
+        <!-- Connection status -->
+        <div class="conn-status" id="connStatus">
+          <div class="spin" id="connSpin" style="display:none;"></div>
+          <span id="connStatusText"></span>
+        </div>
+
+        <!-- Sync button (shown after successful connection) -->
+        <div id="syncSection" style="display:none;">
+          <button class="btn btn-outline" onclick="runTestSync()" id="testSyncBtn">
+            🔄 Run Test Sync
+          </button>
+          <div class="sync-result" id="syncResult"></div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-primary" id="bioContinueBtn" onclick="goToStep(4)" disabled>
+            Continue →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 4: Go Live ===== -->
+  <div class="step-panel" id="step-4">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🚀</div>
+        <div class="card-title">
+          <h2>Pre-flight check before going live</h2>
+          <p>Everything is in order. Review the summary below and launch your first payroll cycle.</p>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <ul class="preflight-list">
+          <li class="preflight-item">
+            <div class="pf-icon">✅</div>
+            <div class="pf-text">
+              <strong>Employee Master</strong>
+              <span id="pf-emp-text">47 employees imported across 5 departments</span>
+            </div>
+          </li>
+          <li class="preflight-item">
+            <div class="pf-icon">✅</div>
+            <div class="pf-text">
+              <strong>Statutory IDs</strong>
+              <span id="pf-stat-text">47 / 47 employees have PAN + UAN</span>
+            </div>
+          </li>
+          <li class="preflight-item">
+            <div class="pf-icon">✅</div>
+            <div class="pf-text">
+              <strong>Biometric Source</strong>
+              <span id="pf-bio-text">eSSL connected · Last sync: just now · 47 attendance records</span>
+            </div>
+          </li>
+          <li class="preflight-item">
+            <div class="pf-icon">✅</div>
+            <div class="pf-text">
+              <strong>Data Complete</strong>
+              <span>All required data sources are live. Ready for first payroll.</span>
+            </div>
+          </li>
+        </ul>
+
+        <!-- External dependency banners -->
+        <div class="ext-deps" id="extDeps">
+          <div class="ext-deps-title">External dependencies (may pause TTFP clock)</div>
+
+          <div class="ext-dep-item" id="dep-pf_registration">
+            <div class="ext-dep-icon">🏛</div>
+            <div class="ext-dep-body">
+              <div class="ext-dep-name">PF Registration (EPFO)</div>
+              <div class="ext-dep-delay">Estimated 2–3 business days</div>
+              <div class="ext-dep-toggle">
+                <input type="checkbox" id="chk-pf_registration" onchange="toggleExtDep('pf_registration', this.checked)">
+                <label for="chk-pf_registration">Waiting for this</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="ext-dep-item" id="dep-esi_registration">
+            <div class="ext-dep-icon">🏥</div>
+            <div class="ext-dep-body">
+              <div class="ext-dep-name">ESI Registration (ESIC)</div>
+              <div class="ext-dep-delay">Estimated 3–5 business days</div>
+              <div class="ext-dep-toggle">
+                <input type="checkbox" id="chk-esi_registration" onchange="toggleExtDep('esi_registration', this.checked)">
+                <label for="chk-esi_registration">Waiting for this</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="ext-dep-item" id="dep-bank_verification">
+            <div class="ext-dep-icon">🏦</div>
+            <div class="ext-dep-body">
+              <div class="ext-dep-name">Bank IFSC Verification</div>
+              <div class="ext-dep-delay">Estimated 1–2 business days</div>
+              <div class="ext-dep-toggle">
+                <input type="checkbox" id="chk-bank_verification" onchange="toggleExtDep('bank_verification', this.checked)">
+                <label for="chk-bank_verification">Waiting for this</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="ext-dep-pause-note" id="extDepPauseNote">
+            ⏸ TTFP clock pauses while awaiting external blockers.
+            External latency will be reported separately on the main dashboard.
+          </div>
+        </div>
+
+        <!-- TTFP Clock -->
+        <div class="ttfp-banner" id="ttfpBanner">
+          <div class="ttfp-label">Time-to-First-Payroll Clock</div>
+          <div class="ttfp-clock" id="ttfpClock">00:00:00</div>
+          <div class="ttfp-biz-days" id="ttfpBizDays"></div>
+          <div class="ttfp-sub" id="ttfpSubtext">Clock starts when you go live</div>
+        </div>
+
+        <div class="action-row">
+          <a href="index.html" class="btn btn-success" id="goLiveBtn" onclick="goLive()">
+            🚀 Go Live — Open Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+let currentStep = 1;
+let importedEmployees = [];
+let biometricConnected = false;
+let biometricSynced = false;
+let selectedDevice = 'essl';
+let ttfpStarted = false;
+let ttfpInterval = null;
+let ttfpStartTime = null;
+
+// ===== MOCK DATA =====
+const MOCK_EMPLOYEES = [
+  { id: 'EMP001', name: 'Priya Sharma',       email: 'priya@acme.com',    dept: 'Engineering', state: 'MH', ctc: 1200000, doj: '2022-03-01' },
+  { id: 'EMP002', name: 'Rahul Mehta',         email: 'rahul@acme.com',    dept: 'Sales',       state: 'DL', ctc: 900000,  doj: '2021-07-15' },
+  { id: 'EMP003', name: 'Divya Krishnamurthy', email: 'divya@acme.com',    dept: 'HR',          state: 'KA', ctc: 750000,  doj: '2023-01-10' },
+  { id: 'EMP004', name: 'Arjun Nair',          email: 'arjun@acme.com',    dept: 'Finance',     state: 'KL', ctc: 1050000, doj: '2020-11-20' },
+  { id: 'EMP005', name: 'Sunita Patel',        email: 'sunita@acme.com',   dept: 'Engineering', state: 'GJ', ctc: 1350000, doj: '2022-09-05' },
+  { id: 'EMP006', name: 'Vikram Singh',        email: 'vikram@acme.com',   dept: 'Sales',       state: 'UP', ctc: 840000,  doj: '2023-04-17' },
+  { id: 'EMP007', name: 'Meera Iyer',          email: 'meera@acme.com',    dept: 'Operations',  state: 'TN', ctc: 780000,  doj: '2021-12-01' },
+  { id: 'EMP008', name: 'Karthik Reddy',       email: 'karthik@acme.com',  dept: 'Engineering', state: 'AP', ctc: 1500000, doj: '2020-06-08' },
+  { id: 'EMP009', name: 'Anjali Bose',         email: 'anjali@acme.com',   dept: 'HR',          state: 'WB', ctc: 690000,  doj: '2023-08-21' },
+  { id: 'EMP010', name: 'Suresh Kumar',        email: 'suresh@acme.com',   dept: 'Finance',     state: 'MH', ctc: 960000,  doj: '2022-02-14' },
+];
+
+// Generate more mock employees
+for (var i = 11; i <= 47; i++) {
+  var names = ['Anil','Rekha','Mohan','Kavitha','Deepak','Shalini','Ganesh','Pooja','Rajesh','Lakshmi','Vijay','Nisha','Sanjay','Uma','Kishore','Madhuri','Ramesh','Geeta','Arun','Jyoti'];
+  var surnames = ['Kumar','Sharma','Patel','Singh','Nair','Reddy','Iyer','Mehta','Rao','Joshi','Shah','Verma','Gupta','Mishra','Pillai'];
+  var depts = ['Engineering','Sales','HR','Finance','Operations'];
+  var states = ['MH','DL','KA','TN','GJ','UP','WB','AP','KL','RJ'];
+  var n = names[Math.floor(Math.random()*names.length)];
+  var s = surnames[Math.floor(Math.random()*surnames.length)];
+  MOCK_EMPLOYEES.push({
+    id: 'EMP' + String(i).padStart(3,'0'),
+    name: n + ' ' + s,
+    email: n.toLowerCase() + '.' + s.toLowerCase() + i + '@acme.com',
+    dept: depts[i % depts.length],
+    state: states[i % states.length],
+    ctc: 600000 + (i * 15000),
+    doj: '202' + ((i % 4)+1) + '-' + String((i % 12)+1).padStart(2,'0') + '-15'
+  });
+}
+
+// ===== STEP NAVIGATION =====
+function goToStep(n) {
+  if (n === currentStep) return;
+
+  // Mark previous step done
+  var prevPill = document.getElementById('pill-' + currentStep);
+  prevPill.className = 'step-pill done';
+  prevPill.querySelector('.step-num').textContent = '✓';
+
+  // Mark connector done
+  if (currentStep < 4) {
+    document.getElementById('conn-' + currentStep + '-' + (currentStep+1)).classList.add('done');
+  }
+
+  // Deactivate current panel
+  document.getElementById('step-' + currentStep).classList.remove('active');
+
+  // Activate new step
+  currentStep = n;
+  document.getElementById('pill-' + n).className = 'step-pill active';
+  document.getElementById('step-' + n).classList.add('active');
+
+  if (n === 2) buildStatTable();
+  if (n === 4) buildPreflight();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== STEP 1: CSV Import =====
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.add('dragover');
+}
+function handleDragLeave(e) {
+  document.getElementById('dropZone').classList.remove('dragover');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+function handleFileSelect(e) {
+  var file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  if (!file.name.endsWith('.csv')) {
+    showError([{ row: '-', msg: 'Only .csv files are accepted' }]);
+    return;
+  }
+  var dz = document.getElementById('dropZone');
+  var dzLabel = document.getElementById('dzLabel');
+  var dzSub = document.getElementById('dzSub');
+  dzLabel.textContent = '⏳ Parsing ' + file.name + '...';
+  dzSub.textContent = 'Validating columns and data...';
+
+  setTimeout(function() {
+    var errors = simulateValidation(file.name);
+    if (errors.length > 0) {
+      showError(errors);
+      dz.classList.remove('uploaded');
+      dzLabel.textContent = 'Drag & drop your CSV here';
+      dzSub.textContent = 'or click to browse · .csv files only';
+      document.getElementById('importBtn').disabled = true;
+      document.getElementById('importSummary').classList.remove('show');
+    } else {
+      dz.classList.add('uploaded');
+      dzLabel.textContent = '✓ ' + file.name;
+      dzSub.textContent = file.size > 1024 ? (file.size / 1024).toFixed(1) + ' KB' : file.size + ' bytes';
+      document.getElementById('errorList').classList.remove('show');
+      document.getElementById('importSummary').classList.add('show');
+      document.getElementById('summaryText').textContent = MOCK_EMPLOYEES.length + ' employees ready to import';
+      document.getElementById('summaryDetail').textContent = 'All 7 required columns present · No validation errors';
+      document.getElementById('importBtn').disabled = false;
+    }
+  }, 800);
+}
+
+function simulateValidation(filename) {
+  if (filename.toLowerCase().indexOf('bad') >= 0 || filename.toLowerCase().indexOf('test') >= 0) {
+    return [
+      { row: 3, msg: 'Missing required field: email' },
+      { row: 7, msg: 'Invalid state code: "Maharashtra" — use 2-letter code (MH)' },
+      { row: 12, msg: 'ctc_annual must be a number' },
+    ];
+  }
+  return [];
+}
+
+function showError(errors) {
+  var el = document.getElementById('errorList');
+  var items = document.getElementById('errorItems');
+  el.classList.add('show');
+  items.innerHTML = errors.map(function(e) {
+    return '<div class="err-item"><b>Row ' + e.row + ':</b> ' + e.msg + '</div>';
+  }).join('');
+  document.getElementById('importSummary').classList.remove('show');
+}
+
+function doImport() {
+  var btn = document.getElementById('importBtn');
+  btn.textContent = 'Importing...';
+  btn.disabled = true;
+
+  setTimeout(function() {
+    importedEmployees = MOCK_EMPLOYEES.slice();
+    localStorage.setItem('pweb_employees', JSON.stringify(importedEmployees));
+    localStorage.setItem('pweb_onboarding_step', '2');
+    showToast('✓ ' + importedEmployees.length + ' employees imported!');
+    goToStep(2);
+  }, 1200);
+}
+
+function downloadTemplate() {
+  var headers = 'employee_id,name,email,department,ctc_annual,doj,state,phone,designation,bank_account,ifsc';
+  var sample = 'EMP001,Priya Sharma,priya@company.com,Engineering,1200000,2022-03-01,MH,9876543210,Senior Engineer,12345678901,HDFC0001234';
+  var csv = headers + '\n' + sample;
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'employee_master_template.csv';
+  a.click();
+  showToast('Template downloaded');
+}
+
+// ===== STEP 2: Statutory IDs =====
+var statData = {};
+
+function buildStatTable() {
+  var employees = importedEmployees.length > 0 ? importedEmployees : MOCK_EMPLOYEES;
+  var tbody = document.getElementById('statTbody');
+  tbody.innerHTML = '';
+  employees.forEach(function(emp, i) {
+    if (!statData[emp.id]) {
+      statData[emp.id] = {
+        pan: i < 5 ? generatePAN(i) : '',
+        uan: i < 5 ? generateUAN(i) : '',
+        esi: i < 3 ? generateESI(i) : ''
+      };
+    }
+    var d = statData[emp.id];
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="color:var(--muted);font-size:12px;">' + emp.id + '</td>' +
+      '<td style="font-weight:600;">' + emp.name + '</td>' +
+      '<td><input type="text" value="' + d.pan + '" placeholder="ABCDE1234F"' +
+        ' maxlength="10" style="text-transform:uppercase;"' +
+        ' oninput="updateStat(\'' + emp.id + '\',\'pan\',this.value,this)"' +
+        ' onblur="validatePAN(this)" /></td>' +
+      '<td><input type="text" value="' + d.uan + '" placeholder="100123456789"' +
+        ' maxlength="12"' +
+        ' oninput="updateStat(\'' + emp.id + '\',\'uan\',this.value,this)"' +
+        ' onblur="validateUAN(this)" /></td>' +
+      '<td><input type="text" value="' + d.esi + '" placeholder="31-00-123456-000-0001"' +
+        ' oninput="updateStat(\'' + emp.id + '\',\'esi\',this.value,this)" /></td>' +
+      '<td id="stat-status-' + emp.id + '">' + getStatStatus(emp.id) + '</td>';
+    tbody.appendChild(tr);
+  });
+  updateStatProgress();
+}
+
+function generatePAN(i) {
+  var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var base = ['ABCDE','PQRST','MNOPQ','VWXYZ','FGHIJ'];
+  return (base[i] || 'ABCDE') + String(1000+i*111).slice(0,4) + letters[(i+5) % 26];
+}
+function generateUAN(i) {
+  return String(100000000000 + i * 1234567).slice(0,12);
+}
+function generateESI(i) {
+  return '31-00-' + String(100000+i*12345).slice(0,6) + '-000-' + String(1001+i).padStart(4,'0');
+}
+
+function updateStat(empId, field, val, input) {
+  if (!statData[empId]) statData[empId] = { pan: '', uan: '', esi: '' };
+  statData[empId][field] = val.toUpperCase ? val.toUpperCase() : val;
+  updateStatProgress();
+}
+
+function validatePAN(input) {
+  var v = input.value.trim().toUpperCase();
+  input.value = v;
+  if (!v) { input.className = ''; return; }
+  var ok = /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(v);
+  input.className = ok ? 'valid' : 'invalid';
+}
+
+function validateUAN(input) {
+  var v = input.value.trim();
+  if (!v) { input.className = ''; return; }
+  var ok = /^\d{12}$/.test(v);
+  input.className = ok ? 'valid' : 'invalid';
+}
+
+function getStatStatus(empId) {
+  var d = statData[empId] || {};
+  var hasPAN = d.pan && /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(d.pan.toUpperCase());
+  var hasUAN = d.uan && /^\d{12}$/.test(d.uan);
+  if (hasPAN && hasUAN) return '<span style="color:var(--green);font-weight:700;font-size:12px;">✓ OK</span>';
+  var missing = [];
+  if (!hasPAN) missing.push('PAN');
+  if (!hasUAN) missing.push('UAN');
+  return '<span style="color:var(--amber);font-size:12px;">' + missing.join(', ') + ' missing</span>';
+}
+
+function updateStatProgress() {
+  var employees = importedEmployees.length > 0 ? importedEmployees : MOCK_EMPLOYEES;
+  var complete = 0;
+  employees.forEach(function(emp) {
+    var d = statData[emp.id] || {};
+    var hasPAN = d.pan && /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(d.pan.toUpperCase());
+    var hasUAN = d.uan && /^\d{12}$/.test(d.uan);
+    if (hasPAN && hasUAN) complete++;
+    var cell = document.getElementById('stat-status-' + emp.id);
+    if (cell) cell.innerHTML = getStatStatus(emp.id);
+  });
+
+  var total = employees.length;
+  var pct = total > 0 ? (complete / total * 100) : 0;
+  var remaining = total - complete;
+
+  document.getElementById('statProgressLabel').textContent = complete + ' / ' + total + ' done';
+  document.getElementById('statProgressFill').style.width = pct + '%';
+
+  var badge = document.getElementById('remainingBadge');
+  if (remaining === 0) {
+    badge.className = 'remaining-badge all-done';
+    badge.textContent = '✓ All employees have PAN + UAN';
+  } else {
+    badge.className = 'remaining-badge';
+    badge.textContent = '⏳ ' + remaining + ' employee' + (remaining > 1 ? 's' : '') + ' still need IDs';
+  }
+
+  var btn = document.getElementById('statContinueBtn');
+  var hint = document.getElementById('statHint');
+  var threshold = Math.ceil(total * 0.8);
+  if (complete >= threshold) {
+    btn.disabled = false;
+    hint.textContent = complete === total ? 'All IDs complete — you\'re good to go!' : complete + '/' + total + ' complete (≥80% met)';
+    hint.style.color = 'var(--green)';
+  } else {
+    btn.disabled = true;
+    hint.textContent = 'Need ' + (threshold - complete) + ' more to reach 80% threshold';
+    hint.style.color = 'var(--muted)';
+  }
+}
+
+function setEntryMode(mode) {
+  document.getElementById('toggleRow').className = mode === 'row' ? 'active' : '';
+  document.getElementById('togglePaste').className = mode === 'paste' ? 'active' : '';
+  document.getElementById('pasteHint').className = 'paste-mode-hint' + (mode === 'paste' ? ' show' : '');
+  document.getElementById('rowModeTable').style.display = mode === 'row' ? '' : 'none';
+}
+
+function parsePaste() {
+  var raw = document.getElementById('pasteZone').value.trim();
+  if (!raw) { showToast('Paste some data first', true); return; }
+  var rows = raw.split('\n');
+  var employees = importedEmployees.length > 0 ? importedEmployees : MOCK_EMPLOYEES;
+  var filled = 0;
+  rows.forEach(function(row, i) {
+    var cols = row.split('\t');
+    if (cols.length < 2) return;
+    var emp = employees[i];
+    if (!emp) return;
+    if (!statData[emp.id]) statData[emp.id] = { pan: '', uan: '', esi: '' };
+    if (cols[1]) statData[emp.id].pan = cols[1].trim().toUpperCase();
+    if (cols[2]) statData[emp.id].uan = cols[2].trim();
+    if (cols[3]) statData[emp.id].esi = cols[3].trim();
+    filled++;
+  });
+  setEntryMode('row');
+  buildStatTable();
+  showToast('Parsed ' + filled + ' rows from paste');
+}
+
+// ===== STEP 3: Biometric =====
+function selectDevice(radio) {
+  selectedDevice = radio.value;
+  document.querySelectorAll('.device-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('dev-' + selectedDevice).classList.add('selected');
+  biometricConnected = false;
+  biometricSynced = false;
+  document.getElementById('connStatus').className = 'conn-status';
+  document.getElementById('syncSection').style.display = 'none';
+  document.getElementById('bioContinueBtn').disabled = true;
+}
+
+function testConnection() {
+  var ip = document.getElementById('deviceIp').value.trim();
+  var port = document.getElementById('devicePort').value.trim();
+  if (!ip || !port) { showToast('Enter IP address and port', true); return; }
+
+  var status = document.getElementById('connStatus');
+  var spin = document.getElementById('connSpin');
+  var text = document.getElementById('connStatusText');
+  var btn = document.getElementById('testConnBtn');
+
+  status.className = 'conn-status checking show';
+  spin.style.display = '';
+  text.textContent = 'Connecting to ' + ip + ':' + port + '...';
+  btn.disabled = true;
+  biometricConnected = false;
+  document.getElementById('syncSection').style.display = 'none';
+  document.getElementById('bioContinueBtn').disabled = true;
+
+  setTimeout(function() {
+    spin.style.display = 'none';
+    status.className = 'conn-status success show';
+    var deviceName = { essl: 'eSSL', zkteco: 'ZKTeco', biomax: 'Biomax', matrix: 'Matrix COSEC' }[selectedDevice];
+    var empCount = importedEmployees.length || 48;
+    text.textContent = '✓ Connected · ' + deviceName + ' at ' + ip + ' · ' + empCount + ' employees found on device';
+    biometricConnected = true;
+    btn.disabled = false;
+    document.getElementById('syncSection').style.display = '';
+    showToast('Connection successful!');
+  }, 1500);
+}
+
+function runTestSync() {
+  var result = document.getElementById('syncResult');
+  var btn = document.getElementById('testSyncBtn');
+  btn.disabled = true;
+  result.className = 'sync-result show';
+  result.style.color = 'var(--blue)';
+  result.textContent = '⏳ Fetching attendance records...';
+
+  setTimeout(function() {
+    var empCount = importedEmployees.length || 47;
+    result.style.color = 'var(--green)';
+    result.textContent = '✓ Sync successful · ' + empCount + ' attendance records received · Last 30 days imported';
+    biometricSynced = true;
+    btn.disabled = false;
+    document.getElementById('bioContinueBtn').disabled = false;
+
+    localStorage.setItem('pweb_biometric_device', selectedDevice);
+    localStorage.setItem('pweb_biometric_ip', document.getElementById('deviceIp').value);
+    localStorage.setItem('pweb_onboarding_step', '4');
+    showToast('Test sync complete!');
+  }, 2000);
+}
+
+// ===== STEP 4: Go Live =====
+function buildPreflight() {
+  var employees = importedEmployees.length > 0 ? importedEmployees : MOCK_EMPLOYEES;
+  var total = employees.length;
+
+  var statComplete = 0;
+  employees.forEach(function(emp) {
+    var d = statData[emp.id] || {};
+    var hasPAN = d.pan && /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(d.pan.toUpperCase());
+    var hasUAN = d.uan && /^\d{12}$/.test(d.uan);
+    if (hasPAN && hasUAN) statComplete++;
+  });
+
+  var deptSet = new Set(employees.map(function(e) { return e.dept; }));
+  document.getElementById('pf-emp-text').textContent = total + ' employees imported across ' + deptSet.size + ' departments';
+  document.getElementById('pf-stat-text').textContent = statComplete + ' / ' + total + ' employees have PAN + UAN';
+
+  var deviceName = { essl: 'eSSL', zkteco: 'ZKTeco', biomax: 'Biomax', matrix: 'Matrix COSEC' }[selectedDevice] || 'eSSL';
+  document.getElementById('pf-bio-text').textContent = deviceName + ' connected · Last sync: just now · ' + total + ' attendance records';
+}
+
+function goLive() {
+  if (ttfpStarted) return;
+  ttfpStarted = true;
+  ttfpStartTime = new Date();
+  localStorage.setItem('pweb_ttfp_start', ttfpStartTime.toISOString());
+  localStorage.setItem('pweb_onboarding_done', 'true');
+  localStorage.setItem('pweb_company_name', 'Acme Manufacturing Pvt Ltd');
+
+  var subtext = document.getElementById('ttfpSubtext');
+  var fmt = ttfpStartTime.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+  subtext.textContent = 'Started at ' + fmt + ' IST';
+
+  ttfpInterval = setInterval(updateTTFPClock, 1000);
+  updateTTFPClock();
+
+  document.getElementById('goLiveBtn').onclick = null;
+}
+
+function updateTTFPClock() {
+  if (!ttfpStartTime) return;
+  var elapsed = Date.now() - ttfpStartTime.getTime();
+  var s = Math.floor(elapsed / 1000) % 60;
+  var m = Math.floor(elapsed / 60000) % 60;
+  var h = Math.floor(elapsed / 3600000);
+  document.getElementById('ttfpClock').textContent =
+    String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  // Also update live biz-days display
+  var bizEl = document.getElementById('ttfpBizDays');
+  if (bizEl) {
+    var pauses = getTtfpPauses();
+    var biz = computeTTFPBizDays(ttfpStartTime, null, pauses);
+    bizEl.textContent = biz.toFixed(1) + ' biz days elapsed';
+  }
+}
+
+// ===== TTFP BUSINESS-DAY HELPERS =====
+
+var INDIA_HOLIDAYS_2026_JS = [
+  '2026-01-26','2026-03-25','2026-04-10','2026-04-14','2026-05-01',
+  '2026-08-15','2026-10-02','2026-10-21','2026-11-04','2026-12-25'
+];
+
+function toDateKey(d) {
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function computeBusinessDaysJS(start, end) {
+  var holidaySet = new Set(INDIA_HOLIDAYS_2026_JS);
+  var count = 0;
+  var cursor = new Date(start);
+  cursor.setHours(0, 0, 0, 0);
+  var endDay = new Date(end);
+  endDay.setHours(0, 0, 0, 0);
+  while (cursor < endDay) {
+    cursor.setDate(cursor.getDate() + 1);
+    var dow = cursor.getDay();
+    if (dow !== 0 && dow !== 6 && !holidaySet.has(toDateKey(cursor))) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function computeTTFPBizDays(startDate, endDate, pauses) {
+  var now = endDate || new Date();
+  var gross = computeBusinessDaysJS(startDate, now);
+  var extDays = 0;
+  for (var i = 0; i < pauses.length; i++) {
+    var p = pauses[i];
+    // Clamp pause start to TTFP start so pre-Go-Live toggles don't over-deduct
+    var rawPs = new Date(p.startedAt);
+    var ps = rawPs > startDate ? rawPs : startDate;
+    var pe = p.resolvedAt ? new Date(p.resolvedAt) : now;
+    extDays += computeBusinessDaysJS(ps, pe);
+  }
+  return Math.max(0, gross - extDays);
+}
+
+function getTtfpPauses() {
+  try { return JSON.parse(localStorage.getItem('pweb_ttfp_pauses') || '[]'); } catch(e) { return []; }
+}
+
+function saveTtfpPauses(pauses) {
+  // Drop resolved records with zero biz-day duration (rapid accidental toggles) to prevent array bloat
+  var filtered = pauses.filter(function(p) {
+    if (p.resolvedAt) {
+      return computeBusinessDaysJS(new Date(p.startedAt), new Date(p.resolvedAt)) > 0;
+    }
+    return true;
+  });
+  try { localStorage.setItem('pweb_ttfp_pauses', JSON.stringify(filtered)); } catch(e) {}
+}
+
+function toggleExtDep(id, isWaiting) {
+  var pauses = getTtfpPauses();
+  var now = new Date().toISOString();
+  if (isWaiting) {
+    // Only add if not already active
+    var existing = pauses.find(function(p) { return p.id === id && !p.resolvedAt; });
+    if (!existing) {
+      pauses.push({ id: id, startedAt: now });
+    }
+  } else {
+    // Mark resolved
+    for (var i = 0; i < pauses.length; i++) {
+      if (pauses[i].id === id && !pauses[i].resolvedAt) {
+        pauses[i].resolvedAt = now;
+      }
+    }
+  }
+  saveTtfpPauses(pauses);
+  document.getElementById('dep-' + id).classList.toggle('is-waiting', isWaiting);
+  refreshPauseNote();
+}
+
+function refreshPauseNote() {
+  var pauses = getTtfpPauses();
+  var active = pauses.filter(function(p) { return !p.resolvedAt; });
+  var note = document.getElementById('extDepPauseNote');
+  if (note) note.classList.toggle('visible', active.length > 0);
+}
+
+function restoreExtDepState() {
+  var pauses = getTtfpPauses();
+  var activeIds = new Set(pauses.filter(function(p) { return !p.resolvedAt; }).map(function(p) { return p.id; }));
+  ['pf_registration','esi_registration','bank_verification'].forEach(function(id) {
+    var chk = document.getElementById('chk-' + id);
+    if (chk) chk.checked = activeIds.has(id);
+    var item = document.getElementById('dep-' + id);
+    if (item) item.classList.toggle('is-waiting', activeIds.has(id));
+  });
+  refreshPauseNote();
+}
+
+// ===== TOAST =====
+function showToast(msg, isError) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isError ? 'var(--red)' : 'var(--green)';
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2800);
+}
+
+// ===== INIT =====
+(function init() {
+  var saved = localStorage.getItem('pweb_employees');
+  if (saved) {
+    try { importedEmployees = JSON.parse(saved); } catch(e) {}
+  }
+
+  var done = localStorage.getItem('pweb_onboarding_done');
+  if (done) {
+    var notice = document.createElement('div');
+    notice.style.cssText = 'background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--blue);display:flex;align-items:center;gap:10px;';
+    notice.innerHTML = '<span>ℹ</span><span>Onboarding was previously completed. You can re-run setup to update your data.</span>';
+    var main = document.querySelector('main');
+    var progressBar = document.getElementById('progressBar');
+    main.insertBefore(notice, progressBar);
+  }
+
+  // Restore external dependency toggle state from localStorage
+  restoreExtDepState();
+
+  // Resume TTFP clock if already started
+  var savedStart = localStorage.getItem('pweb_ttfp_start');
+  if (savedStart && !ttfpStarted) {
+    ttfpStarted = true;
+    ttfpStartTime = new Date(savedStart);
+    var subtext = document.getElementById('ttfpSubtext');
+    var fmt = ttfpStartTime.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+    if (subtext) subtext.textContent = 'Started at ' + fmt + ' IST';
+    ttfpInterval = setInterval(updateTTFPClock, 1000);
+    updateTTFPClock();
+    var goLiveBtn = document.getElementById('goLiveBtn');
+    if (goLiveBtn) goLiveBtn.onclick = null;
+  }
+})();
+</script>
+</body>
+</html>

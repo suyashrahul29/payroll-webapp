@@ -73,9 +73,36 @@ payroll engine.
 - **Tracked in:** `CLAUDE.md` (run instructions + conventions).
 
 ### Next build steps (post-prototype)
-1. Replace mock blockers with a real data model + state-aware compliance rules engine.
+1. ~~Replace mock blockers with a real data model~~ + state-aware compliance rules engine. **Data model: started** — see Build Status (2026-06-11); compliance rules engine still pending.
 2. Wire one real integration end-to-end (start with eSSL/ZKTeco biometric push or Tally).
-3. Add auth + employee read-only payslip/F&F-status portal (v1 scope per brief).
+3. ~~Add auth + employee read-only payslip/F&F-status portal~~ ✅ **prototype done** (Epic 5, localStorage-backed).
+
+## Build Status — Epics & First Real Backend Slice (2026-06-11)
+
+The prototype expanded across all six planned epics (still vanilla HTML/CSS/JS in `app/`,
+localStorage-backed), and the **first vertical slice has now moved off localStorage onto a real
+database**, signing off the production-stack decision in `architecture.md` §2.
+
+- **Epic delivery (prototype):** ~22 of 27 stories done across Epics 1–6 — readiness dashboard
+  (complete), compliance engine (complete), restructuring assistant, onboarding/TTFP, employee
+  portal, integrations. Tracked in `_bmad-output/implementation_artifacts/sprint-status.yaml`.
+- **First production slice — employee master (`server/`):** a **Node/TS + PostgreSQL 16** backend
+  (Express, `pg`, plain SQL migrations, Docker Compose), replacing the localStorage path for
+  employee import. Proves the production stack on one slice:
+  - **Tenant isolation via Postgres Row-Level Security** (app connects as a non-superuser role so
+    RLS actually applies — superusers bypass it).
+  - **Integer-paise money** everywhere (no float), per architecture §4.
+  - **Append-only import audit log**, zod request validation, fail-closed tenant context.
+  - `app/import.html` now writes to the API, with a transparent **localStorage fallback** so the
+    offline demo still runs. Setup + API docs in `server/README.md`.
+- **Scope honesty:** only the employee-master slice is on Postgres; payslips, compliance,
+  readiness, and the portal remain localStorage-backed. **No React yet** (the prototype HTML calls
+  the API directly), and **no auth/session** — tenant comes from a header for the demo.
+
+### Next backend steps
+1. Migrate a second slice (payslips) to exercise read-heavy, compliance-derived data.
+2. Real auth/session so tenant context comes from a logged-in user, not an `X-Tenant-Id` header.
+3. Stand up the React + TypeScript front-end (architecture §2) and retire the direct-from-HTML calls.
 
 ## Next Steps (product)
 

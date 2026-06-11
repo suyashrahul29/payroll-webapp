@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Restructuring Assistant — Greenlit Payroll</title>
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --blue: #0D9488;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+  }
+
+  header.app {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px; border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.95); backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .2px; }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+  .brand small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .back-link {
+    font-size: 12px; color: var(--blue); text-decoration: none;
+    border: 1px solid rgba(13,148,136,.3); padding: 5px 10px; border-radius: 8px;
+    font-weight: 600; background: rgba(13,148,136,.05); white-space: nowrap;
+  }
+  .back-link:hover { background: rgba(13,148,136,.12); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 28px; }
+
+  /* Preview-only banner */
+  .preview-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: #FFFBEB; border: 1px solid #FDE68A;
+    border-radius: 10px; padding: 12px 18px; margin-bottom: 24px;
+    color: #92400E; font-size: 13px;
+  }
+  .preview-banner .icon { font-size: 18px; }
+  .preview-banner strong { font-weight: 700; }
+
+  /* Section headers */
+  .section-header {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-header h2 { font-size: 16px; font-weight: 700; color: var(--txt); }
+  .section-header .badge {
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 20px; background: #FEE2E2; color: var(--red);
+  }
+  .section-header .badge.compliant { background: #DCFCE7; color: var(--green); }
+
+  /* Table */
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+    margin-bottom: 28px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 10px 14px; text-align: left; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    font-weight: 600;
+  }
+  thead th.right { text-align: right; }
+  tbody tr { border-bottom: 1px solid var(--line); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,0,0,.015); }
+  tbody td { padding: 12px 14px; vertical-align: middle; }
+  tbody td.right { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .emp-name { font-weight: 600; font-size: 13px; }
+  .emp-id { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+  .basic-current { font-weight: 600; }
+  .basic-pct { font-size: 11px; color: var(--red); margin-top: 2px; font-weight: 600; }
+
+  /* Proposed basic input */
+  .proposed-input-wrap { display: flex; align-items: center; gap: 6px; }
+  .proposed-input-wrap input[type="number"] {
+    width: 90px; padding: 6px 8px; border: 1px solid var(--line);
+    border-radius: 7px; font-size: 13px; font-family: inherit;
+    color: var(--txt); background: #fff; text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .proposed-input-wrap input[type="number"]:focus {
+    outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(13,148,136,.15);
+  }
+  .proposed-input-wrap input.invalid {
+    border-color: var(--red); background: #FEF2F2;
+  }
+  .pct-label { font-size: 11px; color: var(--muted); white-space: nowrap; min-width: 44px; }
+
+  /* Delta cells */
+  .delta-pos { color: var(--green); font-weight: 600; }
+  .delta-neg { color: var(--red); font-weight: 600; }
+  .delta-zero { color: var(--muted); }
+
+  /* Compliant employees summary */
+  .compliant-summary {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 13px;
+  }
+  .compliant-summary .icon { font-size: 20px; }
+  .compliant-summary strong { color: var(--txt); }
+
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="brand">
+    <span class="dot"></span>
+    <div>Greenlit Payroll <small>Restructuring Assistant · June 2026 · Acme Mfg Pvt Ltd</small></div>
+  </div>
+  <a href="index.html" class="back-link">← Dashboard</a>
+</header>
+
+<main>
+
+  <!-- AC-3: Preview-only banner -->
+  <div class="preview-banner">
+    <span class="icon">👁️</span>
+    <span><strong>Preview only — no changes committed yet.</strong> Review the impact of raising basic salaries to meet the 50%-wage rule. When ready, click "Apply Restructuring" to route changes through the Change Handshake on the dashboard.</span>
+  </div>
+
+  <!-- AC-1 / AC-2: Violations table -->
+  <div class="section-header">
+    <h2>Non-Compliant Employees</h2>
+    <span class="badge" id="violationBadge">0 violations</span>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th class="right">Current Basic</th>
+          <th class="right">Proposed Basic</th>
+          <th class="right">Take-home Δ / mo</th>
+          <th class="right">PF Δ / mo</th>
+          <th class="right">Gratuity Δ / mo</th>
+        </tr>
+      </thead>
+      <tbody id="violationsTbody"></tbody>
+    </table>
+  </div>
+
+  <!-- AC-2/AC-3: Apply Restructuring (story 3.3) -->
+  <div id="applySection" style="margin-top: 0;">
+    <div id="partialWarning" style="display:none; background:#FFFBEB; border:1px solid #FDE68A;
+      border-radius:10px; padding:12px 18px; margin-bottom:12px; color:#92400E; font-size:13px;">
+      <strong>⚠ N employees still below 50% threshold.</strong>
+      Applying will partially restructure the roster. Employees marked ⚠ will still violate the rule.
+      <div style="display:flex; gap:8px; margin-top:10px;">
+        <button id="proceedAnyway" onclick="applyRestructuring(true)"
+          style="padding:8px 16px; border:0; border-radius:8px; background:#D97706;
+                 color:#fff; font-weight:700; cursor:pointer; font-size:13px;">
+          Proceed anyway
+        </button>
+        <button onclick="dismissPartialWarning()"
+          style="padding:8px 16px; border:1px solid #FDE68A; border-radius:8px;
+                 background:none; color:#92400E; cursor:pointer; font-size:13px;">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <button id="applyBtn" onclick="applyRestructuring(false)"
+      style="width:100%; padding:14px; border:0; border-radius:10px;
+             background:#0D9488; color:#fff; font-weight:700; font-size:15px; cursor:pointer;">
+      Apply Restructuring — N employees
+    </button>
+    <p style="margin-top:8px; font-size:12px; color:var(--muted); text-align:center;">
+      Routes through the Change Handshake — Priya must sign off on the dashboard before changes take effect.
+    </p>
+  </div>
+
+  <!-- AC-4: Compliant employees summary -->
+  <div class="section-header" style="margin-top: 32px;">
+    <h2>Already Compliant</h2>
+    <span class="badge compliant" id="compliantBadge">0 employees</span>
+  </div>
+  <div class="compliant-summary">
+    <span class="icon">✅</span>
+    <span id="compliantText">Loading…</span>
+  </div>
+
+</main>
+
+<script>
+// ============================================================================
+// MOCK ROSTER — 5 violating, 3 compliant
+// Mirrors the Dev Notes fixtures (story 3-2).
+// ============================================================================
+const ROSTER = [
+  // Violating (basic < 50% of monthly CTC)
+  { id:"EMP001", name:"Amit Sharma",   basicPaise:2_250_000, grossPaise:4_000_000, ctcAnnualPaise:60_000_000, pfOptOut:false },
+  { id:"EMP002", name:"Sunita Rao",    basicPaise:1_800_000, grossPaise:3_500_000, ctcAnnualPaise:54_000_000, pfOptOut:false },
+  { id:"EMP003", name:"Ravi Kumar",    basicPaise:1_200_000, grossPaise:2_000_000, ctcAnnualPaise:30_000_000, pfOptOut:false },
+  { id:"EMP004", name:"Preethi Nair",  basicPaise:3_000_000, grossPaise:6_000_000, ctcAnnualPaise:90_000_000, pfOptOut:true  },
+  { id:"EMP005", name:"Vikram Singh",  basicPaise:2_000_000, grossPaise:3_800_000, ctcAnnualPaise:60_000_000, pfOptOut:false },
+  // Compliant (basic >= 50% of monthly CTC)
+  { id:"EMP006", name:"Meera Iyer",    basicPaise:3_500_000, grossPaise:5_000_000, ctcAnnualPaise:72_000_000, pfOptOut:false },
+  { id:"EMP007", name:"Aarav Patel",   basicPaise:2_500_000, grossPaise:4_200_000, ctcAnnualPaise:60_000_000, pfOptOut:false },
+  { id:"EMP008", name:"Deepa Menon",   basicPaise:4_000_000, grossPaise:6_000_000, ctcAnnualPaise:84_000_000, pfOptOut:false },
+];
+
+// ============================================================================
+// COMPLIANCE CALCULATION — inlined from calculator.ts / wage-rule.ts logic
+// (Gross stays constant; only basic composition shifts. ESI/TDS/PT unchanged.)
+//
+// NOTE: PF_WAGE_CAP, PF_RATE_BPS, and the gratuity formula below mirror the
+// versioned rule store in calculator.ts. If the Labour Code implementation
+// changes PF rate or cap, this copy MUST be updated to match.
+// TODO (story 3.3): replace with an ES module import of simulateRestructuring()
+// so there is a single source of truth.
+// ============================================================================
+const PF_WAGE_CAP  = 1_500_000; // ₹15,000/month
+const PF_RATE_BPS  = 1200;      // 12.00%
+
+function computePfEmployee(basicPaise, pfOptOut) {
+  if (pfOptOut) return 0;
+  return Math.floor(Math.min(basicPaise, PF_WAGE_CAP) * PF_RATE_BPS / 10_000);
+}
+
+function monthlyGratuityAccrual(basicPaise) {
+  // floor(basic × 15/26/12) — monthly employer accrual per year of service
+  return Math.floor(basicPaise * 15 / 312);
+}
+
+// When basic shifts within fixed gross, only PF moves.
+function computeDeltas(emp, proposedBasicPaise) {
+  const curPf  = computePfEmployee(emp.basicPaise, emp.pfOptOut);
+  const propPf = computePfEmployee(proposedBasicPaise, emp.pfOptOut);
+  return {
+    deltaPf:   propPf - curPf,
+    deltaNet:  -(propPf - curPf),          // take-home: gross-based deductions unchanged
+    deltaGrat: monthlyGratuityAccrual(proposedBasicPaise) - monthlyGratuityAccrual(emp.basicPaise),
+  };
+}
+
+// ============================================================================
+// 50%-WAGE RULE CHECK
+// ============================================================================
+function monthlyCtcPaise(emp) { return Math.floor(emp.ctcAnnualPaise / 12); }
+function isViolating(emp)     { return emp.basicPaise < Math.floor(monthlyCtcPaise(emp) / 2); }
+function defaultProposed(emp) { return Math.floor(monthlyCtcPaise(emp) / 2); }
+function basicPct(basicPaise, emp) {
+  const mc = monthlyCtcPaise(emp);
+  return mc > 0 ? Math.round(basicPaise / mc * 100) : 0;
+}
+
+// ============================================================================
+// FORMATTING
+// ============================================================================
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function fmt(paise) {
+  return '₹' + (paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+}
+function fmtDelta(paise) {
+  if (paise === 0) return '<span style="color:var(--muted)">—</span>';
+  const abs  = Math.abs(paise);
+  const sign = paise > 0 ? '+' : '−';
+  const cls  = paise < 0 ? 'delta-neg' : 'delta-pos';
+  return `<span class="${cls}">${sign}${fmt(abs)}</span>`;
+}
+function fmtTakeHomeDelta(paise) {
+  // For take-home: negative is bad for employee (red), positive is good (green)
+  if (paise === 0) return '<span style="color:var(--muted)">—</span>';
+  const abs  = Math.abs(paise);
+  const sign = paise > 0 ? '+' : '−';
+  const cls  = paise < 0 ? 'delta-neg' : 'delta-pos';
+  return `<span class="${cls}">${sign}${fmt(abs)}</span>`;
+}
+
+// ============================================================================
+// ROW RENDERER & RECALCULATOR
+// ============================================================================
+function buildRow(emp, rowIdx) {
+  const proposed = defaultProposed(emp);
+  const deltas   = computeDeltas(emp, proposed);
+  const curPct   = basicPct(emp.basicPaise, emp);
+  const mc       = monthlyCtcPaise(emp);
+
+  const tr = document.createElement('tr');
+  tr.dataset.idx = rowIdx;
+  tr.innerHTML = `
+    <td>
+      <div class="emp-name">${escHtml(emp.name)}</div>
+      <div class="emp-id">${escHtml(emp.id)}</div>
+    </td>
+    <td class="right">
+      <div class="basic-current">${fmt(emp.basicPaise)}</div>
+      <div class="basic-pct">${curPct}% of monthly CTC</div>
+    </td>
+    <td class="right">
+      <div class="proposed-input-wrap" style="justify-content:flex-end">
+        <input
+          type="number"
+          id="input-${rowIdx}"
+          value="${Math.round(proposed / 100)}"
+          min="1"
+          step="100"
+          oninput="recalcRow(${rowIdx}, ${emp.pfOptOut}, ${mc})"
+          aria-label="Proposed basic for ${escHtml(emp.name)}"
+        />
+        <span class="pct-label" id="pct-${rowIdx}">${basicPct(proposed, emp)}%</span>
+      </div>
+    </td>
+    <td class="right" id="net-${rowIdx}">${fmtTakeHomeDelta(deltas.deltaNet)}</td>
+    <td class="right" id="pf-${rowIdx}">${fmtDelta(deltas.deltaPf)}</td>
+    <td class="right" id="grat-${rowIdx}">${fmtDelta(deltas.deltaGrat)}</td>
+  `;
+  return tr;
+}
+
+function recalcRow(rowIdx, pfOptOut, monthlyCtc) {
+  const input = document.getElementById('input-' + rowIdx);
+  const pctLabel = document.getElementById('pct-' + rowIdx);
+  const rupees = parseFloat(input.value);
+  if (isNaN(rupees) || rupees <= 0) {
+    input.classList.add('invalid');
+    pctLabel.innerHTML = '<span style="color:var(--red)">invalid</span>';
+    return;
+  }
+
+  const emp = violations[rowIdx];
+  const proposedBasicPaise = Math.round(rupees * 100);
+
+  if (proposedBasicPaise > emp.grossPaise) {
+    input.classList.add('invalid');
+    pctLabel.innerHTML = '<span style="color:var(--red)">exceeds gross</span>';
+    return;
+  }
+
+  input.classList.remove('invalid');
+
+  const pct = monthlyCtc > 0 ? Math.round(proposedBasicPaise / monthlyCtc * 100) : 0;
+  const required = Math.floor(monthlyCtc / 2);
+  const belowThreshold = proposedBasicPaise < required;
+  pctLabel.innerHTML = pct + '%' +
+    (belowThreshold ? ' <span style="color:var(--amber);font-weight:700" title="Still below 50% — not yet compliant">⚠</span>' : '');
+
+  const deltas = computeDeltas(emp, proposedBasicPaise);
+
+  document.getElementById('net-'  + rowIdx).innerHTML = fmtTakeHomeDelta(deltas.deltaNet);
+  document.getElementById('pf-'   + rowIdx).innerHTML = fmtDelta(deltas.deltaPf);
+  document.getElementById('grat-' + rowIdx).innerHTML = fmtDelta(deltas.deltaGrat);
+}
+
+// ============================================================================
+// CHANGE RECORD BUILDER (story 3.3)
+// ============================================================================
+const EFFECTIVE_DATE = '2026-07-01';
+const SIGNATORY = 'HR Manager';
+
+function buildChangeRecord(emp, proposedBasicPaise) {
+  const deltas = computeDeltas(emp, proposedBasicPaise);
+  return {
+    employeeId:    emp.id,
+    employeeName:  emp.name,
+    oldBasicPaise: emp.basicPaise,
+    newBasicPaise: proposedBasicPaise,
+    deltaNetPayPaise:                  deltas.deltaNet,
+    deltaPfEmployeePaise:              deltas.deltaPf,
+    deltaMonthlyGratuityAccrualPaise:  deltas.deltaGrat,
+    effectiveDate: EFFECTIVE_DATE,
+    signatory:     SIGNATORY,
+    status:        'pending',
+    createdAt:     new Date().toISOString(),
+  };
+}
+
+function applyRestructuring(force) {
+  const nonCompliantRows = violations.filter((emp, i) => {
+    const input = document.getElementById('input-' + i);
+    if (!input || input.classList.contains('invalid')) return true;
+    const proposedPaise = Math.round(parseFloat(input.value) * 100);
+    const required = Math.floor(monthlyCtcPaise(emp) / 2);
+    return proposedPaise < required;
+  });
+
+  if (!force && nonCompliantRows.length > 0) {
+    const warn = document.getElementById('partialWarning');
+    warn.querySelector('strong').textContent =
+      '⚠ ' + nonCompliantRows.length + ' employee' +
+      (nonCompliantRows.length !== 1 ? 's' : '') + ' still below 50% threshold.';
+    warn.style.display = 'block';
+    document.getElementById('applyBtn').style.display = 'none';
+    return;
+  }
+
+  const records = violations.map((emp, i) => {
+    const input = document.getElementById('input-' + i);
+    const proposedPaise = input && !input.classList.contains('invalid')
+      ? Math.round(parseFloat(input.value) * 100)
+      : defaultProposed(emp);
+    return buildChangeRecord(emp, proposedPaise);
+  });
+
+  const payload = {
+    records,
+    submittedAt:    new Date().toISOString(),
+    submittedBy:    'Priya Sharma (HR Manager)',
+    employeeCount:  records.length,
+  };
+
+  try {
+    localStorage.setItem('restructuring_pending', JSON.stringify(payload));
+  } catch(e) { /* quota exceeded — prototype only */ }
+
+  window.location.href = 'index.html';
+}
+
+function dismissPartialWarning() {
+  document.getElementById('partialWarning').style.display = 'none';
+  document.getElementById('applyBtn').style.display = 'block';
+}
+
+// ============================================================================
+// PAGE INIT
+// ============================================================================
+const violations = ROSTER.filter(isViolating);
+const compliant  = ROSTER.filter(e => !isViolating(e));
+
+document.getElementById('violationBadge').textContent =
+  violations.length + ' violation' + (violations.length !== 1 ? 's' : '');
+document.getElementById('compliantBadge').textContent =
+  compliant.length + ' employee' + (compliant.length !== 1 ? 's' : '');
+
+const tbody = document.getElementById('violationsTbody');
+violations.forEach((emp, i) => tbody.appendChild(buildRow(emp, i)));
+
+if (compliant.length > 0) {
+  const names = compliant.map(e => e.name).join(', ');
+  document.getElementById('compliantText').textContent =
+    `${compliant.length} employee${compliant.length !== 1 ? 's' : ''} already meet the 50%-wage rule and require no restructuring: ${names}.`;
+} else {
+  document.getElementById('compliantText').textContent =
+    'No compliant employees in this roster segment.';
+}
+
+const applyBtn = document.getElementById('applyBtn');
+if (applyBtn) {
+  applyBtn.textContent = 'Apply Restructuring — ' + violations.length +
+    ' employee' + (violations.length !== 1 ? 's' : '');
+}
+</script>
+
+</body>
+</html>

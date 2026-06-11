@@ -263,7 +263,7 @@
   </div>
   <div class="runinfo">
     Pay run due <b>30 Jun</b> · <b>248</b> employees<br/>
-    Time-to-First-Payroll: <b>2.1 business days</b> from data-complete
+    Time-to-First-Payroll: <b id="ttfpHeaderValue">—</b> from data-complete
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <a href="onboarding.html" style="font-size:12px;color:var(--blue);text-decoration:none;border:1px solid rgba(13,148,136,.3);padding:5px 10px;border-radius:8px;font-weight:600;background:rgba(13,148,136,.05);white-space:nowrap;">Setup →</a>
@@ -330,7 +330,7 @@
             <div class="metric good"><div class="k">First-pass accuracy</div><div class="v" id="fpaValue">99.6%<small> / target ≥99.5%</small></div></div>
             <div class="metric good"><div class="k">Errors prevented this run</div><div class="v" id="preventedNum">0</div></div>
             <div class="metric"><div class="k">Lifecycle clock — next F&amp;F</div><div class="v clock" id="ffClock">--:--:--</div></div>
-            <div class="metric"><div class="k">Time-to-First-Payroll</div><div class="v">2.1<small> biz days</small></div></div>
+            <div class="metric" id="ttfpMetric"><div class="k">Time-to-First-Payroll</div><div class="v" id="ttfpMetricValue">—</div></div>
           </div>
         </div>
       </section>
@@ -498,6 +498,76 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
+
+  // ===== TTFP BUSINESS-DAY HELPERS =====
+  const INDIA_HOLIDAYS_2026 = [
+    '2026-01-26','2026-03-25','2026-04-10','2026-04-14','2026-05-01',
+    '2026-08-15','2026-10-02','2026-10-21','2026-11-04','2026-12-25'
+  ];
+
+  function _toDateKey(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function _computeBusinessDays(start, end) {
+    const holidaySet = new Set(INDIA_HOLIDAYS_2026);
+    let count = 0;
+    const cursor = new Date(start);
+    cursor.setHours(0, 0, 0, 0);
+    const endDay = new Date(end);
+    endDay.setHours(0, 0, 0, 0);
+    while (cursor < endDay) {
+      cursor.setDate(cursor.getDate() + 1);
+      const dow = cursor.getDay();
+      if (dow !== 0 && dow !== 6 && !holidaySet.has(_toDateKey(cursor))) count++;
+    }
+    return count;
+  }
+
+  function _getTtfpPauses() {
+    try { return JSON.parse(localStorage.getItem('pweb_ttfp_pauses') || '[]'); } catch(e) { return []; }
+  }
+
+  /**
+   * Reads pweb_ttfp_start and pweb_first_run_at from localStorage and returns
+   * { bizDays, firstRunComplete, externalLatencyDays, activePauses }.
+   * bizDays is null when the clock has not started.
+   */
+  function computeBusinessDaysDisplay() {
+    const startIso = localStorage.getItem('pweb_ttfp_start');
+    if (!startIso) return { bizDays: null, firstRunComplete: false, externalLatencyDays: 0, activePauses: [], resolvedPauses: [] };
+
+    const firstRunIso = localStorage.getItem('pweb_first_run_at');
+    const startDate = new Date(startIso);
+    const endDate = firstRunIso ? new Date(firstRunIso) : new Date();
+
+    const gross = _computeBusinessDays(startDate, endDate);
+    const pauses = _getTtfpPauses();
+    const now = new Date();
+    let extDays = 0;
+    const activePauses = [];
+    const resolvedPauses = [];
+    for (const p of pauses) {
+      // Clamp pause start to TTFP start so pre-Go-Live toggles don't over-deduct
+      const ps = new Date(Math.max(new Date(p.startedAt).getTime(), startDate.getTime()));
+      const pe = p.resolvedAt ? new Date(p.resolvedAt) : now;
+      extDays += _computeBusinessDays(ps, pe);
+      if (!p.resolvedAt) activePauses.push(p);
+      else resolvedPauses.push(p);
+    }
+    return {
+      bizDays: Math.max(0, gross - extDays),
+      firstRunComplete: !!firstRunIso,
+      externalLatencyDays: extDays,
+      activePauses,
+      resolvedPauses,
+    };
+  }
+
+  // ===== / TTFP HELPERS =====
 
   // Story 3.3: detect pending restructuring from Restructuring Assistant
   let restructuringPending = null;
@@ -772,6 +842,11 @@
   }
 
   function completePayrollRun(runPreventedCount) {
+    // Record first run timestamp for TTFP measurement (only on the very first run)
+    if (!localStorage.getItem('pweb_first_run_at')) {
+      localStorage.setItem('pweb_first_run_at', new Date().toISOString());
+    }
+    updateTTFPDisplay();
     // AC-3: run complete state
     runBtn.className = 'runbtn ready';
     runBtn.disabled = true;
@@ -931,6 +1006,15 @@
       updateFFClock();
     }
   }, 1000);
+
+  // Refresh TTFP every minute (elapsed business days change slowly)
+  setInterval(updateTTFPDisplay, 60000);
+  // Sync immediately when onboarding.html writes ext-dep pauses or ttfp keys in another tab
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'pweb_ttfp_pauses' || e.key === 'pweb_ttfp_start' || e.key === 'pweb_first_run_at') {
+      updateTTFPDisplay();
+    }
+  });
 
   // Show banner immediately on load if logged in (18h < 24h → warning state)
   // Banner is behind login overlay (z-index:1000) if not yet logged in — shown after initAuth
@@ -1575,9 +1659,55 @@
     }
   }
 
+  // ===== TTFP DISPLAY =====
+  const PAUSE_LABELS_IDX = { pf_registration: 'PF reg', esi_registration: 'ESI reg', bank_verification: 'Bank verification' };
+
+  function updateTTFPDisplay() {
+    const { bizDays, firstRunComplete, externalLatencyDays, activePauses, resolvedPauses } = computeBusinessDaysDisplay();
+
+    const headerEl = document.getElementById('ttfpHeaderValue');
+    const metricEl = document.getElementById('ttfpMetricValue');
+    const metricCard = document.getElementById('ttfpMetric');
+
+    if (bizDays === null) {
+      // Clock not started yet
+      if (headerEl) headerEl.textContent = '—';
+      if (metricEl) metricEl.innerHTML = '—';
+      if (metricCard) metricCard.className = 'metric';
+      return;
+    }
+
+    const bizStr = bizDays.toFixed(1);
+
+    if (firstRunComplete) {
+      const color = bizDays <= 3.0 ? 'good' : 'warn';
+      const label = bizDays <= 3.0 ? '✓ first run complete' : '⚠ first run complete';
+      if (headerEl) headerEl.textContent = `${bizStr} business days`;
+      if (metricEl) {
+        let html = `${bizStr}<small> biz days · ${label}</small>`;
+        if (externalLatencyDays > 0) {
+          // Label only the deps that actually had pause records (not all possible deps)
+          const allContributing = [...activePauses, ...resolvedPauses];
+          const uniqueIds = [...new Set(allContributing.map(p => p.id))];
+          const extLabel = uniqueIds.map(id => PAUSE_LABELS_IDX[id] || id).join(' + ');
+          html += `<div style="font-size:12px;color:var(--muted);margin-top:4px;">External latency: ${externalLatencyDays.toFixed(1)} biz days (${extLabel})</div>`;
+        }
+        metricEl.innerHTML = html;
+      }
+      if (metricCard) metricCard.className = `metric ${color}`;
+    } else {
+      // In progress
+      const pauseNote = activePauses.length > 0 ? ' ⏸ paused' : ' · in progress';
+      if (headerEl) headerEl.textContent = `${bizStr} business days`;
+      if (metricEl) metricEl.innerHTML = `${bizStr}<small> biz days${pauseNote}</small>`;
+      if (metricCard) metricCard.className = 'metric';
+    }
+  }
+
   // init
   renderList();
   initAuth();
+  updateTTFPDisplay();
   // animate the gauge filling from 0 on load
   arc.style.strokeDashoffset = CIRC;
   setTimeout(()=>renderGauge(true), 250);

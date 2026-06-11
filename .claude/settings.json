@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Write",
+      "Bash(mkdir *)",
+      "Bash(npx tsc *)",
+      "Bash(npm test *)",
+      "Bash(npm run test *)",
+      "Bash(python -m http.server *)",
+      "PowerShell(New-Item *)",
+      "PowerShell(mkdir *)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Test-Path *)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_scroll"
+    ]
+  }
+}

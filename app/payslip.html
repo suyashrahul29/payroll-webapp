@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payslip — Greenlit Payroll</title>
+<style>
+  /* ── Design tokens (mirrors index.html light theme) ── */
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F5F7FA;
+    --line: #E5E7EB;
+    --txt: #1F2937;
+    --muted: #6B7280;
+    --green: #16A34A;
+    --amber: #D97706;
+    --red: #DC2626;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+  }
+
+  /* ── Screen-only header ── */
+  header.app {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+  .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--panel);
+    color: var(--txt);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--line); }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+  .btn-primary:hover { background: #15803d; }
+
+  /* ── Payslip container ── */
+  main { max-width: 860px; margin: 32px auto; padding: 0 24px 48px; }
+
+  .payslip-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 36px;
+  }
+
+  /* ── Payslip header ── */
+  .ps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+  }
+  .ps-company-name { font-size: 20px; font-weight: 800; color: var(--green); }
+  .ps-company-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .ps-title { text-align: right; }
+  .ps-title h1 { font-size: 18px; font-weight: 800; color: var(--txt); }
+  .ps-title p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  /* ── Employee info grid ── */
+  .emp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 28px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .field { display: flex; flex-direction: column; gap: 2px; }
+  .field-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .field-value { font-size: 13px; font-weight: 600; color: var(--txt); }
+
+  /* ── Section headers ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--green);
+    margin: 18px 0 8px;
+    border-bottom: 1px solid #d1fae5;
+    padding-bottom: 4px;
+  }
+
+  /* ── Two-column earnings/deductions ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 5px 2px; color: var(--txt); }
+  td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.total-row td {
+    border-top: 1px solid var(--line);
+    font-weight: 700;
+    padding-top: 7px;
+    font-size: 13px;
+  }
+
+  /* ── Net pay box ── */
+  .net-pay-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--green);
+    color: #fff;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 18px;
+  }
+  .net-pay-label { font-size: 14px; font-weight: 700; }
+  .net-pay-amount { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  /* ── Employer contributions ── */
+  .employer-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 5px; }
+
+  /* ── Statutory grid ── */
+  .statutory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 28px;
+  }
+
+  /* ── Responsive: single-column on narrow screens ── */
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .statutory-grid { grid-template-columns: 1fr; }
+    .emp-grid { grid-template-columns: 1fr; }
+    .payslip-card { padding: 20px 16px; }
+    .net-pay-amount { font-size: 18px; }
+  }
+  .stat-item { display: flex; gap: 8px; font-size: 12px; }
+  .stat-label { color: var(--muted); min-width: 130px; flex-shrink: 0; }
+  .stat-value { font-weight: 600; color: var(--txt); }
+
+  /* ── Multi-State Demo bar ── */
+  .demo-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .demo-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .state-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--txt);
+    transition: background .15s, border-color .15s;
+  }
+  .state-btn:hover { background: var(--line); }
+  .state-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* ── Wage-rule badge ── */
+  .wage-badge {
+    margin-bottom: 8px;
+    min-height: 24px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .badge-ok { color: var(--green); }
+  .badge-warn { color: var(--amber); }
+
+  /* ── Audit log ── */
+  .audit-log {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    max-height: 140px;
+    overflow-y: auto;
+  }
+  .audit-log:empty::before { content: 'Jurisdiction audit log — changes will appear here.'; }
+  .audit-entry { padding: 3px 0; border-bottom: 1px solid var(--line); }
+  .audit-entry:last-child { border-bottom: none; }
+
+  /* ── Footer ── */
+  .ps-footer {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.7;
+  }
+  .run-sig { font-family: monospace; font-size: 10px; color: #bbb; }
+
+  /* ── Empty/loading state ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state h2 { font-size: 18px; margin-bottom: 8px; color: var(--txt); }
+
+  /* ════════════════════════════════════════════════════
+     PRINT STYLES — white background, no chrome
+     ════════════════════════════════════════════════════ */
+  @media print {
+    :root {
+      --bg: #ffffff;
+      --panel: #f8f8f8;
+      --txt: #111111;
+      --muted: #555555;
+      --line: #dddddd;
+      --green: #1a5f2e;
+    }
+
+    .no-print { display: none !important; }
+
+    header.app { display: none !important; }
+
+    body { background: #fff; }
+
+    main {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .payslip-card {
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      padding: 20px 24px;
+    }
+
+    /* Ensure A4 portrait fit */
+    @page {
+      size: A4 portrait;
+      margin: 15mm;
+    }
+
+    table { page-break-inside: avoid; }
+    .two-col { page-break-inside: avoid; }
+    .net-pay-box { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Screen header (hidden on print) ── -->
+<header class="app no-print">
+  <div class="brand">
+    <div class="dot"></div>
+    Greenlit Payroll
+  </div>
+  <div class="header-actions">
+    <a href="./index.html" class="btn">← Back to Dashboard</a>
+    <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+  </div>
+</header>
+
+<main>
+  <!-- Multi-State Demo bar (hidden on print) -->
+  <div class="demo-bar no-print">
+    <span class="demo-label">Multi-State Demo:</span>
+    <button onclick="switchState('MH')" id="btn-MH" class="state-btn active">Maharashtra</button>
+    <button onclick="switchState('TN')" id="btn-TN" class="state-btn">Tamil Nadu</button>
+    <button onclick="switchState('KA')" id="btn-KA" class="state-btn">Karnataka</button>
+  </div>
+  <div id="wageRuleStatus" class="wage-badge no-print"></div>
+  <div id="auditLog" class="audit-log no-print"></div>
+
+  <div id="payslipContainer">
+    <div class="empty-state">
+      <h2>Loading payslip…</h2>
+      <p>Reading payslip data from session.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ── Month names ──
+  const MONTHS = ['','January','February','March','April','May','June',
+    'July','August','September','October','November','December'];
+
+  // ── Escape HTML to prevent XSS ──
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  // ── Format paise as ₹ with Indian grouping ──
+  function formatPaise(paise) {
+    const abs  = Math.abs(Math.round(paise));
+    const rupees = Math.floor(abs / 100);
+    const rem    = abs % 100;
+    const formatted = new Intl.NumberFormat('en-IN').format(rupees);
+    return (paise < 0 ? '−' : '') + '₹' + formatted + '.' + String(rem).padStart(2,'0');
+  }
+
+  // ── PT label map ──
+  const PT_LABEL = {
+    MH: 'Professional Tax (Maharashtra)',
+    TN: 'Professional Tax (Tamil Nadu)',
+    KA: 'Professional Tax (Karnataka)',
+    TG: 'Professional Tax (Telangana)',
+    KL: 'Professional Tax (Kerala)',
+    WB: 'Professional Tax (West Bengal)',
+    AP: 'Professional Tax (Andhra Pradesh)',
+    MP: 'Professional Tax (Madhya Pradesh)',
+  };
+  const PT_NA = ['DL','RJ','UP','HR','GJ','PB'];
+
+  // ── Format ISO date for display ──
+  function fmtDate(iso) {
+    try {
+      return new Date(iso).toLocaleDateString('en-IN',
+        { day:'numeric', month:'long', year:'numeric' });
+    } catch(e) { return iso; }
+  }
+
+  // ── Render payslip into the DOM ──
+  function renderPayslip(r) {
+    const e  = r.employee;
+    const o  = r.outputs;
+    const p  = r.period;
+
+    const periodStr  = MONTHS[p.month] + ' ' + p.year;
+    const showPT     = o.ptPaise > 0 || (PT_LABEL[e.jurisdiction] && !PT_NA.includes(e.jurisdiction));
+    const ptLabel    = PT_LABEL[e.jurisdiction] || ('Professional Tax (' + e.jurisdiction + ')');
+    const showESI    = o.esiEmployeePaise > 0;
+
+    // Earnings breakdown
+    const hraPaise   = Math.floor(e.basicSalaryPaise * 0.25);
+    const specialPaise = Math.max(0, e.grossSalaryPaise - e.basicSalaryPaise - hraPaise);
+
+    document.title = 'Payslip — ' + e.name + ' — ' + periodStr;
+
+    const html = `
+    <div class="payslip-card">
+
+      <!-- HEADER -->
+      <div class="ps-header">
+        <div>
+          <div class="ps-company-name">${esc(r.companyName)}</div>
+          <div class="ps-company-sub">${esc(r.companyAddress)}</div>
+          <div class="ps-company-sub">PAN: ${esc(r.companyPan)}</div>
+        </div>
+        <div class="ps-title">
+          <h1>PAYSLIP</h1>
+          <p>${esc(periodStr)}</p>
+          <p>Payment Date: ${esc(fmtDate(r.paymentDate))}</p>
+        </div>
+      </div>
+
+      <!-- EMPLOYEE INFO -->
+      <div class="emp-grid">
+        <div class="field">
+          <span class="field-label">Employee Name</span>
+          <span class="field-value">${esc(e.name)}</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Employee ID</span>
+          <span class="field-value">${esc(e.employeeId)}</span>
+        </div>
+        ${e.department ? `<div class="field">
+          <span class="field-label">Department</span>
+          <span class="field-value">${esc(e.department)}</span>
+        </div>` : ''}
+        <div class="field">
+          <span class="field-label">Annual CTC</span>
+          <span class="field-value">${formatPaise(e.ctcAnnualPaise)}</span>
+        </div>
+        <div class="field">
+          <span class="field-label">Gross Salary (Monthly)</span>
+          <span class="field-value">${formatPaise(e.grossSalaryPaise)}</span>
+        </div>
+        <div class="field">
+          <span class="field-label">PF / UAN</span>
+          <span class="field-value">${esc(r.uan || '—')}</span>
+        </div>
+        <div class="field">
+          <span class="field-label">PAN</span>
+          <span class="field-value">${esc(r.pan || '—')}</span>
+        </div>
+        ${r.uan ? `<div class="field">
+          <span class="field-label">PF Account No.</span>
+          <span class="field-value">${esc(r.pfAccountNumber || '—')}</span>
+        </div>` : ''}
+        ${(showESI || r.esiNumber) ? `<div class="field">
+          <span class="field-label">ESI Number</span>
+          <span class="field-value">${esc(r.esiNumber || '—')}</span>
+        </div>` : ''}
+      </div>
+
+      <!-- EARNINGS + DEDUCTIONS -->
+      <div class="two-col">
+        <div>
+          <div class="section-title">Earnings</div>
+          <table>
+            <tr><td>Basic Salary</td><td>${formatPaise(e.basicSalaryPaise)}</td></tr>
+            <tr><td>House Rent Allowance (HRA)</td><td>${formatPaise(hraPaise)}</td></tr>
+            ${specialPaise > 0 ? `<tr><td>Special Allowance</td><td>${formatPaise(specialPaise)}</td></tr>` : ''}
+            <tr class="total-row"><td>Gross Pay</td><td>${formatPaise(o.grossPaise)}</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="section-title">Deductions</div>
+          <table>
+            <tr><td>Provident Fund (Employee)</td><td>${formatPaise(o.pfEmployeePaise)}</td></tr>
+            ${showESI ? `<tr><td>ESI (Employee)</td><td>${formatPaise(o.esiEmployeePaise)}</td></tr>` : ''}
+            <tr><td>Tax Deducted at Source (TDS)</td><td>${formatPaise(o.tdsPaise)}</td></tr>
+            ${showPT ? `<tr><td>${esc(ptLabel)}</td><td>${formatPaise(o.ptPaise)}</td></tr>` : ''}
+            <tr class="total-row"><td>Total Deductions</td><td>${formatPaise(o.totalDeductionsPaise)}</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- NET PAY -->
+      <div class="net-pay-box">
+        <span class="net-pay-label">Net Pay (Take-Home)</span>
+        <span class="net-pay-amount">${formatPaise(o.netPayPaise)}</span>
+      </div>
+
+      <!-- EMPLOYER CONTRIBUTIONS -->
+      <div class="section-title">Employer Contributions (Informational)</div>
+      <table>
+        <tr><td>Provident Fund (Employer)</td><td>${formatPaise(o.pfEmployerPaise)}</td></tr>
+        ${o.esiEmployerPaise > 0 ? `<tr><td>ESI (Employer)</td><td>${formatPaise(o.esiEmployerPaise)}</td></tr>` : ''}
+      </table>
+      <div class="employer-note">Employer contributions are part of your CTC but are not deducted from your take-home pay.</div>
+
+      <!-- STATUTORY DISCLOSURES -->
+      <div class="section-title">Statutory Disclosures</div>
+      <div class="statutory-grid">
+        <div class="stat-item"><span class="stat-label">PF Rule Applied:</span><span class="stat-value">${esc(o.appliedRules.pf)}</span></div>
+        <div class="stat-item"><span class="stat-label">ESI Rule Applied:</span><span class="stat-value">${esc(o.appliedRules.esi)}</span></div>
+        <div class="stat-item"><span class="stat-label">TDS Rule Applied:</span><span class="stat-value">${esc(o.appliedRules.tds)}</span></div>
+        ${o.appliedRules.pt ? `<div class="stat-item"><span class="stat-label">PT Rule Applied:</span><span class="stat-value">${esc(o.appliedRules.pt)}</span></div>` : ''}
+        <div class="stat-item"><span class="stat-label">Pay Period:</span><span class="stat-value">${esc(periodStr)}</span></div>
+        <div class="stat-item"><span class="stat-label">Payment Date:</span><span class="stat-value">${esc(fmtDate(r.paymentDate))}</span></div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="ps-footer">
+        This payslip is computer-generated and is valid without signature.<br />
+        Computed under the applicable Labour Codes and statutory rules in force for the pay period.<br />
+        <span class="run-sig">Run ID: ${esc(r.runId)}</span>
+      </div>
+
+    </div>`;
+
+    document.getElementById('payslipContainer').innerHTML = html;
+  }
+
+  // ── Mock payslip (prototype fallback) ──
+  const MOCK = {
+    runId: 'RUN-2026-06-001',
+    paymentDate: '2026-06-30',
+    period: { year: 2026, month: 6, periodString: '2026-06' },
+    employee: {
+      employeeId: 'EMP001',
+      name: 'Aditya Sharma',
+      department: 'Engineering',
+      basicSalaryPaise: 2500000,
+      grossSalaryPaise: 5000000,
+      ctcAnnualPaise: 70000000,
+      jurisdiction: 'MH',
+      pfOptOut: false,
+      esiApplicable: false,
+    },
+    outputs: {
+      grossPaise: 5000000,
+      pfEmployeePaise: 180000,
+      pfEmployerPaise: 180000,
+      esiEmployeePaise: 0,
+      esiEmployerPaise: 0,
+      tdsPaise: 0,
+      ptPaise: 20000,
+      totalDeductionsPaise: 200000,
+      netPayPaise: 4800000,
+      appliedRules: {
+        pf: 'pf-in-2025-04',
+        esi: 'esi-in-2025-04',
+        tds: 'tds-in-2025-04',
+        pt: 'pt-mh-2025-04',
+      },
+    },
+    uan: 'MH/45678/01234',
+    esiNumber: '',
+    pan: 'ABCDE1234F',
+    pfAccountNumber: 'MH/MUM/0012345/000/0001234',
+    companyName: 'Acme Pvt Ltd',
+    companyAddress: 'Mumbai, Maharashtra',
+    companyPan: 'AABCA1234D',
+  };
+
+  // ── Multi-State Demo ─────────────────────────────────────────────────────────
+
+  // Hardcoded expected PT values for gross ₹50,000/month (validated by multi-state.test.ts):
+  //   MH: ₹200  (slab ₹10,001+)
+  //   TN: ₹690  (slab ₹45,001–60,000)
+  //   KA: ₹200  (slab ₹35,001+)
+  const DEMO_EMPLOYEES = {
+    MH: {
+      employeeId: 'EMP001', name: 'Aditya Sharma', department: 'Engineering',
+      basicSalaryPaise: 2_500_000, grossSalaryPaise: 5_000_000,
+      ctcAnnualPaise: 70_000_000, jurisdiction: 'MH', pfOptOut: false, esiApplicable: false,
+    },
+    TN: {
+      employeeId: 'EMP002', name: 'Kavitha Raman', department: 'Finance',
+      basicSalaryPaise: 2_500_000, grossSalaryPaise: 5_000_000,
+      ctcAnnualPaise: 70_000_000, jurisdiction: 'TN', pfOptOut: false, esiApplicable: false,
+    },
+    KA: {
+      employeeId: 'EMP003', name: 'Suresh Hegde', department: 'Operations',
+      basicSalaryPaise: 2_500_000, grossSalaryPaise: 5_000_000,
+      ctcAnnualPaise: 70_000_000, jurisdiction: 'KA', pfOptOut: false, esiApplicable: false,
+    },
+  };
+
+  // Hardcoded StatutoryOutputs per state (PF = 12% of ₹15k cap = ₹1,800; TDS = ₹0 at ₹7L CTC)
+  const DEMO_OUTPUTS = {
+    MH: {
+      grossPaise: 5_000_000,
+      pfEmployeePaise: 180_000, pfEmployerPaise: 180_000,
+      esiEmployeePaise: 0, esiEmployerPaise: 0,
+      tdsPaise: 0,
+      ptPaise: 20_000,
+      totalDeductionsPaise: 200_000,
+      netPayPaise: 4_800_000,
+      appliedRules: { pf: 'pf-in-2025-04', esi: 'esi-in-2025-04', tds: 'tds-in-2025-04', pt: 'pt-mh-2025-04' },
+    },
+    TN: {
+      grossPaise: 5_000_000,
+      pfEmployeePaise: 180_000, pfEmployerPaise: 180_000,
+      esiEmployeePaise: 0, esiEmployerPaise: 0,
+      tdsPaise: 0,
+      ptPaise: 69_000,
+      totalDeductionsPaise: 249_000,
+      netPayPaise: 4_751_000,
+      appliedRules: { pf: 'pf-in-2025-04', esi: 'esi-in-2025-04', tds: 'tds-in-2025-04', pt: 'pt-tn-2025-04' },
+    },
+    KA: {
+      grossPaise: 5_000_000,
+      pfEmployeePaise: 180_000, pfEmployerPaise: 180_000,
+      esiEmployeePaise: 0, esiEmployerPaise: 0,
+      tdsPaise: 0,
+      ptPaise: 20_000,
+      totalDeductionsPaise: 200_000,
+      netPayPaise: 4_800_000,
+      appliedRules: { pf: 'pf-in-2025-04', esi: 'esi-in-2025-04', tds: 'tds-in-2025-04', pt: 'pt-ka-2025-04' },
+    },
+  };
+
+  // Wage-rule validation (port of multi-state.ts, no import)
+  function validateWageRule(employee) {
+    const monthlyCtcPaise = Math.floor(employee.ctcAnnualPaise / 12);
+    const requiredBasicPaise = Math.floor(monthlyCtcPaise / 2);
+    const basicPct = monthlyCtcPaise > 0
+      ? Math.floor((employee.basicSalaryPaise / monthlyCtcPaise) * 100)
+      : 0;
+    const compliant = employee.basicSalaryPaise >= requiredBasicPaise;
+    const gapPaise = compliant ? 0 : requiredBasicPaise - employee.basicSalaryPaise;
+    return { compliant, basicPct, requiredPct: 50, gapPaise };
+  }
+
+  function appendAuditEntry(fromJurisdiction, toJurisdiction) {
+    const log = document.getElementById('auditLog');
+    const ts = new Date().toLocaleTimeString('en-IN');
+    const entry = document.createElement('div');
+    entry.className = 'audit-entry';
+    // Both jurisdiction codes are hardcoded enum values, but we still esc for defence-in-depth
+    entry.textContent = ts + '  Jurisdiction changed: ' + esc(fromJurisdiction) + ' → ' + esc(toJurisdiction);
+    log.appendChild(entry);
+  }
+
+  let currentDemoState = null;
+
+  function switchState(jurisdiction) {
+    const employee = DEMO_EMPLOYEES[jurisdiction];
+    const outputs  = DEMO_OUTPUTS[jurisdiction];
+    const record = {
+      runId: 'DEMO-' + jurisdiction,
+      paymentDate: '2026-06-30',
+      period: { year: 2026, month: 6, periodString: '2026-06' },
+      employee,
+      outputs,
+      uan: '', esiNumber: '', pan: 'ABCDE1234F',
+      pfAccountNumber: '', companyName: 'Acme Pvt Ltd',
+      companyAddress: 'Demo, India', companyPan: 'AABCA1234D',
+    };
+    renderPayslip(record);
+
+    // Wage-rule badge
+    const wr = validateWageRule(employee);
+    document.getElementById('wageRuleStatus').innerHTML = wr.compliant
+      ? '<span class="badge-ok">✓ Wage Rule: Compliant (' + wr.basicPct + '% basic)</span>'
+      : '<span class="badge-warn">✗ Wage Rule: Basic ' + wr.basicPct + '% &lt; 50% (gap ' + formatPaise(wr.gapPaise) + ')</span>';
+
+    // Audit log on jurisdiction change
+    if (currentDemoState && currentDemoState !== jurisdiction) {
+      appendAuditEntry(currentDemoState, jurisdiction);
+    }
+    currentDemoState = jurisdiction;
+
+    // Update active button
+    document.querySelectorAll('.state-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById('btn-' + jurisdiction).classList.add('active');
+  }
+
+  // ── Boot: start demo on Maharashtra (demo bar always active) ──
+  // Note: when real payslip data needs to be shown, pass it via switchState override,
+  // not localStorage, so the wage-rule badge is always initialized.
+  (function init() {
+    switchState('MH');
+  })();
+</script>
+</body>
+</html>

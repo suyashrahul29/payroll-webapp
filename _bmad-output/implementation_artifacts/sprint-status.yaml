@@ -38,7 +38,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-06-09
-last_updated: 2026-06-11T11:40:00Z
+last_updated: 2026-06-11T13:00:00Z
 project: payroll-webapp
 project_key: NOKEY
 tracking_system: file-system
@@ -91,7 +91,7 @@ development_status:
 
   4-1-onboarding-flow-ui-employee-master-statutory-ids: done
   4-2-data-complete-detection-ttfp-clock-start: done
-  4-3-ttfp-measurement-instrumentation: backlog
+  4-3-ttfp-measurement-instrumentation: done
 
   epic-4-retrospective: optional
 

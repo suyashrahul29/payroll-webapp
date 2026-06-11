@@ -114,7 +114,12 @@ Other key data shapes:
 
 ## 7. Key Decisions Needing Your Sign-off
 
-1. **`[DECISION]` Production stack** — React+TS front-end, Node/TS backend, PostgreSQL. (§2) — *biggest call.*
+> **Update 2026-06-11:** Decision #1 (production stack) is **signed off and proven** — a Node/TS +
+> PostgreSQL backend now backs the first vertical slice (**employee master**) in `server/`,
+> demonstrating tenant isolation via RLS, integer-paise money, and an append-only audit log.
+> See `server/README.md`. The `app/` prototype remains localStorage-backed for all other slices.
+
+1. **`[SIGNED OFF — 2026-06-11]` Production stack** — React+TS front-end, Node/TS backend, PostgreSQL. (§2) — *first slice (employee master) implemented in `server/`.* React front-end still pending; the prototype HTML calls the API directly for now.
 2. **`[DECISION]` Compliance engine as effective-dated rule data + pure calc core** (§4) — recommended strongly; confirm the "rules are data, not code" stance and whether historical re-run is v1 (OQ-3).
 3. **`[DECISION]` Keep the vanilla prototype frozen** as the demo, build production separately — vs. evolving the single file (not recommended past demo).
 4. **`[ASSUMPTION]` Node/TS vs Python for the compliance core** — confirm preference.

@@ -10,7 +10,7 @@ continuously-reconciled readiness score, not a monthly fire drill.** The moat is
 **upstream data supply chain** (late exits, silent CTC changes, stale attendance) that every
 incumbent ignores.
 
-The two numbers that define everything we build and sell:
+The two numbers that define everything we build:
 1. **First-pass payroll accuracy** — % of runs with zero post-run corrections (target ≥99.5% v1).
 2. **Time-to-First-Payroll** — ≤3 business days from *data-complete* (not from sign-up).
 
